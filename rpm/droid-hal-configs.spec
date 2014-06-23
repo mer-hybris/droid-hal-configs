@@ -31,7 +31,8 @@ mkdir -p $RPM_BUILD_ROOT/%{board_mappings_dir}
 cp -f %{board_mappings_dir}/05-$MER_HA_VENDOR-$MER_HA_DEVICE.ini $RPM_BUILD_ROOT/%{board_mappings_dir}/
 cp -rf %{_datadir}/ssu/kickstart $RPM_BUILD_ROOT/%{_datadir}/ssu/
 
-%define ssu_override domain=jolla
+%{!?ssu_override: %define ssu_override domain=sales}
+
 # build rnd kickstarts on devel level, release kickstarts on all other levels
 %if 0%{?qa_stage_devel:1}
 KS_LEVELS=true %gen_ks $MER_HA_DEVICE
