@@ -9,6 +9,7 @@ License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration-jolla
 BuildRequires: pkgconfig(android-headers)
+BuildRequires: droid-hal
 BuildRequires: droid-hal-devel
 BuildRequires: droid-hal-kickstart-configuration
 
