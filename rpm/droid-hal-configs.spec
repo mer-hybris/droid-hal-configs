@@ -43,6 +43,10 @@ KS_LEVELS=false %gen_ks $MER_HA_DEVICE
 rm -rf $RPM_BUILD_ROOT/%{board_mappings_dir}
 rm -rf $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart
 
+%files
+%defattr(-,root,root,-)
+
 %files -n ssu-kickstarts-droid
 %defattr(-,root,root,-)
 %{_datadir}/kickstarts/*.ks
+
