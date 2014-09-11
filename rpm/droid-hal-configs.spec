@@ -32,7 +32,17 @@ mkdir -p $RPM_BUILD_ROOT/%{board_mappings_dir}
 cp -f %{board_mappings_dir}/05-$MER_HA_VENDOR-$MER_HA_DEVICE.ini $RPM_BUILD_ROOT/%{board_mappings_dir}/
 cp -rf %{_datadir}/ssu/kickstart $RPM_BUILD_ROOT/%{_datadir}/ssu/
 
+# if we are building on Mer OBS or locally, make a domain=sales .ks
+# so it works for HADK users:
+%define disturl_subst %(echo %{disturl} | grep jollamobile.com)
+%if "%{disturl_subst}" == ""
+echo "Setting domain to sales"
 %define ssu_override domain=sales
+%else
+echo "Setting domain to jolla"
+%define ssu_override domain=jolla
+%endif
+
 # build rnd kickstarts on devel level, release kickstarts on all other levels
 %if 0%{?qa_stage_devel:1}
 KS_LEVELS=true %gen_ks $MER_HA_DEVICE
