@@ -152,9 +152,11 @@ copy_files_from %{dcd_path}/sparse
 # Now the majority of the sparse tree is made we can handle configs
 # which need some kind of substitution or generating
 
-# packages
+# patterns
 mkdir -p %{buildroot}/usr/share/package-groups/
-/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/%{rpm_device} -p %{dcd_common}/patterns/common -p %{dcd_common}/patterns/hybris -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/common -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/hybris -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}
