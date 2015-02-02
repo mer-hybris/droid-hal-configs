@@ -4,7 +4,7 @@
 %define dcd_common %{dcd_path}/droid-configs-device
 %define dcd_sparse droid-configs-device/sparse
 
-Name:	    droid-config-%{device}
+Name:	    droid-configs-%{device}
 Provides:   droid-configs
 Summary:    Config packages for Droid HAL adaptations
 Version:    1
@@ -119,26 +119,26 @@ mkdir -p %{buildroot}
 
 # Amalgamate configs files from device-specific and all- trees
 # Retain permissions:
-echo "%defattr(-,root,root,-)" > tmp/conf.files
-
-# Add files that you will handle manually (per-device and/or per-package) to this | separated var:
-EXCLUDES="/var/lib/platform-updates/flash-bootimg.sh"
+echo "%defattr(-,root,root,-)" > tmp/droid-configs.files
 
 # Prefer files from sparse/ in the HA specific
 # area over sparse/ in the dcd area
 copy_files_from() {
   config_dir=$1
   if [ -d $config_dir ]; then
-    (cd $config_dir; find . \( -type f -or -type l \) -print ) | grep -vE "$EXCLUDES" | sed 's/^.//' >> tmp/conf.files
+    (cd $config_dir; find . \( -type f -or -type l \) -print ) | sed 's/^.//' >> tmp/droid-configs.files
     cp -R $config_dir/* $RPM_BUILD_ROOT/
   fi
 }
 
 delete_files() {
+  files=$1
   if [ -e delete_file.list ]; then
     egrep -v '^#' delete_file.list | (
       while read file; do
         rm -f $RPM_BUILD_ROOT/$file
+	grep -vE "$file" $files > tmp/$$.files
+	mv tmp/$$.files $files
       done)
   fi
 }
@@ -146,7 +146,7 @@ delete_files() {
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
-delete_files
+delete_files tmp/droid-configs.files
 copy_files_from %{dcd_path}/sparse
 
 # Now the majority of the sparse tree is made we can handle configs
@@ -193,6 +193,29 @@ ln -s /bin/false $RPM_BUILD_ROOT%{_libdir}/startup/preinit/is_total_erase_suppor
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps
 /usr/lib/qt5/bin/kmap2qmap %{dcd_common}/configs/droid.kmap %{dcd_common}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap
 /usr/lib/qt5/bin/kmap2qmap %{dcd_path}/configs/droid.kmap %{dcd_path}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap || true
+# and add to the filelist
+echo %{_datadir}/qt5/keymaps/droid.qmap >> tmp/droid-configs.files
+
+clean_files() { sed 's_^./_/_'; }
+
+# Create the various '%%files' files
+(cd $RPM_BUILD_ROOT; ls .%{_datadir}/kickstarts/*.ks) | clean_files > tmp/ssu-kickstarts.files
+
+(cd $RPM_BUILD_ROOT; ls .%{_datadir}/package-groups/*.xml) | clean_files >tmp/patterns.files
+
+touch tmp/policy-settings.files
+
+(cd $RPM_BUILD_ROOT; ls .%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater) | clean_files > tmp/kickstart-configuration.files
+(cd $RPM_BUILD_ROOT; ls .%{_datadir}/ssu/kickstart/attachment/%{rpm_device} ) | clean_files >> tmp/kickstart-configuration.files
+
+(cd $RPM_BUILD_ROOT; ls .%{_libdir}/startup/preinit/*) | clean_files > tmp/preinit-plugin.files
+
+touch tmp/pulseaudio-settings.files
+
+(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt ) | clean_files > tmp/sailfish-config.files
+
+(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt ) | clean_files >> tmp/sailfish-config.files
+
 
 ################################################################
 %post sailfish-config
@@ -200,16 +223,8 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps
 %{_bindir}/add-oneshot dconf-update || :
 
 ################################################################
-%files -f tmp/conf.files
+%files -f tmp/droid-configs.files
 %defattr(-,root,root,-)
-%{_bindir}/droid/droid-init-done.sh
-%{_bindir}/droid/kill-cgroup.sh
-%{_bindir}/droid/droid-hal-startup.sh
-/lib/udev/platform-device
-%{_sharedstatedir}/environment/compositor/droid-hal-device.conf
-%{_sharedstatedir}/environment/nemo/99-hybris.conf
-%{_datadir}/qt5/keymaps/droid.qmap
-
 
 %files ssu-kickstarts
 %defattr(-,root,root,-)
