@@ -1,10 +1,27 @@
+# This file should be %%included into a device specific spec file
+# where macros are defined:
+# device: should be the CM codename or the AOSP TARGET_PRODUCT
+# vendor: determine the droid-side directory used for ./device/<vendor>/<device>
+# device_pretty: User-visible model name of the device
+# vendor_pretty: User-visible manufacturer name of the device
+# rpm_device: device name used rpm-side (eg in configs) : defaults to device
+# rpm_vendor: vendor name used rpm-side (eg in configs) : defaults to vendor
+
 # dcd_path is the base when run from hadk
 # dcd_common is the common stuff (!) and dcd_sparse is the common sparse
 %define dcd_path hybris/droid-configs
 %define dcd_common %{dcd_path}/droid-configs-device
 %define dcd_sparse droid-configs-device/sparse
 
-Name:	    droid-configs-%{device}
+# Set defaults if not defined already:
+%if 0%{!?rpm_device:1}
+%define rpm_device %device
+%endif
+%if 0%{!?rpm_vendor:1}
+%define rpm_vendor %vendor
+%endif
+
+Name:	    droid-configs-%{rpm_device}
 Provides:   droid-configs
 Summary:    Config packages for Droid HAL adaptations
 Version:    1
