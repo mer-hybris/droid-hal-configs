@@ -21,8 +21,8 @@
 %define rpm_vendor %vendor
 %endif
 
-Name:	    droid-configs-%{rpm_device}
-Provides:   droid-configs
+Name:	    droid-config-%{rpm_device}
+Provides:   droid-config
 Summary:    Config packages for Droid HAL adaptations
 Version:    1
 Release:    1
@@ -40,6 +40,7 @@ Provides: bluez-configs
 %{summary}.
 
 %package    ssu-kickstarts
+Provides:   droid-config-ssu-kickstarts
 Summary:    Kickstarts for Droid HAL
 Provides:   image-configurations
 
@@ -49,6 +50,7 @@ Provides:   image-configurations
 ################################################################
 %package patterns
 Summary:    Repository patterns for %{rpm_device} hw
+Provides:   droid-config-patterns
 Provides:   package-groups
 
 %description patterns
@@ -57,6 +59,7 @@ Provides:   package-groups
 ################################################################
 %package policy-settings
 Summary:    Policy settings for %{rpm_device} hw
+Provides:   droid-config-policy-settings
 Requires:   ohm >= 1.1.16
 Requires:   ohm-plugins-misc
 Requires:   ohm-plugins-dbus
@@ -83,6 +86,7 @@ Provides:   policy-settings
 ################################################################
 %package kickstart-configuration
 Summary:    Kickstart configuration for %{rpm_device}
+Provides:   droid-config-kickstart-configuration
 Requires:   ssu-kickstart-configuration-jolla
 Provides:   droid-hal-kickstart-configuration
 
@@ -92,7 +96,7 @@ Provides:   droid-hal-kickstart-configuration
 ################################################################
 %package preinit-plugin
 Summary:    Preinit plugins for %{rpm_device}
-Provides:   preinit-plugins
+Provides:   droid-config-preinit-plugins
 
 %description preinit-plugin
 %{summary}.
@@ -100,6 +104,7 @@ Provides:   preinit-plugins
 ################################################################
 %package pulseaudio-settings
 Summary:    PulseAudio settings for %{rpm_device} hw
+Provides:   droid-config-pulseaudio-settings
 Requires:   pulseaudio >= 4.0
 Requires:   pulseaudio-modules-nemo-parameters >= 4.0.11
 Requires:   pulseaudio-modules-nemo-stream-restore >= 4.0.11
@@ -112,8 +117,8 @@ Provides:   pulseaudio-settings
 %{summary}.
 
 ################################################################
-%package sailfish-config
-Provides: droid-hal-sailfish-config
+%package sailfish
+Provides: droid-config-sailfish
 Group:	System
 BuildArch:	noarch
 Requires: %{name} = %{version}-%{release}
@@ -121,7 +126,7 @@ Requires: oneshot
 Requires: dconf
 Summary: Per device configuration for sailfish for droid-hal device: %{rpm_device}
 
-%description sailfish-config
+%description sailfish
 Configure sailfish eg naturally landscape devices like mako
 
 ################################################################
@@ -137,14 +142,14 @@ mkdir -p %{buildroot}
 
 # Amalgamate configs files from device-specific and all- trees
 # Retain permissions:
-echo "%defattr(-,root,root,-)" > tmp/droid-configs.files
+echo "%defattr(-,root,root,-)" > tmp/droid-config.files
 
 # Prefer files from sparse/ in the HA specific
 # area over sparse/ in the dcd area
 copy_files_from() {
   config_dir=$1
   if [ -d $config_dir ]; then
-    (cd $config_dir; find . \( -type f -or -type l \) -print ) | sed 's/^.//' >> tmp/droid-configs.files
+    (cd $config_dir; find . \( -type f -or -type l \) -print ) | sed 's/^.//' >> tmp/droid-config.files
     cp -R $config_dir/* $RPM_BUILD_ROOT/
   fi
 }
@@ -164,7 +169,7 @@ delete_files() {
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
-delete_files tmp/droid-configs.files
+delete_files tmp/droid-config.files
 copy_files_from %{dcd_path}/sparse
 
 # Now the majority of the sparse tree is made we can handle configs
@@ -212,7 +217,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps
 /usr/lib/qt5/bin/kmap2qmap %{dcd_common}/configs/droid.kmap %{dcd_common}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap
 /usr/lib/qt5/bin/kmap2qmap %{dcd_path}/configs/droid.kmap %{dcd_path}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap || true
 # and add to the filelist
-echo %{_datadir}/qt5/keymaps/droid.qmap >> tmp/droid-configs.files
+echo %{_datadir}/qt5/keymaps/droid.qmap >> tmp/droid-config.files
 
 clean_files() { sed 's_^./_/_'; }
 
@@ -230,18 +235,18 @@ touch tmp/policy-settings.files
 
 touch tmp/pulseaudio-settings.files
 
-(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt ) | clean_files > tmp/sailfish-config.files
+(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt ) | clean_files > tmp/sailfish.files
 
-(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt ) | clean_files >> tmp/sailfish-config.files
+(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt ) | clean_files >> tmp/sailfish.files
 
 
 ################################################################
-%post sailfish-config
+%post sailfish
 
 %{_bindir}/add-oneshot dconf-update || :
 
 ################################################################
-%files -f tmp/droid-configs.files
+%files -f tmp/droid-config.files
 %defattr(-,root,root,-)
 
 %files ssu-kickstarts
@@ -267,7 +272,7 @@ touch tmp/pulseaudio-settings.files
 %files pulseaudio-settings
 %defattr(644,root,root,-)
  
-%files sailfish-config
+%files sailfish
 %defattr(-,root,root,-)
 %{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt
 %{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt
