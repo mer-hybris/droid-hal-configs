@@ -34,6 +34,7 @@ BuildRequires: pkgconfig(android-headers)
 BuildRequires: droid-hal
 BuildRequires: droid-hal-devel
 BuildRequires: repomd-pattern-builder
+Provides: bluez-configs
 
 %description
 %{summary}.
