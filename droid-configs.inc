@@ -35,7 +35,7 @@ BuildRequires: droid-hal
 BuildRequires: droid-hal-devel
 BuildRequires: repomd-pattern-builder
 Provides: bluez-configs
-
+Provides: bluetooth-rfkill-event-configs
 %description
 %{summary}.
 
