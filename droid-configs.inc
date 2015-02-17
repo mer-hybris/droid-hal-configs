@@ -9,7 +9,10 @@
 
 # dcd_path is the base when run from hadk
 # dcd_common is the common stuff (!) and dcd_sparse is the common sparse
+%if 0%{!?dcd_path:1}
 %define dcd_path hybris/droid-configs
+%endif
+
 %define dcd_common %{dcd_path}/droid-configs-device
 %define dcd_sparse droid-configs-device/sparse
 
@@ -31,8 +34,6 @@ License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration-jolla
 BuildRequires: pkgconfig(android-headers)
-BuildRequires: droid-hal
-BuildRequires: droid-hal-devel
 BuildRequires: repomd-pattern-builder
 Provides: bluez-configs
 Provides: bluetooth-rfkill-event-configs
@@ -137,11 +138,10 @@ Configure sailfish eg naturally landscape devices like mako
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}
-# Obtain the DEVICE from the same source as used in /etc/os-release
-. /usr/lib/droid-devel/hw-release.vars
 
 # Amalgamate configs files from device-specific and all- trees
 # Retain permissions:
+mkdir -p tmp/
 echo "%defattr(-,root,root,-)" > tmp/droid-config.files
 
 # Prefer files from sparse/ in the HA specific
@@ -204,9 +204,9 @@ cp -f %{dcd_path}/kickstart/attachment_hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/ki
 
 # build rnd kickstarts on devel level, release kickstarts on all other levels
 %if 0%{?qa_stage_devel:1}
-KS_LEVELS=true %gen_ks $MER_HA_DEVICE
+KS_LEVELS=true %gen_ks %{rpm_device}
 %else
-KS_LEVELS=false %gen_ks $MER_HA_DEVICE
+KS_LEVELS=false %gen_ks %{rpm_device}
 %endif
 
 # Preinit plugins
