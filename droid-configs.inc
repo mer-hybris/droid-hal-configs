@@ -179,6 +179,15 @@ copy_files_from %{dcd_path}/%{dcd_sparse}
 delete_files tmp/droid-config.files
 copy_files_from %{dcd_path}/sparse
 
+# We want to keep some files in separate subpackages.
+# NOTE: some files might get to wrong place with this because of string assumption.
+echo "%defattr(-,root,root,-)" > tmp/policy-settings.files
+grep ohm tmp/droid-config.files > tmp/policy-settings.files
+sed --in-place '/ohm/d' tmp/droid-config.files
+echo "%defattr(-,root,root,-)" > tmp/pulseaudio-settings.files
+grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
+sed --in-place '/pulse/d' tmp/droid-config.files
+
 # Now the majority of the sparse tree is made we can handle configs
 # which need some kind of substitution or generating
 
@@ -202,16 +211,25 @@ sed -e 's|%DEVICE%|%{rpm_device}|g' \
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}
-DEST_UPDATER=$RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater
+DEST_UPDATER=$RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}/hybris
 sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_common}/kickstart/pack_package-droid-updater > $DEST_UPDATER || true
 if [ -f %{dcd_path}/kickstart/pack_package-droid-updater ]; then
   sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_path}/kickstart/pack_package-droid-updater > $DEST_UPDATER || true
 fi
 
+# post_nochroot
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/post_nochroot/
+cp %{dcd_common}/kickstart/post_nochroot/hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/post_nochroot/%{rpm_device}
+
 # and attachments (override if there is one)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment
 cp -f %{dcd_common}/kickstart/attachment_hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment/%{rpm_device}
 cp -f %{dcd_path}/kickstart/attachment_hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment/%{rpm_device} || true
+
+# Override the common configs with device specifics if those exist
+if [ -e %{dcd_path}/kickstart ]; then
+  cp -rf %{dcd_path}/kickstart/* $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/
+fi
 
 # if we are building on Mer OBS or locally, make a domain=sales .ks
 # so it works for HADK users:
@@ -238,33 +256,16 @@ ln -s /bin/false $RPM_BUILD_ROOT%{_libdir}/startup/preinit/is_total_erase_suppor
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps
 /usr/lib/qt5/bin/kmap2qmap %{dcd_common}/configs/droid.kmap %{dcd_common}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap
 /usr/lib/qt5/bin/kmap2qmap %{dcd_path}/configs/droid.kmap %{dcd_path}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap || true
-# and add to the filelist
-echo %{_datadir}/qt5/keymaps/droid.qmap >> tmp/droid-config.files
 
 clean_files() { sed 's_^./_/_'; }
 
 # Create the various '%%files' files
 (cd $RPM_BUILD_ROOT; ls .%{_datadir}/kickstarts/*.ks) | clean_files > tmp/ssu-kickstarts.files
 
-(cd $RPM_BUILD_ROOT; ls .%{_datadir}/package-groups/*.xml) | clean_files >tmp/patterns.files
-
-touch tmp/policy-settings.files
-
-(cd $RPM_BUILD_ROOT; ls .%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater) | clean_files > tmp/kickstart-configuration.files
-(cd $RPM_BUILD_ROOT; ls .%{_datadir}/ssu/kickstart/attachment/%{rpm_device} ) | clean_files >> tmp/kickstart-configuration.files
-
-(cd $RPM_BUILD_ROOT; ls .%{_libdir}/startup/preinit/*) | clean_files > tmp/preinit-plugin.files
-
-touch tmp/pulseaudio-settings.files
-
-(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt ) | clean_files > tmp/sailfish.files
-
-(cd $RPM_BUILD_ROOT; ls .%{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt ) | clean_files >> tmp/sailfish.files
-
+(cd $RPM_BUILD_ROOT; find .%{_datadir}/ssu/kickstart/ -type f) | clean_files > tmp/kickstart-configuration.files
 
 ################################################################
 %post sailfish
-
 %{_bindir}/add-oneshot dconf-update || :
 
 ################################################################
@@ -273,6 +274,7 @@ touch tmp/pulseaudio-settings.files
 %if 0%{!?provides_own_board_mapping:1}
 %{board_mapping_file}
 %endif
+%{_datadir}/qt5/keymaps/droid.qmap
 
 %files ssu-kickstarts
 %defattr(-,root,root,-)
@@ -282,19 +284,17 @@ touch tmp/pulseaudio-settings.files
 %defattr(-,root,root,-)
 %{_datadir}/package-groups/*.xml
 
-%files policy-settings
+%files policy-settings -f tmp/policy-settings.files
 %defattr(644,root,root,-)
 
-%files kickstart-configuration
+%files kickstart-configuration -f tmp/kickstart-configuration.files
 %defattr(644,root,root-)
-%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater
-%{_datadir}/ssu/kickstart/attachment/%{rpm_device}
 
 %files preinit-plugin
 %defattr(-,root,root,-)
 %{_libdir}/startup/preinit/*
 
-%files pulseaudio-settings
+%files pulseaudio-settings -f tmp/pulseaudio-settings.files
 %defattr(644,root,root,-)
  
 %files sailfish

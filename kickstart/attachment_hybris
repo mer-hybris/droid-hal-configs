@@ -2,5 +2,4 @@
 /boot/hybris-updater-script
 /boot/hybris-updater-unpack.sh
 /boot/update-binary
-/etc/sailfish-release
 
