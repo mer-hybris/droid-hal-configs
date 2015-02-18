@@ -94,6 +94,8 @@ Summary:    Kickstart configuration for %{rpm_device}
 Provides:   droid-config-kickstart-configuration
 Requires:   ssu-kickstart-configuration-jolla
 Provides:   droid-hal-kickstart-configuration
+# the %{name} contains ssu.ini file which is needed to build kickstarts
+Requires:   %{name} = %{version}-%{release}
 
 %description kickstart-configuration
 %{summary}.
