@@ -38,6 +38,7 @@ Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration-jolla
 BuildRequires: pkgconfig(android-headers)
 BuildRequires: repomd-pattern-builder
+BuildRequires: qt5-qttools-kmap2qmap
 Provides: bluez-configs
 Provides: bluetooth-rfkill-event-configs
 %description
@@ -136,7 +137,10 @@ Configure sailfish eg naturally landscape devices like mako
 ################################################################
 
 %prep
-#%%setup
+%if 0%{?_obs_build_project:1}
+# For OBS builds we need to have tarball extracted after tar_git packaging it
+%setup -q -n %{name}-%{version}
+%endif
 
 %install
 rm -rf %{buildroot}
