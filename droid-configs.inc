@@ -24,6 +24,9 @@
 %define rpm_vendor %vendor
 %endif
 
+%define board_mapping_dir %{_datadir}/ssu/board-mappings.d
+%define board_mapping_file %{board_mapping_dir}/05-%{rpm_vendor}-%{rpm_device}.ini
+
 Name:	    droid-config-%{rpm_device}
 Provides:   droid-config
 Summary:    Config packages for Droid HAL adaptations
@@ -181,6 +184,18 @@ mkdir -p %{buildroot}/usr/share/package-groups/
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/hybris -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 
+# SSU board mapping for hardware adaptation
+%if 0%{!?provides_own_board_mapping:1}
+mkdir -p $RPM_BUILD_ROOT/%{board_mapping_dir}
+sed -e 's|%DEVICE%|%{rpm_device}|g' \
+    -e 's|%VENDOR%|%{rpm_vendor}|g' \
+    -e 's|%OTHERDEVICE%|%{otherdevice}|g' \
+    -e "s|%DEVICE_PRETTY%|%{device_pretty}|g" \
+    -e "s|%VENDOR_PRETTY%|%{vendor_pretty}|g" \
+    -e "s|%ARCH%|%{_target_cpu}|g" \
+    droid-configs-device/ssu/board-mappings.d/05-sfe.ini.in >$RPM_BUILD_ROOT/%{board_mapping_file}
+%endif
+
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}
 sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_common}/kickstart/pack_package-droid-updater > $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater || true
@@ -248,6 +263,9 @@ touch tmp/pulseaudio-settings.files
 ################################################################
 %files -f tmp/droid-config.files
 %defattr(-,root,root,-)
+%if 0%{!?provides_own_board_mapping:1}
+%{board_mapping_file}
+%endif
 
 %files ssu-kickstarts
 %defattr(-,root,root,-)
