@@ -198,8 +198,11 @@ sed -e 's|%DEVICE%|%{rpm_device}|g' \
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}
-sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_common}/kickstart/pack_package-droid-updater > $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater || true
-sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_path}/kickstart/pack_package-droid-updater > $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater || true
+DEST_UPDATER=$RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}/package-droid-updater
+sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_common}/kickstart/pack_package-droid-updater > $DEST_UPDATER || true
+if [ -f %{dcd_path}/kickstart/pack_package-droid-updater ]; then
+  sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_path}/kickstart/pack_package-droid-updater > $DEST_UPDATER || true
+fi
 
 # and attachments (override if there is one)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment
