@@ -187,6 +187,7 @@ sed --in-place '/ohm/d' tmp/droid-config.files
 echo "%defattr(-,root,root,-)" > tmp/pulseaudio-settings.files
 grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
 sed --in-place '/pulse/d' tmp/droid-config.files
+sed --in-place '/preinit/d' tmp/droid-config.files
 
 # Now the majority of the sparse tree is made we can handle configs
 # which need some kind of substitution or generating
