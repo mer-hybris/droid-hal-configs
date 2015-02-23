@@ -1,6 +1,5 @@
 SUBSYSTEM=="graphics", SYMLINK+="$env{SUBSYSTEM}/%k"
 SUBSYSTEM=="block", SYMLINK+="$env{SUBSYSTEM}/%k"
-SUBSYSTEM=="drm", SYMLINK+="dri/%k"
 SUBSYSTEM=="oncrpc", SYMLINK+="$env{SUBSYSTEM}/%k"
 SUBSYSTEM=="adsp", SYMLINK+="$env{SUBSYSTEM}/%k"
 SUBSYSTEM=="msm_camera", SYMLINK+="$env{SUBSYSTEM}/%k"
