@@ -168,7 +168,7 @@ delete_files() {
   if [ -e delete_file.list ]; then
     egrep -v '^#' delete_file.list | (
       while read file; do
-        rm -f $RPM_BUILD_ROOT/$file
+	rm $RPM_BUILD_ROOT/$file
 	grep -vE "$file" $files > tmp/$$.files
 	mv tmp/$$.files $files
       done)
