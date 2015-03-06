@@ -4,7 +4,7 @@ Wants=systemd-udev-settle.service
 After=local-fs.target systemd-udev-settle.service systemd-tmpfiles-setup.service
 Before=basic.target network.target bluetooth.service ofono.service sensord.service
 DefaultDependencies=no
-Conflicts=shutdown.target actdead.target
+Conflicts=shutdown.target
 # Lets not do Requires= here as that means that this service will restart which leads automatically
 # to broken state as android init can be only started once per boot. If something goes wrong
 # our best hope is that android init doesn't notice that and that the crashing party fixes itself :)
@@ -21,4 +21,4 @@ StartLimitInterval=60
 StartLimitBurst=2
 
 [Install]
-WantedBy=basic.target
+WantedBy=graphical.target
