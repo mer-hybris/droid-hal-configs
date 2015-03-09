@@ -1,6 +1,5 @@
 [Unit]
 Description=Load and save battery aging data
-After=droid-hal-init.service
 
 [Service]
 Type=oneshot

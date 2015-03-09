@@ -2,11 +2,11 @@
 Description=droid-late-start
 After=droid-hal-init.service
 Before=network.target start-user-session@USER.service bluetooth.service ofono.service sensord.service
-Conflicts=shutdown.target actdead.target
+Conflicts=shutdown.target
 
 [Service]
 ExecStart=/usr/bin/setprop droid.late_start trigger_late_start
 
 [Install]
-WantedBy=basic.target
+WantedBy=graphical.target
 
