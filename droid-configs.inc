@@ -138,6 +138,22 @@ Configure sailfish eg naturally landscape devices like mako
 
 ################################################################
 
+%if 0%{?out_of_image_files:1}
+
+%package out-of-image-files
+Group:	System
+BuildArch: noarch
+Summary: Files that are used for flashing and are not needed on device.
+
+%description out-of-image-files
+Contains files that are used for flashing but are not needed inside image, e.g.,
+flashing configurations or flashing scripts.
+
+%endif
+
+################################################################
+
+
 %prep
 %if 0%{?_obs_build_project:1}
 # For OBS builds we need to have tarball extracted after tar_git packaging it
@@ -150,6 +166,7 @@ mkdir -p %{buildroot}
 
 # Amalgamate configs files from device-specific and all- trees
 # Retain permissions:
+rm -rf tmp/
 mkdir -p tmp/
 echo "%defattr(-,root,root,-)" > tmp/droid-config.files
 
@@ -165,10 +182,12 @@ copy_files_from() {
 
 delete_files() {
   files=$1
-  if [ -e delete_file.list ]; then
-    egrep -v '^#' delete_file.list | (
+  deletelist=$2
+  dorm=$3
+  if [ -e $deletelist ]; then
+    egrep -v '^#' $deletelist | (
       while read file; do
-	rm $RPM_BUILD_ROOT/$file
+	[ "x$dorm" == "x1" ] && rm $RPM_BUILD_ROOT/$file
 	grep -vE "$file" $files > tmp/$$.files
 	mv tmp/$$.files $files
       done)
@@ -178,7 +197,7 @@ delete_files() {
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
-delete_files tmp/droid-config.files
+delete_files tmp/droid-config.files delete_file.list 1
 copy_files_from %{dcd_path}/sparse
 
 # We want to keep some files in separate subpackages.
@@ -190,6 +209,13 @@ echo "%defattr(-,root,root,-)" > tmp/pulseaudio-settings.files
 grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
 sed --in-place '/pulse/d' tmp/droid-config.files
 sed --in-place '/preinit/d' tmp/droid-config.files
+
+%if 0%{?out_of_image_files:1}
+if [ -e out-of-image-files.files ]; then
+  delete_files tmp/droid-config.files out-of-image-files.files 0
+  cp out-of-image-files.files tmp/out-of-image-files.files
+fi
+%endif
 
 # Now the majority of the sparse tree is made we can handle configs
 # which need some kind of substitution or generating
@@ -304,3 +330,8 @@ clean_files() { sed 's_^./_/_'; }
 %defattr(-,root,root,-)
 %{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt
 %{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt
+
+%if 0%{?out_of_image_files:1}
+%files out-of-image-files -f tmp/out-of-image-files.files
+%endif
+
