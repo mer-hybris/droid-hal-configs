@@ -150,19 +150,53 @@ if on_device; then
         fi
 
         FILENAME=$2
+
+        GZIP=$(file $FILENAME | grep "gzip compressed data" &> /dev/null; echo $?)
+        GZIPTMPFILE=$(mktemp)
+
+        # In case the file is compressed we need to uncompress it
+        if [[ "x$GZIP" == "x0" ]]; then
+                echo "Uncompressing '$FILENAME' to '$GZIPTMPFILE'.."
+                gunzip -c $FILENAME > $GZIPTMPFILE
+                GZ_RETVAL=$(echo $?)
+                if [[ "x$GZ_RETVAL" != "x0" ]]; then
+                        echo "Uncompress failed.."
+                        rm -f $GZIPTMPFILE
+                        exit 1
+                fi
+                FILENAME=$GZIPTMPFILE
+        fi
+
+        # Sparse files need to be unsparsed before flashing..
         SPARSE=$(hexdump -e '"%02x"' -n 4 $FILENAME)
         if [[ "$SPARSE" == "ed26ff3a" ]]; then
                 if which simg2img &> /dev/null; then
+                        echo "Unsparsing '$FILENAME' to '$FILENAME.tmp'.."
                         simg2img "$FILENAME" "$FILENAME.tmp"
+                        SP_RETVAL=$(echo $?)
+                        # NOTE: simg2img returns 0 when out of disk space thus this check does not
+                        # work for all cases.
+                        if [[ "x$SP_RETVAL" != "x0" ]]; then
+                                echo "Unsparsing failed.."
+                                rm -f $FILENAME.tmp $GZIPTMPFILE
+                                exit 1
+                        fi
                         FILENAME="$FILENAME.tmp"
                 else
+                        rm -f $FILENAME $GZIPTMPFILE
                         echo "simg2img binary missing unable to continue flashing."
                         exit 1
                 fi
         fi
+
         dd if=$FILENAME bs=4096 of=$DEVDIR/$DEVICE
+
         if [[ "$SPARSE" == "ed26ff3a" ]]; then
-                rm $FILENAME
+                rm -f $FILENAME
+        fi
+
+        if [[ "x$GZIP" == "x0" ]]; then
+                rm -f $GZIPTMPFILE
         fi
 else
         echo Not running on device, skipping flashing.
