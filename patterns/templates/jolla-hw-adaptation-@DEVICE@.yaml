@@ -14,6 +14,8 @@ Requires:
 - droid-config-@DEVICE@-preinit-plugin
 - droid-hal-version-@DEVICE@
 
+- pulseaudio-modules-droid
+
 # These need to be per-device due to differing backends (fbdev, eglfs, hwc, ..?)
 - qt5-qtwayland-wayland_egl
 - qt5-qpa-hwcomposer-plugin
