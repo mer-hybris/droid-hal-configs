@@ -1,5 +1,7 @@
 # This file should be %%included into a device specific spec file
 # where macros are defined:
+#
+# Device information:
 # device: should be the CM codename or the AOSP TARGET_PRODUCT
 # vendor: determine the droid-side directory used for ./device/<vendor>/<device>
 # device_pretty: User-visible model name of the device
@@ -21,6 +23,19 @@
 #  Jolla Tablet: 1.5
 #  Nexus 5:      2.0
 #  Nexus 4:      pixel_ratio=1.3 (icon resolution then drops to 1.0)
+
+# IMPORTANT if you want to comment out any macros in your .spec, delete the %
+# sign, otherwise they will remain defined! E.g.:
+#define some_macro "I'll not be defined because I don't have % in front"
+
+# Overwriting other configs:
+# If your droid-config-$DEVICE needs to provide one or more device-specific
+# configuration files, do the following:
+# * find the package of those generic configs (e.g. rpm -qf /etc/ofono/ril_subscription.conf)
+# * copy ALL files, e.g.:
+#   cd $ANDROID_ROOT/hybris/droid-configs/sparse/; rpm2cpio .../ofono-configs-mer...rpm | cpio -idv
+# * make needed modifications for your device
+# * add "Provides: PACKAGE" to your droid-config-$DEVICE.spec (e.g. Provides: ofono-configs)
 
 
 # dcd_path is the base when run from hadk

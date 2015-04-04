@@ -1,0 +1,12 @@
+# These and other macros are documented in ../droid-configs-device/droid-configs.inc
+
+%define device @DEVICE@
+%define vendor @VENDOR@
+
+%define vendor_pretty @VENDOR_PRETTY@
+%define device_pretty @DEVICE_PRETTY@
+
+%define dcd_path ./
+
+%include droid-configs-device/droid-configs.inc
+
