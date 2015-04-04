@@ -21,13 +21,14 @@ Requires:
 - qt5-qpa-hwcomposer-plugin
 - qtscenegraph-adaptation
 
+# GStreamer v0.10 multimedia support is being deprecated
 #- gstreamer0.10-droidcamsrc
 #- gstreamer0.10-omx
 #- gstreamer0.10-droideglsink
 #- nemo-qtmultimedia-plugins-gstvideotexturebackend
 
-# This will do good after sensors start to work:
-#- mce-plugin-libhybris
+# This is needed for notification LEDs
+- mce-plugin-libhybris
 
 ## USB mode controller
 # Enables mode selector upon plugging USB cable:
