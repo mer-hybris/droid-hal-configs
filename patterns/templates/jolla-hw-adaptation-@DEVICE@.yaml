@@ -8,7 +8,7 @@ Requires:
 - droid-hal-@DEVICE@
 - droid-hal-@DEVICE@-img-boot
 - droid-hal-@DEVICE@-kernel-modules
-- droid-config-@DEVICE@-sailfish-config
+- droid-config-@DEVICE@-sailfish
 - droid-config-@DEVICE@-pulseaudio-settings
 - droid-config-@DEVICE@-policy-settings
 - droid-config-@DEVICE@-preinit-plugin
