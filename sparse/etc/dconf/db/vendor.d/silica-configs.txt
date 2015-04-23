@@ -1,0 +1,3 @@
+[desktop/sailfish/silica]
+theme_pixel_ratio=@ICON_RES@
+
