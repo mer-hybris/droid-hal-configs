@@ -11,6 +11,17 @@
 
 # Device capabilities:
 # have_modem: set this if your device ships a modem
+# pixel_ratio: UI scaling factor, choose from 1.0, 1.5, 2.0. Any other value will
+# default the icon pack to 1.0 resolution (it is a bug)!
+# Read more on ways to do-it-together: https://bugs.nemomobile.org/show_bug.cgi?id=814
+# WARNING: pixel_ratio is experimental, and not yet ready for proper UI scalability
+# tests! Please do not test/port your apps to other form factors for the time being.
+#  Ratio examples:
+#  Jolla1:       1.0
+#  Jolla Tablet: 1.5
+#  Nexus 5:      2.0
+#  Nexus 4:      pixel_ratio=1.3 (icon resolution then drops to 1.0)
+
 
 # dcd_path is the base when run from hadk
 # dcd_common is the common stuff (!) and dcd_sparse is the common sparse
@@ -131,6 +142,7 @@ Provides:   pulseaudio-settings
 ################################################################
 %package sailfish
 Provides: droid-config-sailfish
+Provides: theme-configs
 Group:	System
 BuildArch:	noarch
 Requires: %{name} = %{version}-%{release}
@@ -262,6 +274,21 @@ mkdir -p %{buildroot}/usr/share/package-groups/
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/common -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/hybris -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+
+%if 0%{!?pixel_ratio:1}
+%define pixel_ratio 1.0
+%endif
+
+sed --in-place 's|@PIXEL_RATIO@|%{pixel_ratio}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
+
+# icon_res can be only from a predefined set. Otherwise falls back to 1.0 (see NEMO#814 bug)
+%if "%{pixel_ratio}" != "1.0" && "%{pixel_ratio}" != "1.5" && "%{pixel_ratio}" != "2.0"
+%define icon_res 1.0
+%else
+%define icon_res %{pixel_ratio}
+%endif
+
+sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/usr/share/package-groups/*
 
 # SSU board mapping for hardware adaptation
 %if 0%{!?provides_own_board_mapping:1}
