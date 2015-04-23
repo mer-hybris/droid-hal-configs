@@ -244,6 +244,8 @@ echo "%defattr(-,root,root,-)" > tmp/pulseaudio-settings.files
 grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
 sed --in-place '/pulse/d' tmp/droid-config.files
 sed --in-place '/preinit/d' tmp/droid-config.files
+grep "/dconf/db/" tmp/droid-config.files > tmp/sailfish-settings.files
+sed --in-place '/\/dconf\/db\//d' tmp/droid-config.files
 
 %if 0%{?out_of_image_files:1}
 if [ -e out-of-image-files.files ]; then
@@ -361,10 +363,8 @@ clean_files() { sed 's_^./_/_'; }
 %files pulseaudio-settings -f tmp/pulseaudio-settings.files
 %defattr(644,root,root,-)
  
-%files sailfish
+%files sailfish -f tmp/sailfish-settings.files
 %defattr(-,root,root,-)
-%{_sysconfdir}/dconf/db/vendor.d/screen-rotation.txt
-%{_sysconfdir}/dconf/db/vendor.d/locks/screen-rotation.txt
 
 %if 0%{?out_of_image_files:1}
 %files out-of-image-files -f tmp/out-of-image-files.files
