@@ -59,5 +59,8 @@ Requires:
 # from update13, this is needed explicitly
 - bluez-configs-sailfish
 
+# enable device lock and allow to select untrusted software
+- jolla-devicelock-plugin-encsfa
+
 Summary: Jolla HW Adaptation @DEVICE@
 
