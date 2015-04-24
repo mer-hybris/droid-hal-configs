@@ -56,5 +56,8 @@ Requires:
 # brought up (useful during development, available since update10)
 - jolla-rnd-device
 
+# from update13, this is needed explicitly
+- bluez-configs-sailfish
+
 Summary: Jolla HW Adaptation @DEVICE@
 
