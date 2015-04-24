@@ -6,6 +6,11 @@
 # vendor_pretty: User-visible manufacturer name of the device
 # rpm_device: device name used rpm-side (eg in configs) : defaults to device
 # rpm_vendor: vendor name used rpm-side (eg in configs) : defaults to vendor
+# ofono_enable_plugins: any additional ofono plugins that you want explicitly enabled
+# ofono_disable_plugins: any ofono plugins that you want explicitly disabled
+
+# Device capabilities:
+# have_modem: set this if your device ships a modem
 
 # dcd_path is the base when run from hadk
 # dcd_common is the common stuff (!) and dcd_sparse is the common sparse
@@ -199,6 +204,36 @@ delete_files() {
 copy_files_from %{dcd_path}/%{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
 copy_files_from %{dcd_path}/sparse
+
+OFONONOPLUGIN=$RPM_BUILD_ROOT/var/lib/environment/ofono/noplugin.conf
+
+%if 0%{?have_modem:1}
+# DO NOT MODIFY THE "OFONO_MODEM_DEFAULT_PLUGINS" SET! If you do, you will break
+# modems on other devices! If you need to introduce or remove a plugin,
+# use ofono_enable/disable_plugins macro in your device(s) .spec file.
+OFONO_MODEM_DEFAULT_PLUGINS=ril,rildev,rilmodem,sms_history,push_forwarder,\
+push_notification,smart_messaging,mnclength,provision,nettime,connman,atmodem
+
+echo $OFONO_MODEM_DEFAULT_PLUGINS | sed s/,/\\n/g | (
+  while read line; do
+    sed -i '/,'$line'\\/d' $OFONONOPLUGIN
+  done)
+%endif
+
+%if 0%{?ofono_enable_plugins:1}
+echo %{ofono_enable_plugins} | sed s/,/\\n/g | (
+  while read line; do
+    sed -i '/,'$line'\\/d' $OFONONOPLUGIN
+  done)
+%endif
+
+%if 0%{?ofono_disable_plugins:1}
+echo %{ofono_disable_plugins} | sed s/,/\\n/g | (
+  while read line; do
+    echo ','$line'\' >> $OFONONOPLUGIN
+  done)
+%endif
+
 
 # We want to keep some files in separate subpackages.
 # NOTE: some files might get to wrong place with this because of string assumption.
