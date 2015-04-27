@@ -1,0 +1,7 @@
+Description: Pattern with UI related packages for @DEVICE@ configurations
+Name: jolla-ui-configuration-@DEVICE@
+Requires:
+- jolla-ambient-z@ICON_RES@
+- ambient-icons-closed-z@ICON_RES@
+Summary: Jolla UI Configuration @DEVICE@
+

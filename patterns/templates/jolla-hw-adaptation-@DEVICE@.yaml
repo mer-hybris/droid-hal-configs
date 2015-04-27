@@ -3,6 +3,7 @@ Name: jolla-hw-adaptation-@DEVICE@
 Requires:
 - pattern:jolla-hw-adaptation-hybris
 - pattern:jolla-hw-adaptation-hybris-droid-vibrator
+- pattern:jolla-ui-configuration-@DEVICE@
 
 - droid-hal-@DEVICE@
 - droid-hal-@DEVICE@-img-boot
