@@ -8,23 +8,34 @@ Requires:
 - droid-hal-@DEVICE@
 - droid-hal-@DEVICE@-img-boot
 - droid-hal-@DEVICE@-kernel-modules
-- droid-config-@DEVICE@-sailfish-config
+- droid-config-@DEVICE@-sailfish
 - droid-config-@DEVICE@-pulseaudio-settings
 - droid-config-@DEVICE@-policy-settings
 - droid-config-@DEVICE@-preinit-plugin
+- droid-hal-version-@DEVICE@
+
+- pulseaudio-modules-droid
 
 # These need to be per-device due to differing backends (fbdev, eglfs, hwc, ..?)
 - qt5-qtwayland-wayland_egl
 - qt5-qpa-hwcomposer-plugin
 - qtscenegraph-adaptation
 
+# GStreamer v0.10 multimedia support is being deprecated
 #- gstreamer0.10-droidcamsrc
 #- gstreamer0.10-omx
 #- gstreamer0.10-droideglsink
 #- nemo-qtmultimedia-plugins-gstvideotexturebackend
 
-# This will do good after sensors start to work:
-#- mce-plugin-libhybris
+# Add GStreamer v1.0 as standard
+- gstreamer1.0
+- gstreamer1.0-plugins-good
+- gstreamer1.0-plugins-base
+- gstreamer1.0-plugins-bad
+- nemo-gstreamer1.0-interfaces
+
+# This is needed for notification LEDs
+- mce-plugin-libhybris
 
 ## USB mode controller
 # Enables mode selector upon plugging USB cable:
@@ -44,6 +55,14 @@ Requires:
 # jolla-rnd-device will enable usb-moded even when UI is not yet
 # brought up (useful during development, available since update10)
 - jolla-rnd-device
+
+# from update13, this is needed explicitly
+- bluez-configs-sailfish
+# hammerhead, grouper, and maguro use this in scripts, so include for all
+- rfkill
+
+# enable device lock and allow to select untrusted software
+- jolla-devicelock-plugin-encsfa
 
 Summary: Jolla HW Adaptation @DEVICE@
 
