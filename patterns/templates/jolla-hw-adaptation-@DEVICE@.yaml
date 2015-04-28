@@ -58,6 +58,8 @@ Requires:
 
 # from update13, this is needed explicitly
 - bluez-configs-sailfish
+# hammerhead, grouper, and maguro use this in scripts, so include for all
+- rfkill
 
 # enable device lock and allow to select untrusted software
 - jolla-devicelock-plugin-encsfa
