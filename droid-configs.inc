@@ -49,10 +49,10 @@
 
 # Set defaults if not defined already:
 %if 0%{!?rpm_device:1}
-%define rpm_device %device
+%define rpm_device %{device}
 %endif
 %if 0%{!?rpm_vendor:1}
-%define rpm_vendor %vendor
+%define rpm_vendor %{vendor}
 %endif
 
 %define board_mapping_dir %{_datadir}/ssu/board-mappings.d
