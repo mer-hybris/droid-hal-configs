@@ -226,11 +226,26 @@ delete_files() {
   fi
 }
 
+config_files() {
+  files=$1
+  configlist=$2
+  if [ -e $configlist ]; then
+    egrep -v '^#' $configlist | (
+      while read file; do
+        escape=$(echo "$file" | sed 's,/,\\\/,g')
+        sed -e "s/$escape/%config $escape/g" $files > tmp/$$.files
+        mv tmp/$$.files $files
+      done)
+  fi
+}
+
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
 copy_files_from %{dcd_path}/sparse
+# This add %config to %files section for files from rpm-config-files.files
+config_files tmp/droid-config.files rpm-config-files.files
 
 OFONONOPLUGIN=$RPM_BUILD_ROOT/var/lib/environment/ofono/noplugin.conf
 
