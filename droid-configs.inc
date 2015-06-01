@@ -108,7 +108,7 @@ Requires:   ohm-plugin-ruleengine
 Requires:   ohm-plugin-profile
 Requires:   pulseaudio-modules-nemo-common >= 4.0.11
 Requires:   pulseaudio-policy-enforcement >= 4.0.8
-Requires:   policy-settings-common >= 0.2.0
+Requires:   policy-settings-common >= 0.2.5
 Obsoletes:  ohm-config <= 1.1.15
 # ohm-configs-default should not be installed ever, thus no version
 # specification defined here.
