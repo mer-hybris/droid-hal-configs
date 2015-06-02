@@ -1,5 +1,5 @@
-Description: Pattern with packages for all Sailfish for Everyone devices configurations
-Name: jolla-configuration-sfe
+Description: Pattern with packages for common debugging tools used by porters
+Name: sailfish-porter-tools
 Requires:
 - jolla-developer-mode
 - sailfishsilica-qt5-demos
@@ -11,5 +11,5 @@ Requires:
 - vim-enhanced
 - zypper
 
-Summary: Jolla Configuration SFE
+Summary: Sailfish OS Porter Tools
 
