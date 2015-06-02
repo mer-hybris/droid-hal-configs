@@ -1,9 +1,6 @@
 Description: Pattern with packages for all Sailfish for Everyone devices configurations
 Name: jolla-configuration-sfe
 Requires:
-- pattern:jolla-sailfish-applications
-- pattern:jolla-ui-wayland
-
 - jolla-developer-mode
 - sailfishsilica-qt5-demos
 

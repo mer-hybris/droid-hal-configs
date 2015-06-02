@@ -3,6 +3,8 @@ Name: jolla-configuration-@DEVICE@
 Requires:
 - pattern:jolla-hw-adaptation-@DEVICE@
 - pattern:jolla-configuration-sfe
+- pattern:jolla-sailfish-applications
+- pattern:jolla-ui-wayland
 
 Summary: Jolla Configuration @DEVICE@
 
