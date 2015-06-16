@@ -108,7 +108,7 @@ Requires:   ohm-plugin-ruleengine
 Requires:   ohm-plugin-profile
 Requires:   pulseaudio-modules-nemo-common >= 4.0.11
 Requires:   pulseaudio-policy-enforcement >= 4.0.8
-Requires:   policy-settings-common >= 0.2.5
+Requires:   policy-settings-common >= 0.2.7
 Obsoletes:  ohm-config <= 1.1.15
 # ohm-configs-default should not be installed ever, thus no version
 # specification defined here.
@@ -148,7 +148,7 @@ Requires:   pulseaudio-modules-nemo-parameters >= 4.0.11
 Requires:   pulseaudio-modules-nemo-stream-restore >= 4.0.11
 Requires:   pulseaudio-modules-nemo-mainvolume >= 4.0.11
 Requires:   pulseaudio-modules-droid >= 4.0.6
-Requires:   pulseaudio-policy-enforcement >= 4.0.8
+Requires:   pulseaudio-policy-enforcement >= 6.0.20
 Provides:   pulseaudio-settings
 
 %description pulseaudio-settings
