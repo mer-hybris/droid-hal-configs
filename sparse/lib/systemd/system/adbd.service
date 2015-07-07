@@ -3,6 +3,4 @@ Description=Android Debug Bridge Daemon
 
 [Service]
 Environment=PATH=/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
-ExecStartPre=/usr/sbin/adbd-functionfs.sh
 ExecStart=/sbin/adbd
-ExecStopPost=/bin/sleep 1 ; /bin/umount adb
