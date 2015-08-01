@@ -35,6 +35,12 @@
 
 check_bogus=0
 bootreason_str="Normal boot"
+actdead_bootparam=""
+
+if [ -f /var/lib/environment/actdead/bootparam.conf ]; then
+    source /var/lib/environment/actdead/bootparam.conf
+    actdead_bootparam=$ACTDEAD_PARAMETER_STRING
+fi
 
 if grep -q 'jolla.test_mode=USER' /proc/cmdline; then
     # Device is in QA test mode forcing USER
@@ -45,6 +51,12 @@ elif grep -q 'jolla.test_mode=ACT_DEAD' /proc/cmdline; then
 elif grep -q 'androidboot.mode=charger' /proc/cmdline; then
     BOOTSTATE="ACT_DEAD"
     bootreason_str="androidboot.mode=charger"
+    check_bogus=1
+elif [ ! -z "$actdead_bootparam" ] &&
+     grep -q $actdead_bootparam /proc/cmdline; then
+    # Device specific boot parameter
+    BOOTSTATE="ACT_DEAD"
+    bootreason_str=$actdead_bootparam
     check_bogus=1
 else
     BOOTSTATE="USER"
