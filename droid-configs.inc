@@ -390,6 +390,7 @@ clean_files() { sed 's_^./_/_'; }
 ################################################################
 %post sailfish
 %{_bindir}/add-oneshot dconf-update || :
+%{_bindir}/add-oneshot usermod -aG media_rw nemo || :
 
 ################################################################
 %files -f tmp/droid-config.files
