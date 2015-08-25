@@ -144,8 +144,18 @@ if on_device; then
         # If we are flashing boot partition and we are running multirom setup
         # which can be detected by having data_subdir= in th ecmdline skip boot
         # partition flashing as it is not needed.
-        if test $1 = boot && grep data_subdir= /proc/cmdline &> /dev/null; then
+        mrom_check=$(grep data_subdir= /proc/cmdline)
+        if test $1 = boot && [ ! -z "$mrom_check" ]; then
           echo "Skipping flashing of boot partition as multirom setup detected."
+          echo "Update multirom boot image, ramdisk and kernel"
+          pref_path="/android"
+          data_path=$(/usr/bin/droid/get_partition.sh /data)
+          [[ -d $pref_path/media/0/multirom ]] || mkdir -p $pref_path && mount $data_path $pref_path
+          mrom_path=$(echo $mrom_check | sed 's/.*data_subdir=\(.*\)\/data/\1/')
+          cp /boot/kernel-* $pref_path/$mrom_path/zImage
+          cp /boot/boot-initramfs.gz $pref_path/$mrom_path/initrd.img
+          cp /boot/hybris-boot.img $pref_path/$mrom_path/boot.img
+          echo "Multirom update done"
           exit 0
         fi
 
