@@ -1,0 +1,8 @@
+Description: Haptics/vibra capability. Defaults to hybris droid vibrator. Can be overridden per-device.
+Name: sailfish-ha-vibrator
+Requires:
+- ngfd-plugin-droid-vibrator
+- qt5-feedback-haptics-droid-vibrator
+
+Summary: Haptics/vibra Capability
+

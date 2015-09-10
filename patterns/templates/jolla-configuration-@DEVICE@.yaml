@@ -1,8 +1,9 @@
 Description: Pattern with packages for @DEVICE@ configurations
 Name: jolla-configuration-@DEVICE@
+Summary: Jolla Configuration @DEVICE@
 Requires:
 - pattern:jolla-hw-adaptation-@DEVICE@
-- pattern:jolla-configuration-sfe
-
-Summary: Jolla Configuration @DEVICE@
-
+- pattern:jolla-sailfish-applications
+- pattern:jolla-ui-wayland
+# Lines below this line were automatically generated according to the macros
+# set per-device (if any)

@@ -300,10 +300,35 @@ fi
 # which need some kind of substitution or generating
 
 # patterns
+mkdir -p tmp/patterns
+
+cp -f %{dcd_common}/patterns/common/* \
+      %{dcd_common}/patterns/hybris/* \
+      %{dcd_path}/patterns/* tmp/patterns
+
+CAPABILITIES=
+
+%if 0%{?have_vibrator:1}
+echo "- pattern:sailfish-ha-vibrator"
+CAPABILITIES=sailfish-ha-vibrator,$CAPABILITIES
+%endif
+
+%if 0%{?have_porter_tools:1}
+CAPABILITIES=sailfish-porter-tools,$CAPABILITIES
+%endif
+
+# enable capabilities in the template file
+echo $CAPABILITIES | sed s/,/\\n/g | (
+  while read line; do
+    if [ -n "$line" ]; then
+      echo "- pattern:$line" >> tmp/patterns/jolla-configuration-%{rpm_device}.yaml
+    fi
+  done)
+
 mkdir -p %{buildroot}/usr/share/package-groups/
-/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/common -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
-/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/hybris -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
-/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+/usr/bin/repomd-pattern-builder.py --patternxml -p tmp/patterns -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+
+rm -rf tmp/patterns
 
 %if 0%{!?pixel_ratio:1}
 %define pixel_ratio 1.0
