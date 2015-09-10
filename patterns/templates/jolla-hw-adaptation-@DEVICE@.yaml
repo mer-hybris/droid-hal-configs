@@ -52,10 +52,6 @@ Requires:
 # android diag mode only usable for certain android tools
 - usb-moded-diag-mode-android
 
-# jolla-rnd-device will enable usb-moded even when UI is not yet
-# brought up (useful during development, available since update10)
-- jolla-rnd-device
-
 # from update13, this is needed explicitly
 - bluez-configs-sailfish
 # hammerhead, grouper, and maguro use this in scripts, so include for all
