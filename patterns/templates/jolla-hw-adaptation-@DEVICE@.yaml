@@ -64,5 +64,8 @@ Requires:
 # enable device lock and allow to select untrusted software
 - jolla-devicelock-plugin-encsfa
 
+# Settings app needs this since update15
+- jolla-settings-layout
+
 Summary: Jolla HW Adaptation @DEVICE@
 
