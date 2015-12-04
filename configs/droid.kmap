@@ -9,4 +9,10 @@ keycode 168 = AudioRewind
 keycode 200 = MediaPlay
 keycode 201 = MediaPause
 keycode 208 = AudioForward
+# Depending on the device headset can give either
+# KEY_MEDIA or BTN_MISC so lets map both to ToggleCallHangup
+# KEY_MEDIA
+keycode 226 = ToggleCallHangup
+# BTN_MISC
 keycode 256 = ToggleCallHangup
+
