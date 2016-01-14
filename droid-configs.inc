@@ -244,6 +244,7 @@ config_files() {
 copy_files_from %{dcd_path}/%{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
 copy_files_from %{dcd_path}/sparse
+delete_files tmp/droid-config.files delete_file_%{rpm_device}.list 1
 # This add %config to %files section for files from rpm-config-files.files
 config_files tmp/droid-config.files rpm-config-files.files
 
