@@ -239,6 +239,16 @@ config_files() {
   fi
 }
 
+create_variant_ks() {
+  variants=$1
+  if [ -e $variants ]; then
+    egrep -v '^#' $variants | (
+      while read line; do
+        %gen_ks "$line"
+      done)
+  fi
+}
+
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
@@ -368,9 +378,16 @@ fi
 
 # build rnd kickstarts on devel level, release kickstarts on all other levels
 %if 0%{?qa_stage_devel:1}
-KS_LEVELS=true %gen_ks %{rpm_device}
+  KS_LEVELS=true
 %else
-KS_LEVELS=false %gen_ks %{rpm_device}
+  KS_LEVELS=false
+%endif
+
+# build variant ks files if name file exist
+%if 0%{?variant_name_list:1}
+  create_variant_ks variant_name.list
+%else
+  %gen_ks %{rpm_device}
 %endif
 
 # Preinit plugins
@@ -387,6 +404,7 @@ clean_files() { sed 's_^./_/_'; }
 (cd $RPM_BUILD_ROOT; ls .%{_datadir}/kickstarts/*.ks) | clean_files > tmp/ssu-kickstarts.files
 
 (cd $RPM_BUILD_ROOT; find .%{_datadir}/ssu/kickstart/ -type f) | clean_files > tmp/kickstart-configuration.files
+(cd $RPM_BUILD_ROOT; find .%{_datadir}/ssu/kickstart/ -type l) | clean_files >> tmp/kickstart-configuration.files
 
 ################################################################
 %post sailfish
