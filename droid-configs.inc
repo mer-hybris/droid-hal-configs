@@ -245,6 +245,7 @@ create_variant_ks() {
     egrep -v '^#' $variants | (
       while read line; do
         %gen_ks "$line"
+        sed -i s/@VARIANT_NAME@/$line/g %{buildroot}/%{_datadir}/kickstarts/*$line*.ks
       done)
   fi
 }
