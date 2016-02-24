@@ -239,17 +239,6 @@ config_files() {
   fi
 }
 
-create_variant_ks() {
-  variants=$1
-  if [ -e $variants ]; then
-    egrep -v '^#' $variants | (
-      while read line; do
-        %gen_ks "$line"
-        sed -i s/@VARIANT_NAME@/$line/g %{buildroot}/%{_datadir}/kickstarts/*$line*.ks
-      done)
-  fi
-}
-
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
@@ -386,7 +375,14 @@ fi
 
 # build variant ks files if name file exist
 %if 0%{?variant_name_list:1}
-  create_variant_ks variant_name.list
+  variants=variant_name.list
+  if [ -e $variants ]; then
+    egrep -v '^#' $variants | (
+      while read line; do
+        %gen_ks "$line"
+        sed -i s/@VARIANT_NAME@/$line/g %{buildroot}/%{_datadir}/kickstarts/*$line*.ks
+      done)
+  fi
 %else
   %gen_ks %{rpm_device}
 %endif
