@@ -1,3 +1,4 @@
 [desktop/sailfish/silica]
 theme_pixel_ratio=@PIXEL_RATIO@
+default_allowed_orientations=@ALLOWED_ORIENTATIONS@
 
