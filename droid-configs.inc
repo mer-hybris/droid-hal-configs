@@ -97,7 +97,7 @@ Provides:   package-groups
 Summary:    Policy settings for %{rpm_device} hw
 Provides:   droid-config-policy-settings
 Requires:   ohm >= 1.1.16
-Requires:   ohm-plugins-misc
+Requires:   ohm-plugins-misc >= 1.2.0
 Requires:   ohm-plugins-dbus
 Requires:   ohm-plugin-telephony
 Requires:   ohm-plugin-signaling
@@ -106,6 +106,7 @@ Requires:   ohm-plugin-accessories
 Requires:   ohm-plugin-resolver
 Requires:   ohm-plugin-ruleengine
 Requires:   ohm-plugin-profile
+Requires:   ohm-plugin-route
 Requires:   pulseaudio-modules-nemo-common >= 4.0.11
 Requires:   pulseaudio-policy-enforcement >= 4.0.8
 Requires:   policy-settings-common >= 0.2.7
