@@ -403,6 +403,18 @@ clean_files() { sed 's_^./_/_'; }
 (cd $RPM_BUILD_ROOT; find .%{_datadir}/ssu/kickstart/ -type f) | clean_files > tmp/kickstart-configuration.files
 (cd $RPM_BUILD_ROOT; find .%{_datadir}/ssu/kickstart/ -type l) | clean_files >> tmp/kickstart-configuration.files
 
+# Append extra_files to the end of droid-config.files.
+if [ -e extra-files.files ]; then
+  cat extra-files.files >> tmp/droid-config.files
+fi
+
+# In some cases we might need to create empty directories that are e.g. mount points
+if [ -e create.dirs ]; then
+  for A in $(cat create.dirs); do
+    mkdir -p $RPM_BUILD_ROOT/$A
+  done
+fi
+
 ################################################################
 %post sailfish
 %{_bindir}/add-oneshot dconf-update || :
