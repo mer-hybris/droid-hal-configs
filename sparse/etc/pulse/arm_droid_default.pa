@@ -26,6 +26,7 @@
 load-module module-droid-keepalive
 
 load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-parameters use_voice=false
+load-module module-meego-mainvolume virtual_stream=true
 
 ### Automatically restore the volume of streams
 load-module module-stream-restore-nemo restore_device=no restore_volume=yes restore_muted=no route_table=/etc/pulse/x-maemo-route.table fallback_table=/etc/pulse/x-maemo-stream-restore.table use_voice=false sink_volume_table=/etc/pulse/x-maemo-sink-volume.table
@@ -43,8 +44,6 @@ load-module module-droid-card rate=48000 mute_routing_before=24576 mute_routing_
 load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
 load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 load-module module-bluez4-discover sco_sink=sink.fake.sco sco_source=source.fake.sco
-
-load-module module-meego-mainvolume virtual_stream=true
 
 load-module module-policy-enforcement
 
