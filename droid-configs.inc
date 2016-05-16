@@ -417,6 +417,11 @@ if [ -e create.dirs ]; then
 fi
 
 ################################################################
+%post
+# Force an update of ssu repositories
+touch %{board_mapping_dir}/*
+
+################################################################
 %post sailfish
 %{_bindir}/add-oneshot dconf-update || :
 
