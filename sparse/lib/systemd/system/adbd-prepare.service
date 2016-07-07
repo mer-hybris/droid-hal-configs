@@ -9,7 +9,8 @@ Description=functionfs setup for adbd
 Type=notify
 RemainAfterExit=yes
 ExecStart=/usr/sbin/adbd-functionfs.sh
-ExecStop=/bin/umount adb
+ExecStopPost=/bin/umount adb
+ExecStopPost=/bin/umount adb
 
 [Install]
 WantedBy=graphical.target
