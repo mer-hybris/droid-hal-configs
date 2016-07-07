@@ -4,8 +4,6 @@
  
 [Unit]
 Description=functionfs setup for adbd
-Before=adbd.service
-PartOf=adbd.service
 
 [Service]
 Type=notify
