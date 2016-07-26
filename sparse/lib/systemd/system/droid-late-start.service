@@ -1,7 +1,7 @@
 [Unit]
 Description=droid-late-start
 After=droid-hal-init.service
-Before=network.target start-user-session@USER.service bluetooth.service ofono.service sensord.service
+Before=network.target start-user-session@USER.service bluetooth.service ofono.service sensorfwd.service
 Conflicts=shutdown.target
 
 [Service]
