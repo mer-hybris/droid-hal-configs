@@ -1,0 +1,11 @@
+[Unit]
+Description=Home directory mount
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/mount /dev/mapper/sailfish-home /home
+
+[Install]
+WantedBy=multi-user.target
