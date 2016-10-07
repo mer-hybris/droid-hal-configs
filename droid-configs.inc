@@ -72,6 +72,12 @@ BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
 Provides: bluez-configs
 Provides: bluetooth-rfkill-event-configs
+# The pc_suite usb mode (implies obex) can conflict with bluez5
+Conflicts: usb-moded-pc-suite-mode-android
+Obsoletes: usb-moded-pc-suite-mode-android
+# Config packages from usb-moded source with overlapping purposes
+Conflicts: usb-moded-mtp-mode-android-ffs
+Obsoletes: usb-moded-mtp-mode-android-ffs
 %description
 %{summary}.
 
