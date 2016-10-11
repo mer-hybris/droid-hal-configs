@@ -422,6 +422,11 @@ if [ -e create.dirs ]; then
   done
 fi
 
+# Delete files from droid-config.files which are packaged in main spec file
+if [ -e packaged-in-main-spec.files ]; then
+  delete_files tmp/droid-config.files packaged-in-main-spec.files 0
+fi
+
 ################################################################
 %post
 # Force an update of ssu repositories
