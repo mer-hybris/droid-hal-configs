@@ -70,7 +70,6 @@ BuildRequires: ssu-kickstart-configuration-jolla
 BuildRequires: pkgconfig(android-headers)
 BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
-Provides: bluez-configs
 Provides: bluetooth-rfkill-event-configs
 # The pc_suite usb mode (implies obex) can conflict with bluez5
 Conflicts: usb-moded-pc-suite-mode-android
