@@ -177,6 +177,16 @@ Configure sailfish eg naturally landscape devices like mako
 
 ################################################################
 
+%package flashing
+Provides: droid-config-flashing
+Group: System
+Summary: On device flashing files for %{rpm_device} hw
+
+%description flashing
+%{summary}.
+
+################################################################
+
 %if 0%{?out_of_image_files:1}
 
 %package out-of-image-files
@@ -191,7 +201,6 @@ flashing configurations or flashing scripts.
 %endif
 
 ################################################################
-
 
 %prep
 %if 0%{?_obs_build_project:1}
@@ -296,6 +305,8 @@ sed --in-place '/pulse/d' tmp/droid-config.files
 sed --in-place '/preinit/d' tmp/droid-config.files
 grep "/dconf/db/" tmp/droid-config.files > tmp/sailfish-settings.files
 sed --in-place '/\/dconf\/db\//d' tmp/droid-config.files
+grep -e "flash-partition" -e "platform-updates" tmp/droid-config.files > tmp/flashing.files
+sed --in-place -e '/flash-partition/d' -e '/platform-updates/d' tmp/droid-config.files
 
 %if 0%{?out_of_image_files:1}
 if [ -e out-of-image-files.files ]; then
@@ -470,6 +481,9 @@ touch %{board_mapping_dir}/*
 %defattr(644,root,root,-)
  
 %files sailfish -f tmp/sailfish-settings.files
+%defattr(-,root,root,-)
+
+%files flashing -f tmp/flashing.files
 %defattr(-,root,root,-)
 
 %if 0%{?out_of_image_files:1}
