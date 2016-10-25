@@ -12,6 +12,7 @@ Requires:
 - droid-config-@DEVICE@-pulseaudio-settings
 - droid-config-@DEVICE@-policy-settings
 - droid-config-@DEVICE@-preinit-plugin
+- droid-config-@DEVICE@-flashing
 - droid-hal-version-@DEVICE@
 
 - pulseaudio-modules-droid
