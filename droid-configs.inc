@@ -444,9 +444,9 @@ fi
 # Force an update of ssu repositories
 touch %{board_mapping_dir}/*
 
-+# To add additional post scripts, one can define those as part
-+# of additional_post_scripts macro.
-+%{?additional_post_scripts}
+# To add additional post scripts, one can define those as part
+# of additional_post_scripts macro.
+%{?additional_post_scripts}
 
 ################################################################
 %post sailfish
