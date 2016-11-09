@@ -3,5 +3,9 @@ Name: jolla-ui-configuration-@DEVICE@
 Requires:
 - jolla-ambient-z@ICON_RES@
 - ambient-icons-closed-z@ICON_RES@
-Summary: Jolla UI Configuration @DEVICE@
 
+# Introduced starting Sailfish OS 2.0.4.x:
+# 3rd party accounts like Twitter, VK, cloud services, etc
+- jolla-settings-accounts-extensions-3rd-party-all
+
+Summary: Jolla UI Configuration @DEVICE@
