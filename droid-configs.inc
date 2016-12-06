@@ -332,7 +332,7 @@ mkdir -p %{buildroot}/usr/share/package-groups/
 sed --in-place 's|@PIXEL_RATIO@|%{pixel_ratio}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 
 # icon_res can be only from a predefined set. Otherwise falls back to 1.0 (see NEMO#814 bug)
-%if "%{pixel_ratio}" != "1.0" && "%{pixel_ratio}" != "1.5" && "%{pixel_ratio}" != "2.0"
+%if "%{pixel_ratio}" != "1.0" && "%{pixel_ratio}" != "1.25" && "%{pixel_ratio}" != "1.5" && "%{pixel_ratio}" != "1.75" && "%{pixel_ratio}" != "2.0"
 %define icon_res 1.0
 %else
 %define icon_res %{pixel_ratio}
