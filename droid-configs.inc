@@ -13,6 +13,7 @@
 
 # Device capabilities:
 # have_modem: set this if your device ships a modem
+# remove_bluetooth: set this if your device does not have a Bluetooth chip
 # pixel_ratio: UI scaling factor, choose from 1.0, 1.5, 2.0. Any other value will
 # default the icon pack to 1.0 resolution (it is a bug)!
 # Read more on ways to do-it-together: https://bugs.nemomobile.org/show_bug.cgi?id=814
@@ -37,6 +38,11 @@
 # * make needed modifications for your device
 # * add "Provides: PACKAGE" to your droid-config-$DEVICE.spec (e.g. Provides: ofono-configs)
 
+
+# We assume all devices have Bluetooth, unless explicitly removed:
+%if 0%{!?remove_bluetooth:1}
+%define have_bluetooth 1
+%endif
 
 # dcd_path is the base when run from hadk
 # dcd_common is the common stuff (!) and dcd_sparse is the common sparse
@@ -70,7 +76,16 @@ BuildRequires: ssu-kickstart-configuration-jolla
 BuildRequires: pkgconfig(android-headers)
 BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
+%if 0%{?have_bluetooth:1}
 Provides: bluetooth-rfkill-event-configs
+# Device-specific obexd configuration common to BlueZ 4 & 5
+Requires: obexd-calldata-provider
+Requires: obexd-contentfilter-helper
+Provides: obexd-configs
+
+# Require a BlueZ configuration
+Requires: %{rpm_device}-bluez-configs
+%endif
 # The pc_suite usb mode (implies obex) can conflict with bluez5
 Conflicts: usb-moded-pc-suite-mode-android
 Obsoletes: usb-moded-pc-suite-mode-android
@@ -203,6 +218,39 @@ flashing configurations or flashing scripts.
 
 ################################################################
 
+%if 0%{?have_bluetooth:1}
+%package bluez4
+Summary: %{rpm_device} packages for BlueZ 4
+Conflicts: droid-config-%{rpm_device}-bluez5
+Requires: %{name} = %{version}-%{release}
+Requires: %{name} = %{version}
+Provides: %{rpm_device}-bluez-configs
+
+Requires: bluez
+Conflicts: bluez5
+
+Requires: bluez-libs
+Conflicts: bluez5-libs
+
+Requires: obexd
+Conflicts: bluez5-obexd
+
+Requires: obexd-server
+# no obexd-server equivalent in BlueZ 5, so no conflict
+
+Requires: kf5bluezqt-bluez4
+Conflicts: kf5bluezqt-bluez5
+
+Provides: bluez-configs
+Conflicts: bluez5-configs
+Obsoletes: bluez-configs-sailfish
+
+%description bluez4
+%{summary}.
+%endif
+
+################################################################
+
 %prep
 %if 0%{?_obs_build_project:1}
 # For OBS builds we need to have tarball extracted after tar_git packaging it
@@ -308,6 +356,10 @@ grep "/dconf/db/" tmp/droid-config.files > tmp/sailfish-settings.files
 sed --in-place '/\/dconf\/db\//d' tmp/droid-config.files
 grep -e "flash-partition" -e "platform-updates" tmp/droid-config.files > tmp/flashing.files
 sed --in-place -e '/flash-partition/d' -e '/platform-updates/d' tmp/droid-config.files
+%if 0%{?have_bluetooth:1}
+grep bluez4 tmp/droid-config.files > tmp/bluez4.files || true
+sed --in-place '/bluez4/d' tmp/droid-config.files
+%endif
 
 %if 0%{?out_of_image_files:1}
 if [ -e out-of-image-files.files ]; then
@@ -489,5 +541,10 @@ touch %{board_mapping_dir}/*
 
 %if 0%{?out_of_image_files:1}
 %files out-of-image-files -f tmp/out-of-image-files.files
+%endif
+
+%if 0%{?have_bluetooth:1}
+%files bluez4 -f tmp/bluez4.files
+%defattr(644,root,root,-)
 %endif
 
