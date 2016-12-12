@@ -12,7 +12,7 @@
 # ofono_disable_plugins: any ofono plugins that you want explicitly disabled
 
 # Device capabilities:
-# have_modem: set this if your device ships a modem
+# remove_modem: set this if your device has no modem (e.g. a WiFi-only tablet)
 # remove_bluetooth: set this if your device does not have a Bluetooth chip
 # pixel_ratio: UI scaling factor, choose from 1.0, 1.5, 2.0. Any other value will
 # default the icon pack to 1.0 resolution (it is a bug)!
@@ -38,6 +38,11 @@
 # * make needed modifications for your device
 # * add "Provides: PACKAGE" to your droid-config-$DEVICE.spec (e.g. Provides: ofono-configs)
 
+
+# We assume all devices have a cellular modem, unless explicitly removed:
+%if 0%{!?remove_modem:1}
+%define have_modem 1
+%endif
 
 # We assume all devices have Bluetooth, unless explicitly removed:
 %if 0%{!?remove_bluetooth:1}
