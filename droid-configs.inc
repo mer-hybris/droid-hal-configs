@@ -13,6 +13,7 @@
 
 # Device capabilities:
 # have_modem: set this if your device ships a modem
+# allowed_orientations: for phones: 11 (default), for tablets: 15
 # pixel_ratio: UI scaling factor, choose from 1.0, 1.5, 2.0. Any other value will
 # default the icon pack to 1.0 resolution (it is a bug)!
 # Read more on ways to do-it-together: https://bugs.nemomobile.org/show_bug.cgi?id=814
@@ -324,6 +325,12 @@ mkdir -p %{buildroot}/usr/share/package-groups/
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/common -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/hybris -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
+
+%if 0%(!?allowed_orientations:1)
+%define allowed_orientations 11
+%endif
+
+sed --in-place 's|@ALLOWED_ORIENTATIONS@|%{allowed_orientations}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 
 %if 0%{!?pixel_ratio:1}
 %define pixel_ratio 1.0
