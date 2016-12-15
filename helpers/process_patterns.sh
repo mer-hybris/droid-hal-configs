@@ -13,7 +13,7 @@ if [ -z $DEVICE ]; then
     exit 1
 fi
 
-RPMPATH="$ANDROID_ROOT/droid-local-repo/$DEVICE"
+RPMPATH="$ANDROID_ROOT/droid-local-repo/$DEVICE/droid-configs"
 RPMPATTERN='*-patterns*.rpm'
 RPMFILE="$RPMPATH/$RPMPATTERN"
 RPMCOUNT=$(find $RPMPATH -type f -name $RPMPATTERN | wc -l)

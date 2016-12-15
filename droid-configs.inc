@@ -1,6 +1,8 @@
 # This file should be %%included into a device specific spec file
 # where macros are defined:
 #
+# community_adaptation: needs to be defined for community HW adaptations
+#
 # Device information:
 # device: should be the CM codename or the AOSP TARGET_PRODUCT
 # vendor: determine the droid-side directory used for ./device/<vendor>/<device>
@@ -81,6 +83,12 @@ BuildRequires: ssu-kickstart-configuration-jolla
 BuildRequires: pkgconfig(android-headers)
 BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
+%if 0%{?community_adaptation:1}
+# because it provides one ssu feature, do:
+Requires: community-adaptation
+# because it has a template for dhc to provide a ssu feature, do:
+BuildRequires: community-adaptation
+%endif
 %if 0%{?have_bluetooth:1}
 Provides: bluetooth-rfkill-event-configs
 # Device-specific obexd configuration common to BlueZ 4 & 5
@@ -407,6 +415,19 @@ sed -e 's|%DEVICE%|%{rpm_device}|g' \
     -e "s|%VENDOR_PRETTY%|%{vendor_pretty}|g" \
     -e "s|%ARCH%|%{_target_cpu}|g" \
     droid-configs-device/ssu/board-mappings.d/05-sfe.ini.in >$RPM_BUILD_ROOT/%{board_mapping_file}
+
+%if 0%{?community_adaptation:1}
+# Community ports have their adaptation repos on http://build.merproject.org
+# Until we figure out how ssu works, we'll prevent the default adaptation0 from being created...
+sed --in-place '/adaptation-repos=/d' $RPM_BUILD_ROOT/%{board_mapping_file}
+# ...and make a separate adaptation repo for community:
+mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/
+sed -e 's|@DEVICE@|%{rpm_device}|g' \
+    -e 's|@VENDOR@|%{rpm_vendor}|g' \
+    %{_datadir}/community-adaptation/adaptation-community.ini.in \
+    >$RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/adaptation-community.ini
+%endif
+
 %endif
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
@@ -516,6 +537,9 @@ touch %{board_mapping_dir}/*
 %{board_mapping_file}
 %endif
 %{_datadir}/qt5/keymaps/droid.qmap
+%if 0%{?community_adaptation:1}
+%{_datadir}/ssu/features.d/adaptation-community.ini
+%endif
 
 %files ssu-kickstarts
 %defattr(-,root,root,-)
