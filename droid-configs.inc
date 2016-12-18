@@ -396,13 +396,10 @@ mkdir -p %{buildroot}/usr/share/package-groups/
 
 sed --in-place 's|@PIXEL_RATIO@|%{pixel_ratio}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 
-# icon_res can be only from a predefined set. Otherwise falls back to 1.0 (see NEMO#814 bug)
-%if "%{pixel_ratio}" != "1.0" && "%{pixel_ratio}" != "1.25" && "%{pixel_ratio}" != "1.5" && "%{pixel_ratio}" != "1.75" && "%{pixel_ratio}" != "2.0"
-%define icon_res 1.0
-%else
-%define icon_res %{pixel_ratio}
-%endif
+# icon_res can be only one of 1.0, 1.25, 1.5, 1.75 or 2.0 use pixel_ratio and pick closest one
+%define icon_res %(awk 'BEGIN {a=int((%{pixel_ratio}-0.125)/0.25)*0.25+0.25;a=(a<=1?"1.0":(a>=2.0?"2.0":a));print a }')
 
+sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/usr/share/package-groups/*
 
 # SSU board mapping for hardware adaptation
