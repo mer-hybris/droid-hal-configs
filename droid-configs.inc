@@ -257,6 +257,7 @@ Conflicts: kf5bluezqt-bluez5
 Provides: bluez-configs
 Conflicts: bluez5-configs
 Obsoletes: bluez-configs-sailfish
+Obsoletes: bluez-configs-mer
 
 %description bluez4
 %{summary}.
