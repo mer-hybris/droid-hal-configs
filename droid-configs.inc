@@ -518,6 +518,7 @@ fi
 %post
 # Force an update of ssu repositories
 touch %{board_mapping_dir}/*
+touch %{_datadir}/ssu/features.d/*
 
 # To add additional post scripts, one can define those as part
 # of additional_post_scripts macro.
