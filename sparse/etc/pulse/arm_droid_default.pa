@@ -45,6 +45,9 @@ load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
 load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 load-module module-bluez4-discover sco_sink=sink.fake.sco sco_source=source.fake.sco
 
+### Needed on many new devices. HADK guide explains how to implement this fully
+#load-module module-droid-glue
+
 load-module module-policy-enforcement
 
 load-module module-role-ducking trigger_roles=alarm,notification,warning ducking_roles=x-maemo volume=-200dB
