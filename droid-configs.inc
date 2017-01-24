@@ -283,7 +283,7 @@ copy_files_from() {
   config_dir=$1
   if [ -d $config_dir ]; then
     (cd $config_dir; find . \( -type f -or -type l \) -print ) | sed 's/^.//' >> tmp/droid-config.files
-    cp -R $config_dir/* $RPM_BUILD_ROOT/
+    cp -Rf $config_dir/* $RPM_BUILD_ROOT/
   fi
 }
 
