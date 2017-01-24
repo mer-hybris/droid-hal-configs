@@ -27,10 +27,6 @@
 #  Nexus 5:      2.0
 #  Nexus 4:      pixel_ratio=1.3 (icon resolution then drops to 1.0)
 
-# IMPORTANT if you want to comment out any macros in your .spec, delete the %
-# sign, otherwise they will remain defined! E.g.:
-#define some_macro "I'll not be defined because I don't have % in front"
-
 # Overwriting other configs:
 # If your droid-config-$DEVICE needs to provide one or more device-specific
 # configuration files, do the following:
