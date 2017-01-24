@@ -47,12 +47,11 @@
 %define have_bluetooth 1
 %endif
 
-# dcd_path is the base when run from hadk
-# dcd_common is the common stuff (!) and dcd_sparse is the common sparse
-%if 0%{!?dcd_path:1}
-%define dcd_path hybris/droid-configs
-%endif
+# dcd_path is defined for hysterical reasons (coming from dhd builds on OBS)
+# now obsolete, hence always the default:
+%define dcd_path .
 
+# dcd_common is the common stuff and dcd_sparse is the common sparse
 %define dcd_common %{dcd_path}/droid-configs-device
 %define dcd_sparse droid-configs-device/sparse
 

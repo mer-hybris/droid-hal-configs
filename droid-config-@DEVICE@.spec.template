@@ -7,8 +7,6 @@
 %define vendor_pretty @VENDOR_PRETTY@
 %define device_pretty @DEVICE_PRETTY@
 
-%define dcd_path ./
-
 # Community HW adaptations need this
 %define community_adaptation 1
 
