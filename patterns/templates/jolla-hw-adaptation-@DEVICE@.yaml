@@ -64,9 +64,9 @@ Requires:
 # Settings app needs this since update15
 - jolla-settings-layout
 
-# For devices with working cellular modem:
-#- pattern:jolla-sailfish-cellular-apps
-#- telepathy-ring
+# For devices with cellular modem. Those without one, please comment out:
+- pattern:jolla-sailfish-cellular-apps
+- telepathy-ring
 
 # For devices where test_gps eventually gets a fix:
 #- geoclue-provider-hybris
