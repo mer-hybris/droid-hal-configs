@@ -71,5 +71,9 @@ Requires:
 # needs some configuration to get all features working
 - csd
 
+# For FM radio on some QCOM devices
+#- qt5-qtmultimedia-plugin-mediaservice-irisradio
+#- jolla-mediaplayer-radio
+
 Summary: Jolla HW Adaptation @DEVICE@
 
