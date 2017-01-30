@@ -25,12 +25,6 @@ Requires:
 - qt5-qpa-hwcomposer-plugin
 - qtscenegraph-adaptation
 
-# GStreamer v0.10 multimedia support is being deprecated
-#- gstreamer0.10-droidcamsrc
-#- gstreamer0.10-omx
-#- gstreamer0.10-droideglsink
-#- nemo-qtmultimedia-plugins-gstvideotexturebackend
-
 # Add GStreamer v1.0 as standard
 - gstreamer1.0
 - gstreamer1.0-plugins-good
