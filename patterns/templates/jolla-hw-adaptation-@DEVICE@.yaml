@@ -25,18 +25,14 @@ Requires:
 - qt5-qpa-hwcomposer-plugin
 - qtscenegraph-adaptation
 
-# GStreamer v0.10 multimedia support is being deprecated
-#- gstreamer0.10-droidcamsrc
-#- gstreamer0.10-omx
-#- gstreamer0.10-droideglsink
-#- nemo-qtmultimedia-plugins-gstvideotexturebackend
-
 # Add GStreamer v1.0 as standard
 - gstreamer1.0
 - gstreamer1.0-plugins-good
 - gstreamer1.0-plugins-base
 - gstreamer1.0-plugins-bad
 - nemo-gstreamer1.0-interfaces
+# For devices with droidmedia and gst-droid built, see HADK pdf for more information
+#- gstreamer1.0-droid
 
 # This is needed for notification LEDs
 - mce-plugin-libhybris
@@ -49,11 +45,11 @@ Requires:
 
 # Extra useful modes not officially supported:
 # might need some configuration to get working
-- usb-moded-mass-storage-android-config
+#- usb-moded-mass-storage-android-config
 # working but careful with roaming!
 - usb-moded-connection-sharing-android-config
 # android diag mode only usable for certain android tools
-- usb-moded-diag-mode-android
+#- usb-moded-diag-mode-android
 
 # hammerhead, grouper, and maguro use this in scripts, so include for all
 - rfkill
@@ -67,9 +63,21 @@ Requires:
 # For devices with cellular modem. Those without one, please comment out:
 - pattern:jolla-sailfish-cellular-apps
 - telepathy-ring
+# For multi-SIM devices
+#- jolla-settings-networking-multisim
 
-# For devices where test_gps eventually gets a fix:
-#- geoclue-provider-hybris
+# For GPS
+- geoclue-provider-hybris
+# For Mozilla location services (online)
+- geoclue-provider-mlsdb
+
+# Sailfish OS CSD tool for hardware testing
+# needs some configuration to get all features working
+- csd
+
+# For FM radio on some QCOM devices
+#- qt5-qtmultimedia-plugin-mediaservice-irisradio
+#- jolla-mediaplayer-radio
 
 Summary: Jolla HW Adaptation @DEVICE@
 
