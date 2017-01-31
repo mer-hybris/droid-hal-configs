@@ -63,6 +63,8 @@ Requires:
 # For devices with cellular modem. Those without one, please comment out:
 - pattern:jolla-sailfish-cellular-apps
 - telepathy-ring
+# For multi-SIM devices
+#- jolla-settings-networking-multisim
 
 # For GPS
 - geoclue-provider-hybris
