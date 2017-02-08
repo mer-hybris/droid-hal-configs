@@ -3,6 +3,7 @@ Name: sailfish-porter-tools
 Requires:
 - jolla-developer-mode
 - sailfishsilica-qt5-demos
+- libhybris-tests
 
 - busybox-static
 - net-tools

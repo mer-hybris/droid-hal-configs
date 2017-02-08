@@ -1,9 +1,7 @@
 Description: Pattern with packages for @DEVICE@ HW Adaptation
 Name: jolla-hw-adaptation-@DEVICE@
 Requires:
-- pattern:jolla-hw-adaptation-hybris
 - pattern:jolla-hw-adaptation-hybris-droid-vibrator
-- pattern:jolla-ui-configuration-@DEVICE@
 
 - droid-hal-@DEVICE@
 - droid-hal-@DEVICE@-img-boot
@@ -15,6 +13,17 @@ Requires:
 - droid-config-@DEVICE@-flashing
 - droid-config-@DEVICE@-bluez4
 - droid-hal-version-@DEVICE@
+
+# Hybris packages
+- libhybris-libEGL
+- libhybris-libGLESv2
+- libhybris-libwayland-egl
+
+# Sensors
+- hybris-libsensorfw-qt5
+
+# Needed for /dev/touchscreen symlink
+- qt5-plugin-generic-evdev
 
 - pulseaudio-modules-droid
 # for audio recording to work:
@@ -57,23 +66,8 @@ Requires:
 # enable device lock and allow to select untrusted software
 - jolla-devicelock-plugin-encsfa
 
-# Settings app needs this since update15
-- jolla-settings-layout
-
-# For devices with cellular modem. Those without one, please comment out:
-- pattern:jolla-sailfish-cellular-apps
-- telepathy-ring
-# For multi-SIM devices
-#- jolla-settings-networking-multisim
-
 # For GPS
 - geoclue-provider-hybris
-# For Mozilla location services (online)
-- geoclue-provider-mlsdb
-
-# Sailfish OS CSD tool for hardware testing
-# needs some configuration to get all features working
-- csd
 
 # For FM radio on some QCOM devices
 #- qt5-qtmultimedia-plugin-mediaservice-irisradio

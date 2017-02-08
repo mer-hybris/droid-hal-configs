@@ -4,8 +4,26 @@ Requires:
 - pattern:jolla-hw-adaptation-@DEVICE@
 - pattern:jolla-sailfish-applications
 - pattern:jolla-ui-wayland
+# For devices with cellular modem. Those without one, please comment out:
+- pattern:jolla-sailfish-cellular-apps
 # Early stages of porting benefit from these:
 - pattern:sailfish-porter-tools
+
+- sailfish-content-graphics-z@ICON_RES@
+
+# For multi-SIM devices
+#- jolla-settings-networking-multisim
+
+# Introduced starting Sailfish OS 2.0.4.x:
+# 3rd party accounts like Twitter, VK, cloud services, etc
+- jolla-settings-accounts-extensions-3rd-party-all
+
+# For Mozilla location services (online)
+- geoclue-provider-mlsdb
+
+# Sailfish OS CSD tool for hardware testing
+# needs some configuration to get all features working
+- csd
 
 Summary: Jolla Configuration @DEVICE@
 
