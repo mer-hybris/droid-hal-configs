@@ -4,8 +4,13 @@ Requires:
 - pattern:jolla-hw-adaptation-@DEVICE@
 - pattern:jolla-sailfish-applications
 - pattern:jolla-ui-wayland
+- pattern:jolla-ui-configuration-z@ICON_RES@
 # Early stages of porting benefit from these:
 - pattern:sailfish-porter-tools
+
+# Introduced starting Sailfish OS 2.0.4.x:
+# 3rd party accounts like Twitter, VK, cloud services, etc
+- jolla-settings-accounts-extensions-3rd-party-all
 
 Summary: Jolla Configuration @DEVICE@
 
