@@ -58,12 +58,6 @@ Requires:
 
 # For GPS
 - geoclue-provider-hybris
-# For Mozilla location services (online)
-- geoclue-provider-mlsdb
-
-# Sailfish OS CSD tool for hardware testing
-# needs some configuration to get all features working
-- csd
 
 # For FM radio on some QCOM devices
 #- qt5-qtmultimedia-plugin-mediaservice-irisradio

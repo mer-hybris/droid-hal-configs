@@ -17,5 +17,12 @@ Requires:
 # 3rd party accounts like Twitter, VK, cloud services, etc
 - jolla-settings-accounts-extensions-3rd-party-all
 
+# For Mozilla location services (online)
+- geoclue-provider-mlsdb
+
+# Sailfish OS CSD tool for hardware testing
+# needs some configuration to get all features working
+- csd
+
 Summary: Jolla Configuration @DEVICE@
 
