@@ -1,7 +1,6 @@
 Description: Pattern with packages for @DEVICE@ HW Adaptation
 Name: jolla-hw-adaptation-@DEVICE@
 Requires:
-- pattern:jolla-hw-adaptation-hybris
 - pattern:jolla-hw-adaptation-hybris-droid-vibrator
 
 - droid-hal-@DEVICE@
@@ -14,6 +13,17 @@ Requires:
 - droid-config-@DEVICE@-flashing
 - droid-config-@DEVICE@-bluez4
 - droid-hal-version-@DEVICE@
+
+# Hybris packages
+- libhybris-libEGL
+- libhybris-libGLESv2
+- libhybris-libwayland-egl
+
+# Sensors
+- hybris-libsensorfw-qt5
+
+# Needed for /dev/touchscreen symlink
+- qt5-plugin-generic-evdev
 
 - pulseaudio-modules-droid
 # for audio recording to work:
