@@ -4,11 +4,12 @@ Requires:
 - pattern:jolla-hw-adaptation-@DEVICE@
 - pattern:jolla-sailfish-applications
 - pattern:jolla-ui-wayland
-- pattern:jolla-ui-configuration-z@ICON_RES@
 # For devices with cellular modem. Those without one, please comment out:
 - pattern:jolla-sailfish-cellular-apps
 # Early stages of porting benefit from these:
 - pattern:sailfish-porter-tools
+
+- sailfish-content-graphics-z@ICON_RES@
 
 # For multi-SIM devices
 #- jolla-settings-networking-multisim
