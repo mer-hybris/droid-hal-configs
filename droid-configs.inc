@@ -256,6 +256,32 @@ Obsoletes: bluez-configs-mer
 
 %description bluez4
 %{summary}.
+
+%package bluez5
+Summary: %{rpm_device} packages for BlueZ 5
+Conflicts: droid-config-%{rpm_device}-bluez4
+Requires: %{name} = %{version}-%{release}
+Requires: %{name} = %{version}
+Provides: %{rpm_device}-bluez-configs
+
+Requires: bluez5
+Conflicts: bluez
+
+Requires: bluez5-libs
+Conflicts: bluez-libs
+
+Requires: bluez5-obexd
+Conflicts: obexd
+
+Requires: kf5bluezqt-bluez5
+Conflicts: kf5bluezqt-bluez4
+
+Provides: bluez5-configs
+Conflicts: bluez-configs
+Obsoletes: bluez-configs-sailfish
+
+%description bluez5
+%{summary}.
 %endif
 
 ################################################################
@@ -358,6 +384,12 @@ fi
 
 # We want to keep some files in separate subpackages.
 # NOTE: some files might get to wrong place with this because of string assumption.
+%if 0%{?have_bluetooth:1}
+grep bluez4 tmp/droid-config.files > tmp/bluez4.files || true
+sed --in-place '/bluez4/d' tmp/droid-config.files
+grep bluez5 tmp/droid-config.files > tmp/bluez5.files || true
+sed --in-place '/bluez5/d' tmp/droid-config.files
+%endif
 echo "%defattr(-,root,root,-)" > tmp/policy-settings.files
 grep ohm tmp/droid-config.files > tmp/policy-settings.files
 sed --in-place '/ohm/d' tmp/droid-config.files
@@ -369,10 +401,6 @@ grep "/dconf/db/" tmp/droid-config.files > tmp/sailfish-settings.files
 sed --in-place '/\/dconf\/db\//d' tmp/droid-config.files
 grep -e "flash-partition" -e "platform-updates" tmp/droid-config.files > tmp/flashing.files
 sed --in-place -e '/flash-partition/d' -e '/platform-updates/d' tmp/droid-config.files
-%if 0%{?have_bluetooth:1}
-grep bluez4 tmp/droid-config.files > tmp/bluez4.files || true
-sed --in-place '/bluez4/d' tmp/droid-config.files
-%endif
 
 %if 0%{?out_of_image_files:1}
 if [ -e out-of-image-files.files ]; then
@@ -568,5 +596,7 @@ touch %{_datadir}/ssu/features.d/*
 %if 0%{?have_bluetooth:1}
 %files bluez4 -f tmp/bluez4.files
 %defattr(644,root,root,-)
-%endif
 
+%files bluez5 -f tmp/bluez5.files
+%defattr(644,root,root,-)
+%endif
