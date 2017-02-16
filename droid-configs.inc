@@ -351,6 +351,10 @@ echo %{ofono_disable_plugins} | sed s/,/\\n/g | (
   done)
 %endif
 
+# Delete files from droid-config.files which are packaged in main spec file
+if [ -e packaged-in-main-spec.files ]; then
+  delete_files tmp/droid-config.files packaged-in-main-spec.files 0
+fi
 
 # We want to keep some files in separate subpackages.
 # NOTE: some files might get to wrong place with this because of string assumption.
@@ -503,11 +507,6 @@ if [ -e create.dirs ]; then
   for A in $(cat create.dirs); do
     mkdir -p $RPM_BUILD_ROOT/$A
   done
-fi
-
-# Delete files from droid-config.files which are packaged in main spec file
-if [ -e packaged-in-main-spec.files ]; then
-  delete_files tmp/droid-config.files packaged-in-main-spec.files 0
 fi
 
 ################################################################
