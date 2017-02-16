@@ -1,8 +1,6 @@
 Description: Pattern with packages for @DEVICE@ HW Adaptation
 Name: jolla-hw-adaptation-@DEVICE@
 Requires:
-- pattern:jolla-hw-adaptation-hybris-droid-vibrator
-
 - droid-hal-@DEVICE@
 - droid-hal-@DEVICE@-img-boot
 - droid-hal-@DEVICE@-kernel-modules
@@ -21,6 +19,10 @@ Requires:
 
 # Sensors
 - hybris-libsensorfw-qt5
+
+# Vibra
+- ngfd-plugin-droid-vibrator
+- qt5-feedback-haptics-droid-vibrator
 
 # Needed for /dev/touchscreen symlink
 - qt5-plugin-generic-evdev
