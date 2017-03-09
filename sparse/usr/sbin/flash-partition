@@ -199,6 +199,10 @@ if on_device; then
                 fi
         fi
 
+	if [[ "$SAILFISHOS_WIPE_PARTITIONS" == "1" ]]; then
+		dd if=/dev/zero bs=1M of=$DEVDIR/$DEVICE
+	fi
+
         dd if=$FILENAME bs=4096 of=$DEVDIR/$DEVICE
 
         if [[ "$SPARSE" == "ed26ff3a" ]]; then
