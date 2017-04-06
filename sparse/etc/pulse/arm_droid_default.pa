@@ -29,7 +29,14 @@ load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-p
 load-module module-meego-mainvolume virtual_stream=true
 
 ### Automatically restore the volume of streams
-load-module module-stream-restore-nemo restore_device=no restore_volume=yes restore_muted=no route_table=/etc/pulse/x-maemo-route.table fallback_table=/etc/pulse/x-maemo-stream-restore.table use_voice=false sink_volume_table=/etc/pulse/x-maemo-sink-volume.table
+# load configuration based on bluez version
+.ifexists /etc/pulse/bluez4_stream_restore.pa
+.include /etc/pulse/bluez4_stream_restore.pa
+.endif
+
+.ifexists /etc/pulse/bluez5_stream_restore.pa
+.include /etc/pulse/bluez5_stream_restore.pa
+.endif
 
 load-module module-match table=/etc/pulse/x-maemo-match.table key=application.name
 
@@ -49,6 +56,8 @@ load-module module-droid-glue
 load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
 load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 load-module module-bluez4-discover sco_sink=sink.fake.sco sco_source=source.fake.sco
+
+load-module module-combine-sink sink_name=sink.primaryandbluez resample_method=trivial rate=48000 channels=2 ignore=sink.low_latency
 
 load-module module-policy-enforcement
 
@@ -104,7 +113,7 @@ load-module module-systemd-login
 load-module module-dbus-protocol
 .endif
 
-load-module module-switch-on-port-available
+load-module module-rescue-streams sink_name=sink.null source_name=sink.null.monitor
 
 ### Make some devices default
 set-default-sink sink.primary
