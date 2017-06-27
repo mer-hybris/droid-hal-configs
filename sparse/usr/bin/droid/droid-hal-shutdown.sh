@@ -26,6 +26,11 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# The following should be in /init.rc, so init will shut everything down:
+# on property:hybris.shutdown=*
+#    class_stop late_start
+#    class_stop main
+#    class_stop core
 
 # Kill all processes that are in this same cgroup ($1) 
 [ -z "$1" ] && echo "Need cgroup path" && exit 1
@@ -37,20 +42,20 @@ get_pids() {
     # return list $PIDS and $NUM_PIDS
     PIDS=$(cat /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs)
     NUM_PIDS=$(echo $PIDS | wc -w)
-}
-
-kill_pids() {
-    # Kill pids using signal $1
-    for pid in $PIDS; do
-         [ -d /proc/$pid ] && kill -$1 $pid
-    done
+    echo Android service PIDs remaining: $NUM_PIDS
 }
 
 # ============== main() ===============
 
 get_pids
 PREV_NUM_PIDS=$NUM_PIDS
-kill_pids TERM
+# This android property is supposed to ensure a shutdown if system-server crashes
+# We don't use it, but some init scripts watch for it as a signal to shut other things down
+/usr/bin/setprop sys.shutdown.requested 1
+
+echo Shutting down droid-hal-init services
+/usr/bin/setprop hybris.shutdown 1
+
 sleep 1
 WAIT=1
 get_pids
@@ -68,7 +73,9 @@ while [ $NUM_PIDS -gt 0 -a $WAIT -lt $MAX_WAIT ]; do
     PREV_NUM_PIDS=$NUM_PIDS
     get_pids
 done
-# If anyone left, hard kill them all
-[ $NUM_PIDS -gt 0 ] && kill_pids KILL
+
+echo All done. Killing droid-hal-init
+killall droid-hal-init
+
 exit 0
 
