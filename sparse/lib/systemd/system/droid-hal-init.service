@@ -13,7 +13,7 @@ Conflicts=shutdown.target
 Type=notify
 NotifyAccess=all
 ExecStart=/bin/sh /usr/bin/droid/droid-hal-startup.sh
-ExecStop=/usr/bin/droid/kill-cgroup.sh %c
+ExecStop=/bin/sh /usr/bin/droid/droid-hal-shutdown.sh
 Restart=always
 # Lets make sure we don't block minutes in case of errors.
 TimeoutSec=15
