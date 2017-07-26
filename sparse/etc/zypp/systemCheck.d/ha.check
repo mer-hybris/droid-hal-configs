@@ -1,0 +1,6 @@
+requires:droid-hal-@DEVICE@
+requires:droid-config-@DEVICE@
+requires:droid-hal-version-@DEVICE@
+requires:libhybris-libEGL
+requires:libhybris-libGLESv2
+requires:libhybris-libwayland-egl
