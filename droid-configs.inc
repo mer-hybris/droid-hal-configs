@@ -429,6 +429,8 @@ sed --in-place 's|@PIXEL_RATIO@|%{pixel_ratio}|' %{buildroot}/etc/dconf/db/vendo
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/usr/share/package-groups/*
 
+sed --in-place 's|@DEVICE@|%{rpm_device}|' %{buildroot}/etc/zypp/systemCheck.d/*.check
+
 # SSU board mapping for hardware adaptation
 %if 0%{!?provides_own_board_mapping:1}
 mkdir -p $RPM_BUILD_ROOT/%{board_mapping_dir}
