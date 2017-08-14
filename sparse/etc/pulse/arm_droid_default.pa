@@ -55,7 +55,7 @@ load-module module-droid-glue
 
 load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
 load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
-load-module module-bluez4-discover sco_sink=sink.fake.sco sco_source=source.fake.sco
+load-module module-bluetooth-discover bluez4_args="sco_sink=sink.fake.sco sco_source=source.fake.sco" bluez5_args="headset=droid"
 
 load-module module-combine-sink sink_name=sink.primaryandbluez resample_method=trivial rate=48000 channels=2 ignore=sink.low_latency
 
