@@ -60,7 +60,9 @@ sleep 1
 WAIT=1
 get_pids
 MAX_WAIT=5
-while [ $NUM_PIDS -gt 0 -a $WAIT -lt $MAX_WAIT ]; do
+# -gt 1 because droid-hal-init is also in this cgroup
+while [ $NUM_PIDS -gt 1 -a $WAIT -lt $MAX_WAIT ]; do
+    let WAIT=$WAIT+1
     if [ $NUM_PIDS -lt $PREV_NUM_PIDS ]; then
         # Number of running processes is getting smaller
         # Wait a little bit more
@@ -69,13 +71,23 @@ while [ $NUM_PIDS -gt 0 -a $WAIT -lt $MAX_WAIT ]; do
         # Number of pids is not gettting smaller
         break
     fi
-    let WAIT=$WAIT+1
     PREV_NUM_PIDS=$NUM_PIDS
     get_pids
 done
 
-echo All done. Killing droid-hal-init
+echo Killing droid-hal-init
 killall droid-hal-init
+
+echo Killing processes hybris.shutdown missed
+get_pids
+if [ $NUM_PIDS -gt 0 ]; then
+    killall $PIDS
+    sleep 1
+    get_pids
+    if [ $NUM_PIDS -gt 0 ]; then
+        killall -s 9 $PIDS
+    fi
+fi
 
 exit 0
 
