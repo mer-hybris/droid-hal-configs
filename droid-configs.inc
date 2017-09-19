@@ -444,19 +444,18 @@ sed -e 's|%DEVICE%|%{rpm_device}|g' \
     -e "s|%VENDOR_PRETTY%|%{vendor_pretty}|g" \
     -e "s|%ARCH%|%{_target_cpu}|g" \
     droid-configs-device/ssu/board-mappings.d/05-sfe.ini.in >$RPM_BUILD_ROOT/%{board_mapping_file}
+%endif
 
 %if 0%{?community_adaptation:1}
 # Community ports have their adaptation repos on http://build.merproject.org
 # Until we figure out how ssu works, we'll prevent the default adaptation0 from being created...
-sed --in-place '/adaptation-repos=/d' $RPM_BUILD_ROOT/%{board_mapping_file}
+sed --in-place '/adaptation-repos=/d' $RPM_BUILD_ROOT/%{board_mapping_dir}/*.ini
 # ...and make a separate adaptation repo for community:
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/
 sed -e 's|@DEVICE@|%{rpm_device}|g' \
     -e 's|@VENDOR@|%{rpm_vendor}|g' \
     %{_datadir}/community-adaptation/adaptation-community.ini.in \
     >$RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/adaptation-community.ini
-%endif
-
 %endif
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
