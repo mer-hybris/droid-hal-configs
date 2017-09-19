@@ -18,6 +18,10 @@ Requires:
 # 3rd party accounts like Twitter, VK, cloud services, etc
 - jolla-settings-accounts-extensions-3rd-party-all
 
+# Introduced starting Sailfish OS 2.1.1.26
+# Required for Jolla Store Access
+- patterns-sailfish-consumer-generic
+
 # For Mozilla location services (online)
 - geoclue-provider-mlsdb
 
