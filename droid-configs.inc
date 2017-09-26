@@ -432,7 +432,14 @@ sed --in-place 's|@START_DRAG_DISTANCE@|%{start_drag_distance}|' %{buildroot}/et
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/usr/share/package-groups/*
 
+# In localbuilds it will break the system, because droid-hal-version-$DEVICE is
+# not built yet. Also it will pull many unnecessary things into the SDK target.
+%if 0%{?_obs_build_project:1}
 sed --in-place 's|@DEVICE@|%{rpm_device}|' %{buildroot}/etc/zypp/systemCheck.d/*.check
+%else
+sed --in-place '/systemCheck.d/d' tmp/droid-config.files
+rm -f %{buildroot}/etc/zypp/systemCheck.d/*.check
+%endif
 
 # SSU board mapping for hardware adaptation
 %if 0%{!?provides_own_board_mapping:1}
