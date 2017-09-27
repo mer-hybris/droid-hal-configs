@@ -16,4 +16,5 @@ keycode 208 = AudioForward
 keycode 226 = ToggleCallHangup
 # BTN_MISC
 keycode 256 = ToggleCallHangup
-
+keycode 528 = CameraFocus
+keycode 766 = Camera
