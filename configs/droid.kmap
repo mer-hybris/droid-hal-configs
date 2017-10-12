@@ -15,6 +15,7 @@ keycode 165 = MediaPrevious
 keycode 166 = MediaStop
 keycode 168 = AudioRewind
 keycode 169 = Call
+keycode 172 = HomePage
 keycode 200 = MediaPlay
 keycode 201 = MediaPause
 keycode 208 = AudioForward
