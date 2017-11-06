@@ -50,7 +50,9 @@ load-module module-droid-card rate=48000 mute_routing_before=24576 mute_routing_
 
 ### Needed on many new devices. HADK guide explains how to implement this fully
 .ifexists module-droid-glue.so
+.nofail
 load-module module-droid-glue
+.fail
 .endif
 
 load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
