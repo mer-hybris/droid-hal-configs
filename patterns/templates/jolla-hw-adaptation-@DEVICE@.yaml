@@ -9,7 +9,7 @@ Requires:
 - droid-config-@DEVICE@-policy-settings
 - droid-config-@DEVICE@-preinit-plugin
 - droid-config-@DEVICE@-flashing
-- droid-config-@DEVICE@-bluez4
+- droid-config-@DEVICE@-bluez5
 - droid-hal-version-@DEVICE@
 
 # Hybris packages
