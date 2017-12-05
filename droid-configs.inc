@@ -135,9 +135,9 @@ Requires:   ohm-plugin-resolver
 Requires:   ohm-plugin-ruleengine
 Requires:   ohm-plugin-profile
 Requires:   ohm-plugin-route
-Requires:   pulseaudio-modules-nemo-common >= 4.0.11
-Requires:   pulseaudio-policy-enforcement >= 4.0.8
-Requires:   policy-settings-common >= 0.2.7
+Requires:   pulseaudio-modules-nemo-common >= 8.0.24
+Requires:   pulseaudio-policy-enforcement >= 8.0.33
+Requires:   policy-settings-common >= 0.7.3
 Obsoletes:  ohm-config <= 1.1.15
 # ohm-configs-default should not be installed ever, thus no version
 # specification defined here.
@@ -172,12 +172,12 @@ Provides:   droid-config-preinit-plugins
 %package pulseaudio-settings
 Summary:    PulseAudio settings for %{rpm_device} hw
 Provides:   droid-config-pulseaudio-settings
-Requires:   pulseaudio >= 4.0
-Requires:   pulseaudio-modules-nemo-parameters >= 4.0.11
-Requires:   pulseaudio-modules-nemo-stream-restore >= 4.0.11
-Requires:   pulseaudio-modules-nemo-mainvolume >= 4.0.11
-Requires:   pulseaudio-modules-droid >= 4.0.6
-Requires:   pulseaudio-policy-enforcement >= 6.0.20
+Requires:   pulseaudio >= 8.0
+Requires:   pulseaudio-modules-nemo-parameters >= 8.0.24
+Requires:   pulseaudio-modules-nemo-stream-restore >= 8.0.24
+Requires:   pulseaudio-modules-nemo-mainvolume >= 8.0.24
+Requires:   pulseaudio-modules-droid >= 8.0.63
+Requires:   pulseaudio-policy-enforcement >= 8.0.33
 Provides:   pulseaudio-settings
 
 %description pulseaudio-settings
