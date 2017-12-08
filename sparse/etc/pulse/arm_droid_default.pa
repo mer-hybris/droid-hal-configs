@@ -30,12 +30,10 @@ load-module module-meego-mainvolume virtual_stream=true
 
 ### Automatically restore the volume of streams
 # load configuration based on bluez version
-.ifexists /etc/pulse/bluez4_stream_restore.pa
-.include /etc/pulse/bluez4_stream_restore.pa
-.endif
-
 .ifexists /etc/pulse/bluez5_stream_restore.pa
-.include /etc/pulse/bluez5_stream_restore.pa
+ .include /etc/pulse/bluez5_stream_restore.pa
+.else
+ .include /etc/pulse/bluez4_stream_restore.pa
 .endif
 
 load-module module-match table=/etc/pulse/x-maemo-match.table key=application.name
@@ -46,20 +44,24 @@ load-module module-augment-properties
 
 load-module module-null-sink sink_name=sink.null rate=48000
 
-load-module module-droid-card rate=48000 mute_routing_before=24576 mute_routing_after=4096
+### If droid-card needs other arguments than the default, have the new
+### load-module line in /etc/pulse/arm_droid_card_custom.pa
+.ifexists /etc/pulse/arm_droid_card_custom.pa
+ .include /etc/pulse/arm_droid_card_custom.pa
+.else
+ load-module module-droid-card rate=48000
+.endif
 
 ### Needed on many new devices. HADK guide explains how to implement this fully
 .ifexists module-droid-glue.so
-.nofail
-load-module module-droid-glue
-.fail
+ .nofail
+ load-module module-droid-glue
+ .fail
 .endif
 
 load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
 load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 load-module module-bluetooth-discover bluez4_args="sco_sink=sink.fake.sco sco_source=source.fake.sco" bluez5_args="headset=droid"
-
-load-module module-combine-sink sink_name=sink.primaryandbluez resample_method=trivial rate=48000 channels=2 ignore=sink.low_latency
 
 load-module module-policy-enforcement
 
@@ -115,8 +117,7 @@ load-module module-systemd-login
 load-module module-dbus-protocol
 .endif
 
+### Move orphan streams to placeholder sinks or sources so that playback doesn't get
+### interrupted. Policy enforcement module then moves the streams to new appropriate
+### sinks or sources.
 load-module module-rescue-streams sink_name=sink.null source_name=sink.null.monitor
-
-### Make some devices default
-set-default-sink sink.primary
-set-default-source source.primary
