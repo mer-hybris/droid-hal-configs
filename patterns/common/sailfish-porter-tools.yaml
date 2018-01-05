@@ -11,6 +11,7 @@ Requires:
 - openssh-server
 - vim-enhanced
 - zypper
+- strace
 
 # jolla-rnd-device will enable usb-moded even when UI is not yet
 # brought up (useful during development, available since update10)
