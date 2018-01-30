@@ -65,7 +65,7 @@ load-module module-bluetooth-discover bluez4_args="sco_sink=sink.fake.sco sco_so
 
 load-module module-policy-enforcement
 
-load-module module-role-ducking trigger_roles=alarm,notification,warning ducking_roles=x-maemo volume=-200dB
+load-module module-role-ducking trigger_roles=notification,warning ducking_roles=x-maemo volume=-12dB
 
 ### Load several protocols
 .ifexists module-esound-protocol-unix.so
