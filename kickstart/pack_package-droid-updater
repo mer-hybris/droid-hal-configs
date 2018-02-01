@@ -2,7 +2,7 @@ pushd $IMG_OUT_DIR
 
 DEVICE=@DEVICE@
 
-VERSION_FILE=./sailfish-release
+VERSION_FILE=./os-release
 source $VERSION_FILE
 
 # Locate rootfs tar.bz2 archive.
