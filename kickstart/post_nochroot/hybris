@@ -1,1 +1,8 @@
 cp $INSTALL_ROOT/etc/os-release $IMG_OUT_DIR
+ls -l $INSTALL_ROOT/usr/share/ssu/features.d/customer-*.ini &> /dev/null
+if [ "$?" == "0" ]; then
+  for CFILE in $(ls -1 $INSTALL_ROOT/usr/share/ssu/features.d/customer-*.ini); do
+     CUSTOMER_TMP+=${CUSTOMER_TMP:+ }$(grep -i "^name[ ]*=" $CFILE | sed 's/^.*=[ \t]*//')
+  done
+  echo "SAILFISH_CUSTOMER=\""$(echo ${CUSTOMER_TMP} | sed 's![/ ()]\+!_!g')"\"" >> $IMG_OUT_DIR/os-release
+fi
