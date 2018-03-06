@@ -35,7 +35,7 @@
 #    oneshot
 
 export LD_LIBRARY_PATH=/lib:/usr/lib
-export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
 export NOTIFY_SOCKET="$(cat /run/droid-hal/notify-socket-name)"
 DROID_PID=$(pgrep droid-hal-init)
 systemd-notify --pid=$DROID_PID --ready
