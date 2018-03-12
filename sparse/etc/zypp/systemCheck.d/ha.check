@@ -1,5 +1,6 @@
-requires:droid-hal-@DEVICE@
 requires:droid-config-@DEVICE@
+requires:droid-hal
+requires:droid-hal-img-boot
 requires:droid-hal-version-@DEVICE@
 requires:libhybris-libEGL
 requires:libhybris-libGLESv2
