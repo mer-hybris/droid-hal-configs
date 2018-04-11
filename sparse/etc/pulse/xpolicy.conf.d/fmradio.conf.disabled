@@ -14,7 +14,7 @@ flags = refresh_always
 type  = headphoneasfmradiolp
 source= droid.input.external@equals:true
 ports = droid.input.external@equals:true->$droid_source_input_fmradio
-module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20latency_msec=250
+module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20source_output_properties='media.name=fmradio-loopback-source'%20latency_msec=250
 flags = refresh_always, module_unload_immediately
 
 [device]
@@ -27,9 +27,13 @@ flags = refresh_always
 type  = headsetasfmradiolp
 source= droid.input.external@equals:true
 ports = droid.input.external@equals:true->$droid_source_input_fmradio
-module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20latency_msec=250
+module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20source_output_properties='media.name=fmradio-loopback-source'%20latency_msec=250
 flags = refresh_always, module_unload_immediately
 
 [stream]
 property = media.name@equals:"fmradio-loopback"
+group    = player
+
+[stream]
+property = media.name@equals:"fmradio-loopback-source"
 group    = player
