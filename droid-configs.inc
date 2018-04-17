@@ -473,10 +473,6 @@ if [ -f %{dcd_path}/kickstart/pack_package-droid-updater ]; then
   sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_path}/kickstart/pack_package-droid-updater > $DEST_UPDATER || true
 fi
 
-# post_nochroot
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/post_nochroot/
-cp %{dcd_common}/kickstart/post_nochroot/hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/post_nochroot/%{rpm_device}
-
 # and attachments (override if there is one)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment
 cp -f %{dcd_common}/kickstart/attachment_hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment/%{rpm_device}
