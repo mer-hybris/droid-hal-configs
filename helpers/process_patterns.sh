@@ -33,7 +33,8 @@ COUNT=$(find . -type f -name "*.xml" | wc -l)
 echo "<patterns count=\"$COUNT\">" >  ../patterns.xml
 find . -type f -name "*.xml" -exec cat {} + >> ../patterns.xml
 echo "</patterns>" >>  ../patterns.xml
-modifyrepo ../patterns.xml $ANDROID_ROOT/droid-local-repo/$DEVICE/repodata
+modifyrepo_c ../patterns.xml $ANDROID_ROOT/droid-local-repo/$DEVICE/repodata ||
+  modifyrepo ../patterns.xml $ANDROID_ROOT/droid-local-repo/$DEVICE/repodata
 cd ../..
 rm -rf tmp/patterns
 rm tmp/patterns.xml
