@@ -10,6 +10,9 @@ SUBSYSTEM=="misc", KERNEL=="log_radio", SYMLINK+="alog/radio"
 SUBSYSTEM=="misc", KERNEL=="log_system", SYMLINK+="alog/system"
 SUBSYSTEM=="misc", KERNEL=="log_main", SYMLINK+="alog/main"
 
+# Video device symlinks needed for video codecs
+SUBSYSTEM=="video4linux", KERNEL=="video[0-9]*", ATTRS{link_name}!="", SYMLINK+="video/%s{link_name}"
+
 # Partition symlinks, compatible with the android way of setting up the
 # symlinks.
 
