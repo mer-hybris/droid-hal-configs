@@ -172,7 +172,7 @@ Provides:   droid-config-preinit-plugins
 %package pulseaudio-settings
 Summary:    PulseAudio settings for %{rpm_device} hw
 Provides:   droid-config-pulseaudio-settings
-Requires:   pulseaudio >= 11.1
+Requires:   pulseaudio >= 11.1+git4
 Requires:   pulseaudio-modules-nemo-parameters >= 11.1.24
 Requires:   pulseaudio-modules-nemo-stream-restore >= 11.1.24
 Requires:   pulseaudio-modules-nemo-mainvolume >= 11.1.24
