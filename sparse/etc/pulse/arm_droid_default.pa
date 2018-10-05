@@ -25,6 +25,21 @@
 
 load-module module-droid-keepalive
 
+### If droid-card needs other arguments than the default, have the new
+### load-module line in /etc/pulse/arm_droid_card_custom.pa
+.ifexists /etc/pulse/arm_droid_card_custom.pa
+ .include /etc/pulse/arm_droid_card_custom.pa
+.else
+ load-module module-droid-card rate=48000
+.endif
+
+### Needed on many new devices. HADK guide explains how to implement this fully
+.ifexists module-droid-glue.so
+ .nofail
+ load-module module-droid-glue
+ .fail
+.endif
+
 load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-parameters use_voice=false
 load-module module-meego-mainvolume virtual_stream=true
 
@@ -43,21 +58,6 @@ load-module module-match table=/etc/pulse/x-maemo-match.table key=application.na
 load-module module-augment-properties
 
 load-module module-null-sink sink_name=sink.null rate=48000
-
-### If droid-card needs other arguments than the default, have the new
-### load-module line in /etc/pulse/arm_droid_card_custom.pa
-.ifexists /etc/pulse/arm_droid_card_custom.pa
- .include /etc/pulse/arm_droid_card_custom.pa
-.else
- load-module module-droid-card rate=48000
-.endif
-
-### Needed on many new devices. HADK guide explains how to implement this fully
-.ifexists module-droid-glue.so
- .nofail
- load-module module-droid-glue
- .fail
-.endif
 
 load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
 load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
