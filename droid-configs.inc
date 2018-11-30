@@ -600,6 +600,14 @@ touch %{_datadir}/ssu/features.d/* || :
 %endif
 
 %if 0%{?have_bluetooth:1}
+%posttrans bluez4
+rm -rf /etc/bluetooth                   || :
+ln -s bluez4/bluetooth /etc/bluetooth   || :
+
+%posttrans bluez5
+rm -rf /etc/bluetooth                   || :
+ln -s bluez5/bluetooth /etc/bluetooth   || :
+
 %files bluez4 -f tmp/bluez4.files
 %defattr(644,root,root,-)
 
