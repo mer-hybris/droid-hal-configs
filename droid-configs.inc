@@ -417,6 +417,18 @@ mkdir -p %{buildroot}/usr/share/package-groups/
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/common -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 
+delete_patterns() {
+  deletelist=$1
+  if [ -e $deletelist ]; then
+    egrep -v '^#|^$' $deletelist | (
+      while read file; do
+        rm $RPM_BUILD_ROOT/$file
+      done)
+  fi
+}
+
+delete_patterns delete_pattern_%{rpm_device}.list
+
 %if 0%{!?pixel_ratio:1}
 %define pixel_ratio 1.0
 %endif
