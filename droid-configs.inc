@@ -307,7 +307,7 @@ echo "%defattr(-,root,root,-)" > tmp/droid-config.files
 copy_files_from() {
   config_dir=$1
   if [ -d $config_dir ]; then
-    (cd $config_dir; find . \( -type f -or -type l \) -print ) | sed 's/^.//' >> tmp/droid-config.files
+    (cd $config_dir; find . \( -type f -o -type l \) -print ) | sed 's/^.//' >> tmp/droid-config.files
     cp -Rf $config_dir/* $RPM_BUILD_ROOT/
   fi
 }
