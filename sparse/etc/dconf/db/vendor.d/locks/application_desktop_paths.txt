@@ -1,0 +1,2 @@
+/desktop/sailfish/application_desktop_paths
+
