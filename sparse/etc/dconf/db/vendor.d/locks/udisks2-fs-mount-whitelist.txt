@@ -1,1 +1,0 @@
-/org/freedesktop/udisks2/filesystem/whitelist
