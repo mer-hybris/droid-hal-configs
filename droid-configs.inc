@@ -12,6 +12,8 @@
 # rpm_vendor: vendor name used rpm-side (eg in configs) : defaults to vendor
 # ofono_enable_plugins: any additional ofono plugins that you want explicitly enabled
 # ofono_disable_plugins: any ofono plugins that you want explicitly disabled
+# out_of_image_files_from_fs: files from the filesystem which should also be
+#     distributed alongside the filesystem images
 
 # Device capabilities:
 # remove_modem: set this if your device has no modem (e.g. a WiFi-only tablet)
@@ -301,6 +303,14 @@ mkdir -p %{buildroot}
 rm -rf tmp/
 mkdir -p tmp/
 echo "%defattr(-,root,root,-)" > tmp/droid-config.files
+
+%if 0%{?out_of_image_files_from_fs:1}
+echo "%{out_of_image_files_from_fs}" > tmp/out-of-image-files-from-fs.files
+for f in `cat tmp/out-of-image-files-from-fs.files`; do
+  mkdir -p $RPM_BUILD_ROOT/$(dirname $f)
+  cp $f $RPM_BUILD_ROOT/$(dirname $f)
+done
+%endif
 
 # Prefer files from sparse/ in the HA specific
 # area over sparse/ in the dcd area
@@ -609,6 +619,9 @@ touch %{_datadir}/ssu/features.d/* || :
 
 %if 0%{?out_of_image_files:1}
 %files out-of-image-files -f tmp/out-of-image-files.files
+%if 0%{?out_of_image_files_from_fs:1}
+%{out_of_image_files_from_fs}
+%endif
 %endif
 
 %if 0%{?have_bluetooth:1}
