@@ -74,7 +74,7 @@ Release:    1
 Group:      Configs
 License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
-BuildRequires: ssu-kickstart-configuration-jolla
+BuildRequires: ssu-kickstart-configuration
 BuildRequires: pkgconfig(android-headers)
 BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
@@ -152,7 +152,7 @@ Provides:   policy-settings
 %package kickstart-configuration
 Summary:    Kickstart configuration for %{rpm_device}
 Provides:   droid-config-kickstart-configuration
-Requires:   ssu-kickstart-configuration-jolla
+Requires:   ssu-kickstart-configuration
 Provides:   droid-hal-kickstart-configuration
 # the %{name} contains ssu.ini file which is needed to build kickstarts
 Requires:   %{name} = %{version}-%{release}
