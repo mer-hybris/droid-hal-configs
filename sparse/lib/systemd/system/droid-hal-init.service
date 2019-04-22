@@ -15,6 +15,7 @@ NotifyAccess=all
 ProtectSystem=full
 ProtectHome=true
 PrivateTmp=true
+ExecStartPre=-/bin/sh /usr/bin/droid/droid-hal-early-init.sh
 ExecStart=/bin/sh /usr/bin/droid/droid-hal-startup.sh
 ExecStop=/bin/sh /usr/bin/droid/droid-hal-shutdown.sh %c
 Restart=always
