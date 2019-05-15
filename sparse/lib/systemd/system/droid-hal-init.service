@@ -12,6 +12,9 @@ Conflicts=shutdown.target
 [Service]
 Type=notify
 NotifyAccess=all
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
 ExecStart=/bin/sh /usr/bin/droid/droid-hal-startup.sh
 ExecStop=/bin/sh /usr/bin/droid/droid-hal-shutdown.sh %c
 Restart=always
