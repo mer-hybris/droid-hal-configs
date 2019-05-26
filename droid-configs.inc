@@ -81,11 +81,15 @@ Release: %{rel_date}
 License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration
+%if 0%{!?native_build:1}
 BuildRequires: pkgconfig(android-headers)
+%endif
 BuildRequires: qt5-qttools-kmap2qmap
 BuildRequires: sed
 Requires: sed
+%if 0%{!?native_build:1}
 Requires: droid-hal
+%endif
 %if 0%{?community_adaptation:1}
 # because it provides one ssu feature, do:
 Requires: community-adaptation
@@ -175,7 +179,11 @@ Requires:   pulseaudio >= 11.1+git4
 Requires:   pulseaudio-modules-nemo-parameters >= 11.1.24
 Requires:   pulseaudio-modules-nemo-stream-restore >= 11.1.24
 Requires:   pulseaudio-modules-nemo-mainvolume >= 11.1.24
+%if 0%{!?native_build:1}
 Requires:   pulseaudio-modules-droid >= 11.1.66
+%else
+Requires:   pulseaudio-module-keepalive
+%endif
 Requires:   pulseaudio-policy-enforcement >= 11.1.35
 Provides:   pulseaudio-settings
 
