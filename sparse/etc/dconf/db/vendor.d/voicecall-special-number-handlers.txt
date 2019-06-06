@@ -1,0 +1,2 @@
+[desktop/jolla/specials]
+supported='csd,'
