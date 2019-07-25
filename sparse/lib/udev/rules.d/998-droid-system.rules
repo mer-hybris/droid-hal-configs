@@ -59,3 +59,5 @@ ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block
 # NOTE: if the comment marked with (1) applies then this will not do anything.
 ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block/platform/$env{PLATFORM_FOLDER}/by-name/$env{ID_PART_ENTRY_NAME}"
 
+SUBSYSTEM=="firmware", ACTION=="add", RUN="/usr/bin/droid/droid-load-firmware.sh"
+
