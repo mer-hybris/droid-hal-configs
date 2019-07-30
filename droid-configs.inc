@@ -495,15 +495,18 @@ if [ -e %{dcd_path}/kickstart ]; then
   cp -rf %{dcd_path}/kickstart/* $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/
 fi
 
-# if we are building on Mer OBS or locally, make a domain=sales .ks
-# so it works for HADK users:
-%define disturl_subst %(echo %{disturl} | grep jollamobile.com)
-%if "%{disturl_subst}" == ""
-  echo "Setting domain to sales"
-  %define ssu_override domain=sales
-%else
-  echo "Setting domain to jolla"
-  %define ssu_override domain=jolla
+# Do not set ssu_override if it is already defined
+%if 0%{!?ssu_override:1}
+  # if we are building on Mer OBS or locally, make a domain=sales .ks
+  # so it works for HADK users:
+  %define disturl_subst %(echo %{disturl} | grep jollamobile.com)
+  %if "%{disturl_subst}" == ""
+    echo "Setting domain to sales"
+    %define ssu_override domain=sales
+  %else
+    echo "Setting domain to jolla"
+    %define ssu_override domain=jolla
+  %endif
 %endif
 
 # build rnd kickstarts on devel level, release kickstarts on all other levels
