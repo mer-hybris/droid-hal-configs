@@ -23,6 +23,7 @@ if [ -e /sys$DEVPATH/loading ]; then
     done
 
     log "Failed to find firmware $FIRMWARE for $DEVPATH"
+    echo "\-1" > /sys$DEVPATH/loading
     exit 1
 else
     log "Failed to find /sys$DEVPATH/loading, could not load $FIRMWARE."
