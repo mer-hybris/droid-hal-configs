@@ -40,6 +40,12 @@ load-module module-droid-keepalive
  .fail
 .endif
 
+.ifexists module-droid-hidl.so
+ .nofail
+ load-module module-droid-hidl
+ .fail
+.endif
+
 load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-parameters use_voice=false
 load-module module-meego-mainvolume virtual_stream=true
 
