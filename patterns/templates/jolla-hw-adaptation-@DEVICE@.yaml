@@ -75,5 +75,9 @@ Requires:
 #- qt5-qtmultimedia-plugin-mediaservice-irisradio
 #- jolla-mediaplayer-radio
 
+# NFC for devices using Android 8 or newer as base
+#- nfcd-binder-plugin
+#- jolla-settings-system-nfc
+
 Summary: Jolla HW Adaptation @DEVICE@
 
