@@ -78,6 +78,7 @@ BuildRequires: ssu-kickstart-configuration
 BuildRequires: pkgconfig(android-headers)
 BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
+Requires: droid-hal
 %if 0%{?community_adaptation:1}
 # because it provides one ssu feature, do:
 Requires: community-adaptation
