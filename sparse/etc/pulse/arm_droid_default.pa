@@ -23,7 +23,12 @@
 
 .fail
 
-load-module module-droid-keepalive
+# Transitional check as keepalive module is moved away from droid modules.
+.ifexists module-keepalive.so
+ load-module module-keepalive
+.else
+ load-module module-droid-keepalive
+.endif
 
 ### If droid-card needs other arguments than the default, have the new
 ### load-module line in /etc/pulse/arm_droid_card_custom.pa
