@@ -60,6 +60,9 @@ load-module module-meego-mainvolume virtual_stream=true
  .include /etc/pulse/bluez5_stream_restore.pa
 .else
  .include /etc/pulse/bluez4_stream_restore.pa
+ # fake sco sink and source are needed only by bluez4 device
+ load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
+ load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 .endif
 
 load-module module-match table=/etc/pulse/x-maemo-match.table key=application.name
@@ -69,9 +72,8 @@ load-module module-match table=/etc/pulse/x-maemo-match.table key=application.na
 load-module module-augment-properties
 
 load-module module-null-sink sink_name=sink.null rate=48000
+load-module module-null-source source_name=source.null rate=48000
 
-load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
-load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 load-module module-bluetooth-discover bluez4_args="sco_sink=sink.fake.sco sco_source=source.fake.sco" bluez5_args="headset=droid"
 
 load-module module-policy-enforcement
@@ -131,4 +133,4 @@ load-module module-dbus-protocol
 ### Move orphan streams to placeholder sinks or sources so that playback doesn't get
 ### interrupted. Policy enforcement module then moves the streams to new appropriate
 ### sinks or sources.
-load-module module-rescue-streams sink_name=sink.null source_name=sink.null.monitor
+load-module module-rescue-streams sink_name=sink.null source_name=source.null
