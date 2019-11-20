@@ -3,6 +3,9 @@
 #
 # community_adaptation: needs to be defined for community HW adaptations
 #
+# use_meta_package: define to use meta package jolla-configuration-%{rpm_device} with
+#                   all dependencies instead of patterns
+#
 # Device information:
 # device: should be the CM codename or the AOSP TARGET_PRODUCT
 # vendor: determine the droid-side directory used for ./device/<vendor>/<device>
@@ -525,10 +528,16 @@ fi
       while read line; do
         %gen_ks "$line"
         sed -i s/@VARIANT_NAME@/$line/g %{buildroot}/%{_datadir}/kickstarts/*$line*.ks
+        %if 0%{?use_meta_package:1}
+          sed -i "s/@Jolla Configuration /jolla-configuration-/g" %{buildroot}/%{_datadir}/kickstarts/*.ks
+        %endif
       done)
   fi
 %else
   %gen_ks %{rpm_device}
+  %if 0%{?use_meta_package:1}
+    sed -i "s/@Jolla Configuration %{rpm_device}/jolla-configuration-%{rpm_device}/g" %{buildroot}/%{_datadir}/kickstarts/*.ks
+  %endif
 %endif
 
 # Preinit plugins
