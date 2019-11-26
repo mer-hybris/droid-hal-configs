@@ -510,8 +510,8 @@ fi
   %endif
 %endif
 
-# build rnd kickstarts on devel level, release kickstarts on all other levels
-%if 0%{?qa_stage_devel:1}
+# build rnd kickstarts on devel and branch_devel level, release kickstarts on all other levels
+%if 0%{?qa_stage_devel:1} || 0%{?qa_stage_branch_devel:1}
   KS_LEVELS=true
 %else
   KS_LEVELS=false
