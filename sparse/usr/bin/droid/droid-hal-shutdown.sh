@@ -32,10 +32,11 @@
 #    class_stop main
 #    class_stop core
 
-# Kill all processes that are in this same cgroup ($1) 
-[ -z "$1" ] && echo "Need cgroup path" && exit 1
-CGROUP=$1
-[ ! -f /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs ] && echo "No such cgroup: $1" && exit 1
+# Kill all processes that are in this same cgroup.
+# Deducing the name of the service's cgroup based on the shutdown script's
+# cgroup name.
+CGROUP=$(cat /proc/self/cgroup | sed -r '/1:name=systemd:/!d;s|||;s|/control||')
+[ ! -f /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs ] && echo "No such cgroup: $CGROUP" && exit 1
 
 get_pids() {
     # Get list of running pids in this cgroup
