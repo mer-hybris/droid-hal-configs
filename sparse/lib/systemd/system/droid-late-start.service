@@ -5,6 +5,10 @@ Before=network.target start-user-session@USER.service bluetooth.service ofono.se
 Conflicts=shutdown.target
 
 [Service]
+# Sandboxing
+CapabilityBoundingSet=
+ProtectHome=true
+ProtectSystem=full
 ExecStart=/usr/bin/setprop droid.late_start trigger_late_start
 
 [Install]
