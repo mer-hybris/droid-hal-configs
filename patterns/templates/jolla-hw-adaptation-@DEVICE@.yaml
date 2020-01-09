@@ -68,6 +68,9 @@ Requires:
 # enable device lock and allow to select untrusted software
 - jolla-devicelock-daemon-encsfa
 
+# Enable home encryption
+#- sailfish-device-encryption
+
 # For GPS
 - geoclue-provider-hybris
 
