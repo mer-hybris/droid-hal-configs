@@ -508,15 +508,19 @@ sed -e 's|%DEVICE%|%{rpm_device}|g' \
 %endif
 
 %if 0%{?community_adaptation:1}
-# Community ports have their adaptation repos on http://build.merproject.org
-# Until we figure out how ssu works, we'll prevent the default adaptation0 from being created...
-sed --in-place '/adaptation-repos=/d' $RPM_BUILD_ROOT/%{board_mapping_dir}/*.ini
-# ...and make a separate adaptation repo for community:
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/
-sed -e 's|@DEVICE@|%{rpm_device}|g' \
-    -e 's|@VENDOR@|%{rpm_vendor}|g' \
-    %{_datadir}/community-adaptation/adaptation-community.ini.in \
-    >$RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/adaptation-community.ini
+if [ ! "$(ls -A %{dcd_path}/sparse/%{_datadir}/ssu/repos.d 2> /dev/null)" ]; then
+  # Community ports that do not override repos in ssu/repos.d are catered by
+  # the community-adaptation package.
+  # Prevent the default adaptation0 from being created:
+  sed --in-place '/adaptation-repos=/d' $RPM_BUILD_ROOT/%{board_mapping_dir}/*.ini
+  # Make a separate adaptation repo for community:
+  mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/
+  sed -e 's|@DEVICE@|%{rpm_device}|g' \
+      -e 's|@VENDOR@|%{rpm_vendor}|g' \
+      %{_datadir}/community-adaptation/adaptation-community.ini.in \
+      >$RPM_BUILD_ROOT/%{_datadir}/ssu/features.d/adaptation-community.ini
+  echo "%{_datadir}/ssu/features.d/adaptation-community.ini" >> tmp/droid-config.files
+fi
 %endif
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
@@ -614,6 +618,15 @@ fi
 touch %{board_mapping_dir}/* &> /dev/null || :
 touch %{_datadir}/ssu/features.d/* &> /dev/null || :
 
+%if 0%{?community_adaptation:1}
+if [ "$(find /%{_datadir}/ssu/repos.d -maxdepth 1 -type f -not -name 10-jolla.ini 2> /dev/null)" ] \
+   && ssu lr | grep -q adaptation-community; then
+  # Switching to a self-hosted removes adaptation-community*.ini files
+  # but those feature repos will still exist until we clear its cache:
+  rm -f /var/cache/ssu/features.ini
+fi
+%endif
+
 # To add additional post scripts, one can define those as part
 # of additional_post_scripts macro.
 %{?additional_post_scripts}
@@ -629,9 +642,6 @@ touch %{_datadir}/ssu/features.d/* &> /dev/null || :
 %{board_mapping_file}
 %endif
 %{_datadir}/qt5/keymaps/droid.qmap
-%if 0%{?community_adaptation:1}
-%{_datadir}/ssu/features.d/adaptation-community.ini
-%endif
 
 %files ssu-kickstarts
 %defattr(-,root,root,-)
