@@ -70,7 +70,12 @@ Name:	    droid-config-%{rpm_device}
 Provides:   droid-config
 Summary:    Config packages for Droid HAL adaptations
 Version:    1
+%if 0%{?_obs_build_project:1}
 Release:    1
+%else
+%define rel_date %(date +'%%Y%%m%%d%%H%%M')
+Release: %{rel_date}
+%endif
 Group:      Configs
 License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
