@@ -517,11 +517,19 @@ fi
   %endif
 %endif
 
+%if 0%{?_obs_build_project:1}
 # build rnd kickstarts on devel and branch_devel level, release kickstarts on all other levels
 %if 0%{?qa_stage_devel:1} || 0%{?qa_stage_branch_devel:1}
   KS_LEVELS=true
 %else
   KS_LEVELS=false
+%endif
+%else
+  if ssu s 2>/dev/null | grep -q "Release (rnd): latest (devel)"; then
+    KS_LEVELS=true
+  else
+    KS_LEVELS=false
+  fi
 %endif
 
 # build variant ks files if name file exist
