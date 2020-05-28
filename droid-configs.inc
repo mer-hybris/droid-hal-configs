@@ -269,19 +269,25 @@ Provides: %{rpm_device}-bluez-configs
 
 Requires: bluez5
 Conflicts: bluez
+Obsoletes: bluez
 
 Requires: bluez5-libs
 Conflicts: bluez-libs
+Obsoletes: bluez-libs
 
 Requires: bluez5-obexd
 Conflicts: obexd
+Obsoletes: obexd
 
 Requires: kf5bluezqt-bluez5
 Conflicts: kf5bluezqt-bluez4
+Obsoletes: kf5bluezqt-bluez4
+Obsoletes: kf5bluezqt-bluez4-declarative
 
 Provides: bluez5-configs
 Conflicts: bluez-configs
 Obsoletes: bluez-configs-sailfish
+Obsoletes: bluez-configs-mer
 
 %description bluez5
 %{summary}.
