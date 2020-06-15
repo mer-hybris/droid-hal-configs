@@ -233,8 +233,6 @@ flashing configurations or flashing scripts.
 %package bluez4
 Summary: %{rpm_device} packages for BlueZ 4
 Conflicts: droid-config-%{rpm_device}-bluez5
-Requires: %{name} = %{version}-%{release}
-Requires: %{name} = %{version}
 Provides: %{rpm_device}-bluez-configs
 
 Requires: bluez
@@ -263,25 +261,29 @@ Obsoletes: bluez-configs-mer
 %package bluez5
 Summary: %{rpm_device} packages for BlueZ 5
 Conflicts: droid-config-%{rpm_device}-bluez4
-Requires: %{name} = %{version}-%{release}
-Requires: %{name} = %{version}
 Provides: %{rpm_device}-bluez-configs
 
 Requires: bluez5
 Conflicts: bluez
+Obsoletes: bluez
 
 Requires: bluez5-libs
 Conflicts: bluez-libs
+Obsoletes: bluez-libs
 
 Requires: bluez5-obexd
 Conflicts: obexd
+Obsoletes: obexd
 
 Requires: kf5bluezqt-bluez5
 Conflicts: kf5bluezqt-bluez4
+Obsoletes: kf5bluezqt-bluez4
+Obsoletes: kf5bluezqt-bluez4-declarative
 
 Provides: bluez5-configs
 Conflicts: bluez-configs
 Obsoletes: bluez-configs-sailfish
+Obsoletes: bluez-configs-mer
 
 %description bluez5
 %{summary}.
