@@ -70,7 +70,12 @@ Name:	    droid-config-%{rpm_device}
 Provides:   droid-config
 Summary:    Config packages for Droid HAL adaptations
 Version:    1
+%if 0%{?_obs_build_project:1}
 Release:    1
+%else
+%define rel_date %(date +'%%Y%%m%%d%%H%%M')
+Release: %{rel_date}
+%endif
 Group:      Configs
 License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
@@ -514,11 +519,19 @@ fi
   %endif
 %endif
 
+%if 0%{?_obs_build_project:1}
 # build rnd kickstarts on devel and branch_devel level, release kickstarts on all other levels
 %if 0%{?qa_stage_devel:1} || 0%{?qa_stage_branch_devel:1}
   KS_LEVELS=true
 %else
   KS_LEVELS=false
+%endif
+%else
+  if ssu s 2>/dev/null | grep -q "Release (rnd): latest (devel)"; then
+    KS_LEVELS=true
+  else
+    KS_LEVELS=false
+  fi
 %endif
 
 # build variant ks files if name file exist
