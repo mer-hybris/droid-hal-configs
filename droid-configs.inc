@@ -312,13 +312,49 @@ rm -rf tmp/
 mkdir -p tmp/
 echo "%defattr(-,root,root,-)" > tmp/droid-config.files
 
-# Prefer files from sparse/ in the HA specific
-# area over sparse/ in the dcd area
+# On 64-bit ARM certain subdirs should not be moved to lib64 but kept under lib.
+# Algorithm below autodetects cases under sparse/ so adaptations do not have to
+# make any changes to their trees when going from armv7hl to aarch64.
+do_not_move_to_lib64=(
+    "firmware"
+    "modules"
+    "startup"
+    "systemd/system"
+    "systemd/user"
+    "tmpfiles.d"
+    "udev"
+    )
 copy_files_from() {
   config_dir=$1
   if [ -d $config_dir ]; then
-    (cd $config_dir; find . \( -type f -o -type l \) -print ) | sed 's/^.//' >> tmp/droid-config.files
-    cp -Rf $config_dir/* $RPM_BUILD_ROOT/
+    olddir=$PWD
+    cd $config_dir
+    for f in $(find . \( -type f -o -type l \) -print); do
+      dst=$(echo $f | sed 's/^.//')
+      if echo $dst | grep -qE "^/usr/lib/|^/lib/"; then
+        move_to_lib64=true
+        for stay_in_lib in "${do_not_move_to_lib64[@]}"; do
+          if echo $dst | grep -qE "^/usr/lib/$stay_in_lib/|^/lib/$stay_in_lib/"; then
+            move_to_lib64=false
+            break
+          fi
+        done
+        if [ "$move_to_lib64" = true ]; then
+          if echo $dst | grep -q "^/usr/lib/"; then
+            dst=$(echo $dst | sed 's /usr/lib/ %{_libdir}/ ')
+          else
+            dst=$(echo $dst | sed 's /lib/ /%{_lib}/ ')
+          fi
+        fi
+      fi
+      dstdir=$RPM_BUILD_ROOT$(dirname $dst)
+      if [ ! -d $dstdir ]; then
+        mkdir -p $dstdir
+      fi
+      cp -Pv $f $dstdir
+      echo $dst >> $olddir/tmp/droid-config.files
+    done
+    cd - >/dev/null
   fi
 }
 
@@ -549,12 +585,12 @@ fi
 %endif
 
 # Preinit plugins
-ln -s /bin/false $RPM_BUILD_ROOT%{_libdir}/startup/preinit/is_total_erase_supported
+ln -s /bin/false $RPM_BUILD_ROOT%{_prefix}/lib/startup/preinit/is_total_erase_supported
 
 # Create keyboard map file
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps
-/usr/lib/qt5/bin/kmap2qmap %{dcd_common}/configs/droid.kmap %{dcd_common}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap
-/usr/lib/qt5/bin/kmap2qmap %{dcd_path}/configs/droid.kmap %{dcd_path}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap || true
+%{_libdir}/qt5/bin/kmap2qmap %{dcd_common}/configs/droid.kmap %{dcd_common}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap
+%{_libdir}/qt5/bin/kmap2qmap %{dcd_path}/configs/droid.kmap %{dcd_path}/configs/us.kmap $RPM_BUILD_ROOT/%{_datadir}/qt5/keymaps/droid.qmap || true
 
 clean_files() { sed 's_^./_/_'; }
 
@@ -617,7 +653,7 @@ touch %{_datadir}/ssu/features.d/* &> /dev/null || :
 
 %files preinit-plugin
 %defattr(-,root,root,-)
-%{_libdir}/startup/preinit/*
+%{_prefix}/lib/startup/preinit/*
 
 %files pulseaudio-settings -f tmp/pulseaudio-settings.files
 %defattr(644,root,root,-)
