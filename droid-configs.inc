@@ -76,7 +76,6 @@ Release:    1
 %define rel_date %(date +'%%Y%%m%%d%%H%%M')
 Release: %{rel_date}
 %endif
-Group:      Configs
 License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration
@@ -195,7 +194,6 @@ Provides:   pulseaudio-settings
 %package sailfish
 Provides: droid-config-sailfish
 Provides: theme-configs
-Group:	System
 BuildArch:	noarch
 Requires: %{name} = %{version}-%{release}
 Requires: oneshot
@@ -209,7 +207,6 @@ Configure sailfish eg naturally landscape devices like mako
 
 %package flashing
 Provides: droid-config-flashing
-Group: System
 # Sparse image flashing support for flash-partition
 Requires: droid-hal-tools
 Summary: On device flashing files for %{rpm_device} hw
@@ -222,7 +219,6 @@ Summary: On device flashing files for %{rpm_device} hw
 %if 0%{?out_of_image_files:1}
 
 %package out-of-image-files
-Group:	System
 BuildArch: noarch
 Summary: Files that are used for flashing and are not needed on device.
 
