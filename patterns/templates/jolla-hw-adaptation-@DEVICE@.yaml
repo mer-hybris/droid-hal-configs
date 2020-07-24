@@ -43,12 +43,6 @@ Requires:
 - qt5-qpa-hwcomposer-plugin
 - qtscenegraph-adaptation
 
-# Add GStreamer v1.0 as standard
-- gstreamer1.0
-- gstreamer1.0-plugins-good
-- gstreamer1.0-plugins-base
-- gstreamer1.0-plugins-bad
-- nemo-gstreamer1.0-interfaces
 # For devices with droidmedia and gst-droid built, see HADK pdf for more information
 - gstreamer1.0-droid
 
