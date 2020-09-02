@@ -5,3 +5,4 @@ requires:droid-hal-version-@DEVICE@
 requires:libhybris-libEGL
 requires:libhybris-libGLESv2
 requires:libhybris-libwayland-egl
+requires:patterns-sailfish-core-device
