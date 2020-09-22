@@ -16,16 +16,12 @@
 # Device capabilities:
 # remove_modem: set this if your device has no modem (e.g. a WiFi-only tablet)
 # remove_bluetooth: set this if your device does not have a Bluetooth chip
-# pixel_ratio: UI scaling factor, choose from 1.0, 1.5, 2.0. Any other value will
-# default the icon pack to 1.0 resolution (it is a bug)!
-# Read more on ways to do-it-together: https://bugs.nemomobile.org/show_bug.cgi?id=814
-# WARNING: pixel_ratio is experimental, and not yet ready for proper UI scalability
-# tests! Please do not test/port your apps to other form factors for the time being.
+# pixel_ratio: UI scaling factor. Calc shown in droid-config-@DEVICE@.spec.template
 #  Ratio examples:
 #  Jolla1:       1.0
 #  Jolla Tablet: 1.5
 #  Nexus 5:      2.0
-#  Nexus 4:      pixel_ratio=1.3 (icon resolution then drops to 1.0)
+#  Nexus 4:      pixel_ratio=1.3 (then icon_res becomes 1.25)
 
 # Overwriting other configs:
 # If your droid-config-$DEVICE needs to provide one or more device-specific
