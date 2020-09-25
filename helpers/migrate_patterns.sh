@@ -28,6 +28,7 @@ function migrate {
   sed -i 's/pattern://g' $METAPKG_DIR/"$metaspec"
   sed -i 's/Requires: jolla-hw-adaptation-/Requires: patterns-sailfish-device-adaptation-/g' $METAPKG_DIR/"$metaspec"
   sed -i 's/Requires: jolla-configuration-/Requires: patterns-sailfish-device-configuration-/g' $METAPKG_DIR/"$metaspec"
+  sed -i 's/Requires: sailfish-porter-tools/Requires: patterns-sailfish-device-porter-tools/g' $METAPKG_DIR/"$metaspec"
   sed -i "s/@ICON_RES@/%{icon_res}/" $METAPKG_DIR/"$metaspec"
 
   {
@@ -66,6 +67,15 @@ if [ ! -d droid-configs-device/helpers ]; then
   echo "$0: launch this script from the \$ANDROID_ROOT/hybris/droid-configs directory"
   exit 1
 fi
+
+for pattern in "$PATTERNS_DIR"/*.yaml; do
+  while IFS= read -r f; do
+    if ! (echo "$f" | grep -qE "^- pattern:\s*sailfish-porter-tools|^- pattern:\s*jolla-hw-adaptation-"); then
+      echo "File $pattern contains patterns that cannot be migrated automatically. Aborting."
+      exit 1
+    fi
+  done < <(grep "^- pattern:" "$pattern")
+done
 
 for pattern in "$PATTERNS_DIR"/*.yaml; do
   migrate "${pattern##*/}"
