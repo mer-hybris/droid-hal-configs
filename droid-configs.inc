@@ -685,3 +685,26 @@ ln -s bluez5/bluetooth /etc/bluetooth   || :
 %files bluez5 -f tmp/bluez5.files
 %defattr(644,root,root,-)
 %endif
+
+%package -n patterns-sailfish-device-porter-tools
+Summary: Sailfish OS Device Porter Tools
+Requires: jolla-developer-mode
+Requires: sailfishsilica-qt5-demos
+Requires: libhybris-tests
+
+Requires: busybox-static
+Requires: net-tools
+Requires: openssh-clients
+Requires: openssh-server
+Requires: vim-enhanced
+Requires: zypper
+Requires: strace
+
+# jolla-rnd-device will enable usb-moded even when UI is not yet
+# brought up (useful during development)
+Requires: jolla-rnd-device
+
+%description -n patterns-sailfish-device-porter-tools
+Pattern with packages for common debugging tools used by porters
+
+%files -n patterns-sailfish-device-porter-tools
