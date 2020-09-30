@@ -1,9 +1,8 @@
 %package -n patterns-sailfish-device-configuration-@DEVICE@
 Summary: Jolla Configuration @DEVICE@
+Requires: patterns-sailfish-device-configuration-common
 Requires: patterns-sailfish-device-adaptation-@DEVICE@
 
-Requires: patterns-sailfish-applications
-Requires: patterns-sailfish-ui
 # For devices with cellular modem. Those without one, please comment out:
 Requires: patterns-sailfish-cellular-apps
 # Early stages of porting benefit from these:
@@ -24,10 +23,6 @@ Requires: patterns-sailfish-consumer-generic
 
 # For Mozilla location services (online)
 Requires: geoclue-provider-mlsdb
-
-# Sailfish OS CSD tool for hardware testing
-# needs some configuration to get all features working
-Requires: csd
 
 # Devices with 2G or more memory should also include this booster
 # to improve camera startup times and the like

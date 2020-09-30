@@ -704,3 +704,17 @@ Requires: jolla-rnd-device
 Pattern with packages for common debugging tools used by porters
 
 %files -n patterns-sailfish-device-porter-tools
+
+%package -n patterns-sailfish-device-configuration-common
+Summary: Jolla Configuration common
+Requires: patterns-sailfish-applications
+Requires: patterns-sailfish-ui
+
+# Sailfish OS CSD tool for hardware testing
+# needs some configuration to get all features working
+Recommends: csd
+
+%description -n patterns-sailfish-device-configuration-common
+Pattern with packages for common HW configurations
+
+%files -n patterns-sailfish-device-configuration-common
