@@ -53,15 +53,15 @@ function migrate {
   if [[ $meta == patterns-sailfish-device-adaptation-* ]]; then
     rm $PATTERNS_DIR/"$pattern"
     sed -i "/$pattername.xml$/d" delete_pattern_*.list 2>/dev/null
-  elif [[ $meta == patterns-sailfish-device-configuration-* ]]; then
-    cat <<EOF > $PATTERNS_DIR/"$pattern"
-Description: Pattern with packages for $device configurations
-Name: jolla-configuration-$device
-Requires:
-- patterns-sailfish-device-configuration-$device
-
-Summary: Jolla Configuration $device
-EOF
+  elif [[ $meta == patterns-sailfish-device-*configuration-* ]]; then
+    # Replace pattern contents with the main meta-package
+    tmpmeta=$(mktemp)
+    awk -v name=$meta '
+      BEGIN         {p=1}
+      /^Requires:/  {print;system("echo - "name"; echo");p=0}
+      /^Summary:/   {p=1}
+      p' $PATTERNS_DIR/"$pattern" > $tmpmeta
+    mv $tmpmeta $PATTERNS_DIR/"$pattern"
   fi
 
   echo "Migrated successfully: $PATTERNS_DIR/$pattern -> $metaspec"
