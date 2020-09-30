@@ -16,16 +16,12 @@
 # Device capabilities:
 # remove_modem: set this if your device has no modem (e.g. a WiFi-only tablet)
 # remove_bluetooth: set this if your device does not have a Bluetooth chip
-# pixel_ratio: UI scaling factor, choose from 1.0, 1.5, 2.0. Any other value will
-# default the icon pack to 1.0 resolution (it is a bug)!
-# Read more on ways to do-it-together: https://bugs.nemomobile.org/show_bug.cgi?id=814
-# WARNING: pixel_ratio is experimental, and not yet ready for proper UI scalability
-# tests! Please do not test/port your apps to other form factors for the time being.
+# pixel_ratio: UI scaling factor. Calc shown in droid-config-@DEVICE@.spec.template
 #  Ratio examples:
 #  Jolla1:       1.0
 #  Jolla Tablet: 1.5
 #  Nexus 5:      2.0
-#  Nexus 4:      pixel_ratio=1.3 (icon resolution then drops to 1.0)
+#  Nexus 4:      pixel_ratio=1.3 (then icon_res becomes 1.25)
 
 # Overwriting other configs:
 # If your droid-config-$DEVICE needs to provide one or more device-specific
@@ -685,3 +681,40 @@ ln -s bluez5/bluetooth /etc/bluetooth   || :
 %files bluez5 -f tmp/bluez5.files
 %defattr(644,root,root,-)
 %endif
+
+%package -n patterns-sailfish-device-porter-tools
+Summary: Sailfish OS Device Porter Tools
+Requires: jolla-developer-mode
+Requires: sailfishsilica-qt5-demos
+Requires: libhybris-tests
+
+Requires: busybox-static
+Requires: net-tools
+Requires: openssh-clients
+Requires: openssh-server
+Requires: vim-enhanced
+Requires: zypper
+Requires: strace
+
+# jolla-rnd-device will enable usb-moded even when UI is not yet
+# brought up (useful during development)
+Requires: jolla-rnd-device
+
+%description -n patterns-sailfish-device-porter-tools
+Pattern with packages for common debugging tools used by porters
+
+%files -n patterns-sailfish-device-porter-tools
+
+%package -n patterns-sailfish-device-configuration-common
+Summary: Jolla Configuration common
+Requires: patterns-sailfish-applications
+Requires: patterns-sailfish-ui
+
+# Sailfish OS CSD tool for hardware testing
+# needs some configuration to get all features working
+Recommends: csd
+
+%description -n patterns-sailfish-device-configuration-common
+Pattern with packages for common HW configurations
+
+%files -n patterns-sailfish-device-configuration-common
