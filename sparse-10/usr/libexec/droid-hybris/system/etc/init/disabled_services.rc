@@ -23,3 +23,5 @@ service storaged /system/bin/storaged_HYBRIS_DISABLED
 service surfaceflinger surfaceflinger_HYBRIS_DISABLED
 
 service bootanim /system/bin/bootanimation_HYBRIS_DISABLED
+
+service vendor.usb-hal-1-0 /vendor/bin/hw/android.hardware.usb@1.0-service
