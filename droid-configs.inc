@@ -519,7 +519,9 @@ sed -e 's|@DEVICE@|%{rpm_device}|g' \
 %define lvm_root_size 2500
 %endif
 
-sed --in-place 's|@LVM_ROOT_PART_SIZE@|%{lvm_root_size}|' %{dcd_path}/kickstart/part/%{rpm_device}
+if [ -f %{dcd_path}/kickstart/part/%{rpm_device} ]; then
+  sed --in-place 's|@LVM_ROOT_PART_SIZE@|%{lvm_root_size}|' %{dcd_path}/kickstart/part/%{rpm_device}
+fi
 
 # Copy kickstart packs (for %%{rpm_device}-kickstart-configuration)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/pack/%{rpm_device}
