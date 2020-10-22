@@ -43,7 +43,7 @@ function migrate {
   } >> $METAPKG_DIR/"$metaspec"
 
   # scan all .spec files, some of them might have differing rpm_device and device vars
-  grep -l "device\s*$device$" $SPEC_DIR/droid-config-*.spec | while IFS= read -r f; do
+  grep -l "device\s*$device\s*$" $SPEC_DIR/droid-config-*.spec | while IFS= read -r f; do
     if ! grep -q "%include $METAPKG_DIR\/$metaspec" "$f"; then
       # include meta-packages to the .spec
       sed -i "/^%include droid-configs-device\/droid-configs.inc/a %include $METAPKG_DIR\/$metaspec" "$f"
