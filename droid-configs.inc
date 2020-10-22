@@ -388,6 +388,8 @@ config_files tmp/droid-config.files rpm-config-files.files
 
 OFONONOPLUGIN=$RPM_BUILD_ROOT/var/lib/environment/ofono/noplugin.conf
 
+if [ -e $OFONONOPLUGIN ]; then
+
 %if 0%{?have_modem:1}
 # DO NOT MODIFY THE "OFONO_MODEM_DEFAULT_PLUGINS" SET! If you do, you will break
 # modems on other devices! If you need to introduce or remove a plugin,
@@ -414,6 +416,8 @@ echo %{ofono_disable_plugins} | sed s/,/\\n/g | (
     echo ','$line'\' >> $OFONONOPLUGIN
   done)
 %endif
+
+fi
 
 # Delete files from droid-config.files which are packaged in main spec file
 if [ -e packaged-in-main-spec.files ]; then
