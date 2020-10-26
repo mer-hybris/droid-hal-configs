@@ -16,6 +16,12 @@ Requires: libhybris-libEGL
 Requires: libhybris-libGLESv2
 Requires: libhybris-libwayland-egl
 
+# Bluetooth
+#Requires: bluebinder
+
+# Telephony
+#Requires: ofono-ril-binder-plugin
+
 # Sensors
 Requires: hybris-libsensorfw-qt5
 
@@ -44,6 +50,7 @@ Requires: qtscenegraph-adaptation
 
 # For devices with droidmedia and gst-droid built, see HADK pdf for more information
 Requires: gstreamer1.0-droid
+#Requires: gmp-droid
 
 # This is needed for notification LEDs
 Requires: mce-plugin-libhybris
@@ -69,6 +76,7 @@ Requires: geoclue-provider-hybris
 
 # NFC for devices using Android 8 or newer as base
 #Requires: nfcd-binder-plugin
+#Requires: nfcd-mce-plugin
 #Requires: jolla-settings-system-nfc
 
 %description -n patterns-sailfish-device-adaptation-@DEVICE@
