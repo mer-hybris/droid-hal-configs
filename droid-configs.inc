@@ -689,7 +689,7 @@ ln -s bluez5/bluetooth /etc/bluetooth   || :
 %endif
 
 
-%package -n patterns-sailfish-device-configuration-common
+%package -n patterns-sailfish-device-configuration-common-%{rpm_device}
 Summary: Jolla Configuration common
 Requires: patterns-sailfish-applications
 Requires: patterns-sailfish-ui
@@ -697,8 +697,13 @@ Requires: patterns-sailfish-ui
 # Sailfish OS CSD tool for hardware testing
 # needs some configuration to get all features working
 Recommends: csd
+# All 3 requires above will be replaced with new meta-package
+# "patterns-sailfish-device-configuration-common" that will become available in
+# the next Sailfish OS release after 3.4.0
 
-%description -n patterns-sailfish-device-configuration-common
+%description -n patterns-sailfish-device-configuration-common-%{rpm_device}
 Pattern with packages for common HW configurations
 
-%files -n patterns-sailfish-device-configuration-common
+%files -n patterns-sailfish-device-configuration-common-%{rpm_device}
+
+

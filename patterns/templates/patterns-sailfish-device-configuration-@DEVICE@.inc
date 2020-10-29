@@ -1,6 +1,6 @@
 %package -n patterns-sailfish-device-configuration-@DEVICE@
 Summary: Jolla Configuration @DEVICE@
-Requires: patterns-sailfish-device-configuration-common
+Requires: patterns-sailfish-device-configuration-common-@DEVICE@
 Requires: patterns-sailfish-device-adaptation-@DEVICE@
 
 # For devices with cellular modem. Those without one, please comment out:

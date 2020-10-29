@@ -27,7 +27,7 @@ function migrate {
   sed -i 's/- /Requires: /g' $METAPKG_DIR/"$metaspec"
   sed -i 's/pattern://g' $METAPKG_DIR/"$metaspec"
   sed -i 's/Requires: jolla-hw-adaptation-/Requires: patterns-sailfish-device-adaptation-/g' $METAPKG_DIR/"$metaspec"
-  sed -i "/^Requires: patterns-sailfish-device-adaptation-/i Requires: patterns-sailfish-device-configuration-common" $METAPKG_DIR/"$metaspec"
+  sed -i "/^Requires: patterns-sailfish-device-adaptation-/i Requires: patterns-sailfish-device-configuration-common-$device" $METAPKG_DIR/"$metaspec"
   sed -i '/^Requires: patterns-sailfish-applications/d' $METAPKG_DIR/"$metaspec"
   sed -i '/^Requires: patterns-sailfish-ui/d' $METAPKG_DIR/"$metaspec"
   sed -i '/^Requires: csd/d' $METAPKG_DIR/"$metaspec"
