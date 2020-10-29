@@ -32,7 +32,6 @@ function migrate {
   sed -i '/^Requires: patterns-sailfish-ui/d' $METAPKG_DIR/"$metaspec"
   sed -i '/^Requires: csd/d' $METAPKG_DIR/"$metaspec"
   sed -i 's/Requires: jolla-configuration-/Requires: patterns-sailfish-device-configuration-/g' $METAPKG_DIR/"$metaspec"
-  sed -i 's/Requires: sailfish-porter-tools/Requires: patterns-sailfish-device-porter-tools/g' $METAPKG_DIR/"$metaspec"
   sed -i "s/@ICON_RES@/%{icon_res}/" $METAPKG_DIR/"$metaspec"
 
   {
@@ -74,7 +73,19 @@ fi
 
 for pattern in "$PATTERNS_DIR"/*.yaml; do
   while IFS= read -r f; do
-    if ! (echo "$f" | grep -qE "^- pattern:\s*sailfish-porter-tools|^- pattern:\s*jolla-hw-adaptation-"); then
+    if (echo "$f" | grep -q "^- pattern:\s*sailfish-porter-tools"); then
+      echo "Please replace '- pattern:sailfish-porter-tools' with:"
+      echo "- patterns-sailfish-dev-tools"
+      echo "- patterns-sailfish-rnd"
+      echo "- libhybris-tests"
+      echo "- busybox-static"
+      echo "- openssh-server"
+      echo "- zypper"
+      echo
+      echo "and re-run this script"
+      exit 1
+    fi
+    if ! (echo "$f" | grep -q "^- pattern:\s*jolla-hw-adaptation-"); then
       echo "File $pattern contains patterns that cannot be migrated automatically. Aborting."
       exit 1
     fi
