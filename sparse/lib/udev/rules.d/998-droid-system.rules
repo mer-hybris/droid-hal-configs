@@ -34,21 +34,21 @@ SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/de
 # be). If android-init doesn't create the bootdevice symlink and there is no
 # androidboot.bootdevice on the cmdline, then the bootdevice symlink is not
 # required.
-IMPORT{cmdline}="bootdevice"
+IMPORT{cmdline}="androidboot.bootdevice"
 # Unfortunately we cannot compare two variables, therefore use a workaround
 # with a file.
-ENV{bootdevice}!="", RUN+="/bin/touch /tmp/udev-$env{bootdevice}"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{bootdevice}"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/ln -s /dev/block/platform/$env{PLATFORM_FOLDER}/$env{bootdevice} /dev/block/bootdevice"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*/*", DEVPATH=="/devices/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{bootdevice}"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*/*", DEVPATH=="/devices/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/ln -s /dev/block/platform/$env{PLATFORM_FOLDER}/$env{bootdevice} /dev/block/bootdevice"
+ENV{androidboot.bootdevice}!="", RUN+="/bin/touch /tmp/udev-$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/ln -s /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice} /dev/block/bootdevice"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*/*", DEVPATH=="/devices/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*/*", DEVPATH=="/devices/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/ln -s /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice} /dev/block/bootdevice"
 # On certain devices the path is .../$PLATFORM_FOLDER/$PLATFORM_DEVICE/...,
 # but on others there is no $PLATFORM_DEVICE subdirectory, or in other words,
 # PLATFORM_FOLDER=platform device, PLATFORM_DEVICE=empty string. (1).
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*", DEVPATH=="/devices/platform/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/mkdir -p /dev/block/platform/$env{bootdevice}"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*", DEVPATH=="/devices/platform/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/ln -s /dev/block/platform/$env{bootdevice} /dev/block/bootdevice"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*", DEVPATH=="/devices/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/mkdir -p /dev/block/platform/$env{bootdevice}"
-SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*", DEVPATH=="/devices/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/ln -s /dev/block/platform/$env{bootdevice} /dev/block/bootdevice"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*", DEVPATH=="/devices/platform/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/mkdir -p /dev/block/platform/$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*", DEVPATH=="/devices/platform/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/ln -s /dev/block/platform/$env{androidboot.bootdevice} /dev/block/bootdevice"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*", DEVPATH=="/devices/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/mkdir -p /dev/block/platform/$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*", DEVPATH=="/devices/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/ln -s /dev/block/platform/$env{androidboot.bootdevice} /dev/block/bootdevice"
 
 # Create the partition symlinks.
 ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/by-name/$env{ID_PART_ENTRY_NAME}"
