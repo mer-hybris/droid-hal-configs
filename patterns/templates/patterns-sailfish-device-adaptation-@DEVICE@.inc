@@ -67,9 +67,12 @@ Requires: geoclue-provider-hybris
 #Requires: qt5-qtmultimedia-plugin-mediaservice-irisradio
 #Requires: jolla-mediaplayer-radio
 
-# NFC for devices using Android 8 or newer as base
+# NFC support
+# 1. binder plugin requires Android 8 or a newer base
+# 2. pn54x plugin talks directly to pn54x driver
+# These plugins are mutually exclusive, you need to pick one:
 #Requires: nfcd-binder-plugin
-#Requires: jolla-settings-system-nfc
+#Requires: nfcd-pn54x-plugin
 
 %description -n patterns-sailfish-device-adaptation-@DEVICE@
 Pattern with packages for @DEVICE@ HW Adaptation

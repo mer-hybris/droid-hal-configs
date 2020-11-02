@@ -19,6 +19,11 @@ Requires: sailfish-content-graphics-z%{icon_res}
 # For multi-SIM devices
 #Requires: jolla-settings-networking-multisim
 
+# For devices which support NFC
+#Requires: jolla-settings-system-nfc
+#Requires: nfcd-dbuslog-plugin
+#Requires: nfcd-mce-plugin
+
 # Introduced starting Sailfish OS 2.0.4.x:
 # 3rd party accounts like Twitter, VK, cloud services, etc
 Requires: jolla-settings-accounts-extensions-3rd-party-all
