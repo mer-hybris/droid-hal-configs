@@ -1,12 +1,18 @@
 %package -n patterns-sailfish-device-configuration-@DEVICE@
 Summary: Jolla Configuration @DEVICE@
-Requires: patterns-sailfish-device-configuration-common
+Requires: patterns-sailfish-device-configuration-common-@DEVICE@
 Requires: patterns-sailfish-device-adaptation-@DEVICE@
 
 # For devices with cellular modem. Those without one, please comment out:
 Requires: patterns-sailfish-cellular-apps
+
 # Early stages of porting benefit from these:
-Requires: patterns-sailfish-device-porter-tools
+Requires: patterns-sailfish-rnd
+Requires: patterns-sailfish-dev-tools
+Requires: libhybris-tests
+Requires: busybox-static
+Requires: openssh-server
+Requires: zypper
 
 Requires: sailfish-content-graphics-z%{icon_res}
 
