@@ -59,6 +59,12 @@
 %define rpm_vendor %{vendor}
 %endif
 
+%if 0%{?android_version_major:1}
+# If defined also use android version specfic sparse
+# Supersedes the base sparse and is superseded by device specific sparse
+%define dcd_sparse_android_version_major droid-configs-device/sparse-%{android_version_major}
+%endif
+
 %define board_mapping_dir %{_datadir}/ssu/board-mappings.d
 %define board_mapping_file %{board_mapping_dir}/05-%{rpm_vendor}-%{rpm_device}.ini
 
@@ -294,6 +300,12 @@ Obsoletes: bluez-configs-mer
 %setup -q -n %{name}-%{version}
 %endif
 
+%if 0%{?android_version_major:1}
+# If defined also use android version specfic sparse
+# Supersedes the base sparse and is superseded by device specific sparse
+case %{android_version_major} in 8|9|10) : ;; *) echo unsupported android_version_major; exit 1; esac
+%endif
+
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}
@@ -380,8 +392,17 @@ config_files() {
 # Copy from common; erase any we don't want; overlay from device
 # specific sparse/ :
 copy_files_from %{dcd_path}/%{dcd_sparse}
+%if 0%{?dcd_sparse_android_version_major:1}
+copy_files_from %{dcd_path}/%{dcd_sparse_android_version_major}
+%endif
 delete_files tmp/droid-config.files delete_file.list 1
 copy_files_from %{dcd_path}/sparse
+%if 0%{?dcd_sparse_android_version_major:1}
+if [ -e droid-config-device/delete_file_android_version_major_%{android_version_major}.list ] ; then
+     delete_files tmp/droid-config.files \
+                  droid-config-device/delete_file_android_version_major_%{android_version_major}.list
+fi
+%endif
 delete_files tmp/droid-config.files delete_file_%{rpm_device}.list 1
 # This add %config to %files section for files from rpm-config-files.files
 config_files tmp/droid-config.files rpm-config-files.files
