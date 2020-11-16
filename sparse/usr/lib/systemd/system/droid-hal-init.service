@@ -17,7 +17,7 @@ ProtectHome=true
 PrivateTmp=true
 ExecStartPre=-/bin/sh /usr/bin/droid/droid-hal-early-init.sh
 ExecStart=/bin/sh /usr/bin/droid/droid-hal-startup.sh
-ExecStop=/bin/sh /usr/bin/droid/droid-hal-shutdown.sh %c
+ExecStop=/bin/sh /usr/bin/droid/droid-hal-shutdown.sh
 Restart=always
 # Lets make sure we don't block minutes in case of errors.
 TimeoutSec=15
