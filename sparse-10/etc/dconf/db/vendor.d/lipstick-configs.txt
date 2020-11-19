@@ -1,0 +1,6 @@
+[desktop/lipstick-jolla-home]
+reboot_warning_on_sim_remove=true
+
+[desktop/lipstick-jolla-home/peekfilter]
+boundaryWidth=48
+pressDelay=800
