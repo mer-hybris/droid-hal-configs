@@ -8,7 +8,17 @@ Requires: patterns-sailfish-cellular-apps
 
 # Early stages of porting benefit from these:
 Requires: patterns-sailfish-rnd
-Requires: patterns-sailfish-dev-tools
+# dev-tools pattern will be fixed in the next release
+# for now we'll use its 'exploded' version:
+#Requires: patterns-sailfish-dev-tools
+Requires: jolla-developer-mode
+Requires: strace
+Requires: gdb
+Requires: gdb-gdbserver
+Requires: wget
+Requires: vim-enhanced
+Requires: less
+Requires: valgrind
 Requires: libhybris-tests
 Requires: busybox-static
 Requires: openssh-server
