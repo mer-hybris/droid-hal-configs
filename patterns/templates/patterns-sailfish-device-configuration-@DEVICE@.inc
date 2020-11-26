@@ -18,6 +18,7 @@ Requires: gdb-gdbserver
 Requires: vim-enhanced
 Requires: less
 Requires: valgrind
+Requires: lipstick-qt5-tools
 Requires: libhybris-tests
 Requires: busybox-static
 Requires: openssh-server
