@@ -15,10 +15,10 @@ Requires: jolla-developer-mode
 Requires: strace
 Requires: gdb
 Requires: gdb-gdbserver
-Requires: wget
 Requires: vim-enhanced
 Requires: less
 Requires: valgrind
+Requires: lipstick-qt5-tools
 Requires: libhybris-tests
 Requires: busybox-static
 Requires: openssh-server
