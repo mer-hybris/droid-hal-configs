@@ -32,6 +32,7 @@ function migrate {
   sed -i '/^Requires: patterns-sailfish-ui/d' $METAPKG_DIR/"$metaspec"
   sed -i '/^Requires: csd/d' $METAPKG_DIR/"$metaspec"
   sed -i 's/Requires: jolla-configuration-/Requires: patterns-sailfish-device-configuration-/g' $METAPKG_DIR/"$metaspec"
+  sed -i 's/Requires: jolla-developer-mode$/Recommends: jolla-developer-mode/g' $METAPKG_DIR/"$metaspec"
   sed -i "s/@ICON_RES@/%{icon_res}/" $METAPKG_DIR/"$metaspec"
 
   {
