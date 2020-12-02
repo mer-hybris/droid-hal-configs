@@ -1,0 +1,12 @@
+on post-fs
+    # Create directory for ofono ecc files
+    mkdir /run/ofono 0755 root root
+
+# Ofono tracks these files to sync emergency numbers with the modem
+on property:ril.ecclist=*
+    write /run/ofono/ril.ecclist ${ril.ecclist}
+    chmod 0644 /run/ofono/ril.ecclist
+
+on property:ril.ecclist1=*
+    write /run/ofono/ril.ecclist1 ${ril.ecclist1}
+    chmod 0644 /run/ofono/ril.ecclist1
