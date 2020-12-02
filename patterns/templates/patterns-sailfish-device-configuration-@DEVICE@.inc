@@ -11,7 +11,7 @@ Requires: patterns-sailfish-rnd
 # dev-tools pattern will be fixed in the next release
 # for now we'll use its 'exploded' version:
 #Requires: patterns-sailfish-dev-tools
-Requires: jolla-developer-mode
+Recommends: jolla-developer-mode
 Requires: strace
 Requires: gdb
 Requires: gdb-gdbserver
