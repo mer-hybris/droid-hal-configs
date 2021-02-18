@@ -1,2 +1,0 @@
-load-module module-droid-card rate=48000 quirks=+unload_call_exit
-load-module module-udev-detect
