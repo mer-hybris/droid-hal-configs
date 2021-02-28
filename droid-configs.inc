@@ -22,6 +22,7 @@
 #  Jolla Tablet: 1.5
 #  Nexus 5:      2.0
 #  Nexus 4:      pixel_ratio=1.3 (then icon_res becomes 1.25)
+# packages_own_system: adaptation gets /system from rpm instead of device partition
 
 # Overwriting other configs:
 # If your droid-config-$DEVICE needs to provide one or more device-specific
@@ -386,6 +387,7 @@ config_files() {
 # Copy from common; erase any we don't want; overlay from
 # android version-specific sparse (if exists), then
 # vendor (android version-specific) sparse (if exists), then
+# sparse for adaptation that package own /system (if applicable), then
 # device specific sparse:
 copy_files_from %{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
@@ -396,6 +398,9 @@ delete_files tmp/droid-config.files \
 copy_files_from %{dcd_sparse}-%{vendor}-%{android_version_major}
 delete_files tmp/droid-config.files \
              %{dcd_common}/delete_file_sparse-vendor-%{android_version_major}.list 1
+%endif
+%if 0%{?packages_own_system:1}
+copy_files_from %{dcd_sparse}-ownsystem
 %endif
 copy_files_from %{dcd_path}/sparse
 delete_files tmp/droid-config.files delete_file_%{rpm_device}.list 1
