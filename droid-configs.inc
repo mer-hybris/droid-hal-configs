@@ -385,6 +385,7 @@ config_files() {
 
 # Copy from common; erase any we don't want; overlay from
 # android version-specific sparse (if exists), then
+# vendor (android version-specific) sparse (if exists), then
 # device specific sparse:
 copy_files_from %{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
@@ -392,6 +393,9 @@ delete_files tmp/droid-config.files delete_file.list 1
 copy_files_from %{dcd_sparse}-%{android_version_major}
 delete_files tmp/droid-config.files \
              %{dcd_common}/delete_file_sparse-%{android_version_major}.list 1
+copy_files_from %{dcd_sparse}-%{vendor}-%{android_version_major}
+delete_files tmp/droid-config.files \
+             %{dcd_common}/delete_file_sparse-vendor-%{android_version_major}.list 1
 %endif
 copy_files_from %{dcd_path}/sparse
 delete_files tmp/droid-config.files delete_file_%{rpm_device}.list 1
