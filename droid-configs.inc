@@ -258,6 +258,8 @@ Conflicts: bluez5-configs
 Obsoletes: bluez-configs-sailfish
 Obsoletes: bluez-configs-mer
 
+Requires: pulseaudio-modules-bluez4
+
 %description bluez4
 %{summary}.
 
