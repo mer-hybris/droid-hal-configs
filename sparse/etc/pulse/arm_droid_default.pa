@@ -52,7 +52,7 @@
 .endif
 
 load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-parameters use_voice=false
-load-module module-meego-mainvolume virtual_stream=true
+load-module module-meego-mainvolume virtual_stream=true unmute_delay=600
 
 ### Automatically restore the volume of streams
 # load configuration based on bluez version
