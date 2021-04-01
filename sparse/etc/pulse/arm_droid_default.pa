@@ -130,7 +130,8 @@ load-module module-systemd-login
 load-module module-dbus-protocol
 .endif
 
-### Move orphan streams to placeholder sinks or sources so that playback doesn't get
-### interrupted. Policy enforcement module then moves the streams to new appropriate
-### sinks or sources.
-load-module module-rescue-streams sink_name=sink.null source_name=source.null
+### Set default sink and source to sink.null and source.null, respectively. PulseAudio default
+### sink/source handling will move orphaned sink-inputs and source-outputs to default ones.
+### Policy enforcement module then moves the streams to new appropriate sinks or sources.
+set-default-sink sink.null
+set-default-source source.null
