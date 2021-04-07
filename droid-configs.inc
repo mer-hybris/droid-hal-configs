@@ -364,16 +364,23 @@ copy_files_from() {
   fi
 }
 
+delete_file() {
+  local files=$1
+  local file=$2
+  local dorm=$3
+  [ "x$dorm" == "x1" ] && rm $RPM_BUILD_ROOT/$file
+  grep -vE "$file" $files > tmp/$$.files
+  mv tmp/$$.files $files
+}
+
 delete_files() {
-  files=$1
-  deletelist=$2
-  dorm=$3
+  local files=$1
+  local deletelist=$2
+  local dorm=$3
   if [ -e $deletelist ]; then
     egrep -v '^#|^$' $deletelist | (
       while read file; do
-	[ "x$dorm" == "x1" ] && rm $RPM_BUILD_ROOT/$file
-	grep -vE "$file" $files > tmp/$$.files
-	mv tmp/$$.files $files
+        delete_file $files $file $dorm
       done)
   fi
 }
@@ -472,6 +479,8 @@ if [ -e out-of-image-files.files ]; then
   delete_files tmp/droid-config.files out-of-image-files.files 0
   cp out-of-image-files.files tmp/out-of-image-files.files
 fi
+%else
+  delete_file tmp/droid-config.files /boot/flash.sh 1
 %endif
 
 # Now the majority of the sparse tree is made we can handle configs
