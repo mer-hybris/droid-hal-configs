@@ -106,9 +106,9 @@ fi
 check_fastboot() {
     FASTBOOT_BIN_NAME=$1
     if [ -f "$FASTBOOT_BIN_NAME" ]; then
-        chmod 755 $FASTBOOT_BIN_NAME
+        chmod 755 "$FASTBOOT_BIN_NAME"
         # Ensure that the binary that is found can be executed fine
-        if ./$FASTBOOT_BIN_NAME help &>/dev/null; then
+        if ./"$FASTBOOT_BIN_NAME" help &>/dev/null; then
             FASTBOOT_BIN_PATH="./"
             return 0
         fi
@@ -117,8 +117,10 @@ check_fastboot() {
 }
 
 print_and_run() {
+    # shellcheck disable=SC2145
     echo ">> $@"
 
+    # shellcheck disable=SC2068
     $@
     local ret=$?
 
@@ -129,11 +131,13 @@ print_and_run() {
 }
 
 print_and_run_retry() {
+    # shellcheck disable=SC2145
     echo ">> $@"
 
     local retries=30
     local ret=1
     while [ $ret -ne 0 ]; do
+        # shellcheck disable=SC2068
         $@
         ret=$?
 
@@ -225,7 +229,7 @@ fi
 UNAME=$(uname)
 
 # Do not need root for fastboot on Mac OS X
-if [ "$UNAME" != "Darwin" -a $(id -u) -ne 0 ]; then
+if [ "$UNAME" != "Darwin" ] && [ "$(id -u)" -ne 0 ]; then
     exec sudo -E bash -c "FORCE=$FORCE FASTBOOT_BIN_NAME=\"$FASTBOOT_BIN_NAME\" IMAGE_PATH=\"$IMAGE_PATH\" BLOB_PATH=\"$BLOB_PATH\" FASTBOOTEXTRAOPTS=\"$FASTBOOTEXTRAOPTS\" FLASH_CONFIG=\"$FLASH_CONFIG\" $0"
 fi
 
@@ -235,7 +239,7 @@ case $UNAME in
         echo "Detected Linux"
         ;;
     Darwin)
-        IFS='.' read -r major minor patch <<< $(sw_vers -productVersion)
+        IFS='.' read -r major minor patch <<< "$(sw_vers -productVersion)"
         OS_VERSION=$major-$minor
         echo "Detected Mac OS X - Version: $OS_VERSION"
         ;;
@@ -278,7 +282,7 @@ if [ -z "$FLASHCMD_FLASH_BOOT" ]; then
     FLASHCMD_FLASH_BOOT="flash"
 
     # If flash:raw command exists use that instead
-    if [ -n "$(${FASTBOOT_BIN_PATH}${FASTBOOT_BIN_NAME} help | grep flash:raw)" ]; then
+    if ${FASTBOOT_BIN_PATH}${FASTBOOT_BIN_NAME} help | grep -q flash:raw; then
         FLASHCMD_FLASH_BOOT="flash:raw"
     fi
 fi
@@ -308,19 +312,20 @@ done
 TARGET_SERIALNO=
 count=0
 for SERIALNO in $FASTBOOT_DEVICES; do
-    PRODUCT=$($FASTBOOTCMD_NO_DEVICE -s $SERIALNO getvar product 2>&1 | head -n1 | cut -d ' ' -f2)
-    BASEBAND=$($FASTBOOTCMD_NO_DEVICE -s $SERIALNO getvar version-baseband 2>&1 | head -n1 | cut -d ' ' -f2)
-    BOOTLOADER=$($FASTBOOTCMD_NO_DEVICE -s $SERIALNO getvar version-bootloader 2>&1 | head -n1 | cut -d ' ' -f2)
+    PRODUCT=$($FASTBOOTCMD_NO_DEVICE -s "$SERIALNO" getvar product 2>&1 | head -n1 | cut -d ' ' -f2)
+    BASEBAND=$($FASTBOOTCMD_NO_DEVICE -s "$SERIALNO" getvar version-baseband 2>&1 | head -n1 | cut -d ' ' -f2)
+    BOOTLOADER=$($FASTBOOTCMD_NO_DEVICE -s "$SERIALNO" getvar version-bootloader 2>&1 | head -n1 | cut -d ' ' -f2)
 
     echo "Found $PRODUCT, baseband:$BASEBAND, bootloader:$BOOTLOADER"
 
     for VALID_PRODUCT in "${VALID_PRODUCTS[@]}"; do
-        if [ -n "$(echo $PRODUCT | grep -e "^$VALID_PRODUCT$")" ]; then
+        if echo "$PRODUCT" | grep -qe "^$VALID_PRODUCT$"; then
             TARGET_SERIALNO="$SERIALNO $TARGET_SERIALNO"
             ((++count))
         fi
     done
 done
+TARGET_SERIALNO=${TARGET_SERIALNO%% }
 
 unset IFS
 
@@ -343,9 +348,9 @@ echo "Fastboot command: $FASTBOOTCMD"
 if [ "$UNAME" = "Darwin" ] || [ "$UNAME" = "FreeBSD" ]; then
     # macOS and FreeBSD don't have md5sum so lets use md5 there.
     while read -r line; do
-        md5=$(echo $line | awk '{ print $1 }')
-        filename=$(echo $line | awk '{ print $2 }')
-        md5calc=$(md5 $filename | cut -d '=' -f2 | tr -d '[:space:]')
+        md5=$(echo "$line" | awk '{ print $1 }')
+        filename=$(echo "$line" | awk '{ print $2 }')
+        md5calc=$(md5 "$filename" | cut -d '=' -f2 | tr -d '[:space:]')
         if [ "$md5" != "$md5calc" ]; then
             if [ -n "$FORCE" ]; then
                 echo "Ignoring md5sum errors (--force)"
@@ -392,10 +397,10 @@ flash_image() {
             flashcmd=$FLASHCMD_FLASH_BOOT
         fi
 
-        if [ $exit_on_failure -eq 1 ]; then
-            print_and_run $FASTBOOTCMD $flashcmd $partition $image_file
+        if [ "$exit_on_failure" -eq 1 ]; then
+            print_and_run "$FASTBOOTCMD" $flashcmd "$partition" "$image_file"
         else
-            print_and_run_retry $FASTBOOTCMD $flashcmd $partition $image_file
+            print_and_run_retry "$FASTBOOTCMD" $flashcmd "$partition" "$image_file"
         fi
     fi
 }
@@ -411,12 +416,12 @@ flash_blob() {
 
     local count=0
 
-    for b in $(find "$b_path" -maxdepth 1 -name "$image_file"); do
+    while IFS= read -r -d '' b; do
         if [ $DRY_RUN -eq 0 ]; then
-            print_and_run $FASTBOOTCMD flash $partition $b
+            print_and_run "$FASTBOOTCMD" flash "$partition" "$b"
         fi
         ((++count))
-    done
+    done < <(find "$b_path" -maxdepth 1 -name "$image_file" -print0)
 
     if [ $count -eq 0 ]; then
         eval echo -e \"\$BLOB_ERROR_NOT_FOUND_$partition\"
@@ -439,7 +444,8 @@ getvar_test() {
     fi
 
     echo ">> $FASTBOOTCMD getvar $var_name"
-    local val="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1 | cut -d' ' -f2)"
+    local val
+    val="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1 | cut -d' ' -f2)"
     echo ">> getvar $var_name: $val"
 
     if [ "$val" == "$getvar_fail" ]; then
@@ -476,13 +482,13 @@ run_flash_op() {
                     fastboot)
                         shift
                         shift
-                        print_and_run $FASTBOOTCMD "$@"
+                        print_and_run "$FASTBOOTCMD" "$@"
                         ;;
 
                     *)
                         shift
                         shift
-                        print_and_run $arg1 "$@"
+                        print_and_run "$arg1" "$@"
                         ;;
                 esac
             fi
@@ -497,7 +503,7 @@ run_flash_op() {
 
 run_flash_ops() {
     for flash_op in "${FLASH_OPS[@]}"; do
-        read var_op var_arg1 var_arg2 <<< $flash_op
+        read var_op var_arg1 var_arg2 <<< "$flash_op"
         run_flash_op "$var_op" "$var_arg1" "$var_arg2"
     done
 }
