@@ -288,10 +288,9 @@ if [ -z "$FLASHCMD_FLASH_BOOT" ]; then
 fi
 
 echo "Searching device to flash.."
-IFS=$'\n'
 FASTBOOTCMD_NO_DEVICE="${FASTBOOT_BIN_PATH}${FASTBOOT_BIN_NAME}"
 
-FASTBOOT_DEVICES=$($FASTBOOTCMD_NO_DEVICE devices |cut -d$'\t' -f1)
+FASTBOOT_DEVICES=$($FASTBOOTCMD_NO_DEVICE devices | awk '{ print $1 }' | tr $'\n' ' ')
 
 if [ -z "$FASTBOOT_DEVICES" ]; then
     echo "No device that can be flashed found. Please connect your device in fastboot mode before running this script."
@@ -306,10 +305,13 @@ fi
 # but both contain one or more of '-e "product_name"'
 for test_valid in "${VALID_PRODUCTS[@]}"; do
     if [ "$test_valid" == "@VALID_PRODUCTS@" ]; then
+        old_IFS=$"$IFS"
+        IFS=" "
         VALID_PRODUCTS=($(printf %s "@DEVICES@" | sed 's/-e //g'))
         if [ "${VALID_PRODUCTS[0]}" == '@DEVICES@' ]; then
             VALID_PRODUCTS=($(printf %s "@DEVICE@" | sed 's/-e //g'))
         fi
+        IFS=$"$old_IFS"
         break
     fi
 done
@@ -321,7 +323,7 @@ for SERIALNO in $FASTBOOT_DEVICES; do
     BASEBAND=$($FASTBOOTCMD_NO_DEVICE -s "$SERIALNO" getvar version-baseband 2>&1 | head -n1 | cut -d ' ' -f2)
     BOOTLOADER=$($FASTBOOTCMD_NO_DEVICE -s "$SERIALNO" getvar version-bootloader 2>&1 | head -n1 | cut -d ' ' -f2)
 
-    echo "Found $PRODUCT, baseband:$BASEBAND, bootloader:$BOOTLOADER"
+    echo "Found $PRODUCT, serial:$SERIALNO, baseband:$BASEBAND, bootloader:$BOOTLOADER"
 
     for VALID_PRODUCT in "${VALID_PRODUCTS[@]}"; do
         if echo "$PRODUCT" | grep -qe "^$VALID_PRODUCT$"; then
@@ -332,19 +334,19 @@ for SERIALNO in $FASTBOOT_DEVICES; do
 done
 TARGET_SERIALNO=${TARGET_SERIALNO%% }
 
-unset IFS
-
-echo "Found $count devices: $TARGET_SERIALNO"
-
 FASTBOOTCMD="${FASTBOOT_BIN_PATH}${FASTBOOT_BIN_NAME}"
 
 if [ -n "$FASTBOOTEXTRAOPTS" ]; then
     echo "Fastboot extra options detected: $FASTBOOTEXTRAOPTS, let's ignore device count check."
     FASTBOOTCMD="$FASTBOOTCMD $FASTBOOTEXTRAOPTS"
-elif [ $count -ne 1 ]; then
-    echo "Incorrect number of devices connected. Make sure there is exactly one device connected in fastboot mode."
+elif [ $count -eq 0 ]; then
+    echo "No valid devices found."
+    exit 1
+elif [ $count -gt 1 ]; then
+    echo "More than one flashable device connected. Make sure there is exactly one device connected in fastboot mode."
     exit 1
 else
+    echo "Found matching device with serial $TARGET_SERIALNO"
     FASTBOOTCMD="$FASTBOOTCMD -s $TARGET_SERIALNO"
 fi
 
