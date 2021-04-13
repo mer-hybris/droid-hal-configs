@@ -452,8 +452,8 @@ getvar_test() {
 
     echo ">> $FASTBOOTCMD getvar $var_name"
     local val
-    val="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1 | cut -d' ' -f2)"
-    echo ">> getvar $var_name: $val"
+    val="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1 | awk '{ print $2 }')"
+    echo "<< getvar $var_name: $val"
 
     if [ "$val" == "$getvar_fail" ]; then
         eval echo -e \"\$GETVAR_ERROR_$var_name\"
