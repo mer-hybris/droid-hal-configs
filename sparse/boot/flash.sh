@@ -281,8 +281,8 @@ if [ -z "$FLASHCMD_FLASH_BOOT" ]; then
     # By default use "flash" for boot partition
     FLASHCMD_FLASH_BOOT="flash"
 
-    # If flash:raw command exists use that instead
-    if ${FASTBOOT_BIN_PATH}${FASTBOOT_BIN_NAME} help | grep -q flash:raw; then
+    # If running fastboot version 30 or newer, use flash:raw for boot
+    if ${FASTBOOT_BIN_PATH}${FASTBOOT_BIN_NAME} help 2>&1 | grep -q "flash:raw PARTITION"; then
         FLASHCMD_FLASH_BOOT="flash:raw"
     fi
 fi
