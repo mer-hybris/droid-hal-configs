@@ -22,6 +22,7 @@
 #  Jolla Tablet: 1.5
 #  Nexus 5:      2.0
 #  Nexus 4:      pixel_ratio=1.3 (then icon_res becomes 1.25)
+# packages_own_system: adaptation gets /system from rpm instead of device partition
 
 # Overwriting other configs:
 # If your droid-config-$DEVICE needs to provide one or more device-specific
@@ -49,7 +50,7 @@
 
 # dcd_common is the common stuff and dcd_sparse is the common sparse
 %define dcd_common %{dcd_path}/droid-configs-device
-%define dcd_sparse droid-configs-device/sparse
+%define dcd_sparse %{dcd_common}/sparse
 
 # Set defaults if not defined already:
 %if 0%{!?rpm_device:1}
@@ -57,12 +58,6 @@
 %endif
 %if 0%{!?rpm_vendor:1}
 %define rpm_vendor %{vendor}
-%endif
-
-%if 0%{?android_version_major:1}
-# If defined also use android version specfic sparse
-# Supersedes the base sparse and is superseded by device specific sparse
-%define dcd_sparse_android_version_major droid-configs-device/sparse-%{android_version_major}
 %endif
 
 %define board_mapping_dir %{_datadir}/ssu/board-mappings.d
@@ -398,20 +393,25 @@ config_files() {
   fi
 }
 
-# Copy from common; erase any we don't want; overlay from device
-# specific sparse/ :
-copy_files_from %{dcd_path}/%{dcd_sparse}
-%if 0%{?dcd_sparse_android_version_major:1}
-copy_files_from %{dcd_path}/%{dcd_sparse_android_version_major}
-%endif
+# Copy from common; erase any we don't want; overlay from
+# android version-specific sparse (if exists), then
+# vendor (android version-specific) sparse (if exists), then
+# sparse for adaptation that package own /system (if applicable), then
+# device specific sparse:
+copy_files_from %{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
-copy_files_from %{dcd_path}/sparse
-%if 0%{?dcd_sparse_android_version_major:1}
-if [ -e droid-config-device/delete_file_android_version_major_%{android_version_major}.list ] ; then
-     delete_files tmp/droid-config.files \
-                  droid-config-device/delete_file_android_version_major_%{android_version_major}.list
-fi
+%if 0%{?android_version_major:1}
+copy_files_from %{dcd_sparse}-%{android_version_major}
+delete_files tmp/droid-config.files \
+             %{dcd_common}/delete_file_sparse-%{android_version_major}.list 1
+copy_files_from %{dcd_sparse}-%{vendor}-%{android_version_major}
+delete_files tmp/droid-config.files \
+             %{dcd_common}/delete_file_sparse-vendor-%{android_version_major}.list 1
 %endif
+%if 0%{?packages_own_system:1}
+copy_files_from %{dcd_sparse}-ownsystem
+%endif
+copy_files_from %{dcd_path}/sparse
 delete_files tmp/droid-config.files delete_file_%{rpm_device}.list 1
 # This add %config to %files section for files from rpm-config-files.files
 config_files tmp/droid-config.files rpm-config-files.files
