@@ -76,22 +76,7 @@ for pattern in "$PATTERNS_DIR"/*.yaml; do
   while IFS= read -r f; do
     if (echo "$f" | grep -q "^- pattern:\s*sailfish-porter-tools"); then
       echo "Please replace '- pattern:sailfish-porter-tools' with:"
-      echo "- patterns-sailfish-rnd"
-      echo "# dev-tools pattern will be fixed in the next release"
-      echo "# for now we'll use its 'exploded' version:"
-      echo "#- patterns-sailfish-dev-tools"
-      echo "- jolla-developer-mode"
-      echo "- strace"
-      echo "- gdb"
-      echo "- gdb-gdbserver"
-      echo "- vim-enhanced"
-      echo "- less"
-      echo "- valgrind"
-      echo "- lipstick-qt5-tools"
-      echo "- libhybris-tests"
-      echo "- busybox-static"
-      echo "- openssh-server"
-      echo "- zypper"
+      echo "- patterns-sailfish-device-tools"
       echo
       echo "and re-run this script"
       exit 1

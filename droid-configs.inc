@@ -488,7 +488,6 @@ fi
 
 # patterns
 mkdir -p %{buildroot}/usr/share/package-groups/
-/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_common}/patterns/common -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 /usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
 
 delete_patterns() {
