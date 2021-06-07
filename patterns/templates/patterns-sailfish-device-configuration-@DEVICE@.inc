@@ -7,22 +7,7 @@ Requires: patterns-sailfish-device-adaptation-@DEVICE@
 Requires: patterns-sailfish-cellular-apps
 
 # Early stages of porting benefit from these:
-Requires: patterns-sailfish-rnd
-# dev-tools pattern will be fixed in the next release
-# for now we'll use its 'exploded' version:
-#Requires: patterns-sailfish-dev-tools
-Recommends: jolla-developer-mode
-Requires: strace
-Requires: gdb
-Requires: gdb-gdbserver
-Requires: vim-enhanced
-Requires: less
-Requires: valgrind
-Requires: lipstick-qt5-tools
-Requires: libhybris-tests
-Requires: busybox-static
-Requires: openssh-server
-Requires: zypper
+Requires: patterns-sailfish-device-tools
 
 Requires: sailfish-content-graphics-z%{icon_res}
 

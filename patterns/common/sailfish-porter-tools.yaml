@@ -1,6 +1,0 @@
-Description: Pattern with packages for common debugging tools used by porters
-Name: sailfish-porter-tools
-Requires:
-- patterns-sailfish-device-porter-tools
-
-Summary: Sailfish OS Porter Tools
