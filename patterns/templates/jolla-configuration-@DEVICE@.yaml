@@ -1,6 +1,0 @@
-Description: Pattern with packages for @DEVICE@ configurations
-Name: jolla-configuration-@DEVICE@
-Requires:
-- patterns-sailfish-device-configuration-@DEVICE@
-
-Summary: Jolla Configuration @DEVICE@
