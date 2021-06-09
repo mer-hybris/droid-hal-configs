@@ -77,7 +77,6 @@ License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration
 BuildRequires: pkgconfig(android-headers)
-BuildRequires: repomd-pattern-builder
 BuildRequires: qt5-qttools-kmap2qmap
 BuildRequires: sed
 Requires: sed
@@ -113,15 +112,6 @@ Summary:    Kickstarts for Droid HAL
 Provides:   image-configurations
 
 %description ssu-kickstarts
-%{summary}.
-
-################################################################
-%package patterns
-Summary:    Repository patterns for %{rpm_device} hw
-Provides:   droid-config-patterns
-Provides:   package-groups
-
-%description patterns
 %{summary}.
 
 ################################################################
@@ -486,22 +476,6 @@ fi
 # Now the majority of the sparse tree is made we can handle configs
 # which need some kind of substitution or generating
 
-# patterns
-mkdir -p %{buildroot}/usr/share/package-groups/
-/usr/bin/repomd-pattern-builder.py --patternxml -p %{dcd_path}/patterns/ -o %{buildroot}/usr/share/package-groups/ --version=%{version} --release=%{release}
-
-delete_patterns() {
-  deletelist=$1
-  if [ -e $deletelist ]; then
-    egrep -v '^#|^$' $deletelist | (
-      while read file; do
-        rm $RPM_BUILD_ROOT/$file
-      done)
-  fi
-}
-
-delete_patterns delete_pattern_%{rpm_device}.list
-
 %if 0%{!?pixel_ratio:1}
 %define pixel_ratio 1.0
 %endif
@@ -515,7 +489,6 @@ sed --in-place 's|@START_DRAG_DISTANCE@|%{start_drag_distance}|' %{buildroot}/et
 %define icon_res %(awk 'BEGIN {a=int((%{pixel_ratio}-0.125)/0.25)*0.25+0.25;a=(a<=1?"1.0":(a>=2.0?"2.0":a));print a }')
 
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
-sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/usr/share/package-groups/*
 
 # In localbuilds it will break the system, because droid-hal-version-$DEVICE is
 # not built yet. Also it will pull many unnecessary things into the SDK target.
@@ -685,10 +658,6 @@ fi
 %files ssu-kickstarts
 %defattr(-,root,root,-)
 %{_datadir}/kickstarts/*.ks
-
-%files patterns
-%defattr(-,root,root,-)
-%{_datadir}/package-groups/*.xml
 
 %files policy-settings -f tmp/policy-settings.files
 %defattr(644,root,root,-)
