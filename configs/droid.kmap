@@ -22,3 +22,4 @@ keycode 226 = ToggleCallHangup
 keycode 256 = ToggleCallHangup
 keycode 528 = CameraFocus
 keycode 766 = Camera
+keycode 212 = Camera
