@@ -90,7 +90,7 @@
 # Message to show with successful flashing.
 # "
 
-SCRIPT_VERSION=1.0
+SCRIPT_VERSION=1.1
 
 OS_VERSION=
 FASTBOOT_BIN_PATH=
@@ -169,6 +169,7 @@ Options
   --blob-path     Where possible vendor specific image files are located
   --extra-opts    Custom extra options for fastboot
   --config        Specify location for flash ops
+  --dry-run       Only dry run, don't do any changes to device
 
 EOF
 }
@@ -202,6 +203,9 @@ while [ $# -gt 0 ]; do
             shift
             FLASH_CONFIG="$1"
             ;;
+        --dry-run)
+            ONLY_DRY_RUN=1
+            ;;
         --help)
             usage
             exit 0
@@ -230,9 +234,10 @@ UNAME=$(uname)
 
 # Do not need root for fastboot on Mac OS X
 if [ "$UNAME" != "Darwin" ] && [ "$(id -u)" -ne 0 ]; then
-    exec sudo -E bash -c "FORCE=$FORCE FASTBOOT_BIN_NAME=\"$FASTBOOT_BIN_NAME\" IMAGE_PATH=\"$IMAGE_PATH\" BLOB_PATH=\"$BLOB_PATH\" FASTBOOTEXTRAOPTS=\"$FASTBOOTEXTRAOPTS\" FLASH_CONFIG=\"$FLASH_CONFIG\" $0"
+    exec sudo -E bash -c "FORCE=$FORCE FASTBOOT_BIN_NAME=\"$FASTBOOT_BIN_NAME\" IMAGE_PATH=\"$IMAGE_PATH\" BLOB_PATH=\"$BLOB_PATH\" FASTBOOTEXTRAOPTS=\"$FASTBOOTEXTRAOPTS\" FLASH_CONFIG=\"$FLASH_CONFIG\" ONLY_DRY_RUN=$ONLY_DRY_RUN $0"
 fi
 
+echo "Flash utility v$SCRIPT_VERSION"
 
 case $UNAME in
     Linux)
@@ -296,25 +301,6 @@ if [ -z "$FASTBOOT_DEVICES" ]; then
     echo "No device that can be flashed found. Please connect your device in fastboot mode before running this script."
     exit 1
 fi
-
-# Workaround for kickstart files until they are modified to not alter
-# flash.sh script directly.
-# If the valid product from flash-config.sh still contains @VALID_PRODUCTS@ placeholder,
-# assume this script is still being modified and set the product name here.
-# There are two variations of the modification, one uses DEVICE and other DEVICES
-# but both contain one or more of '-e "product_name"'
-for test_valid in "${VALID_PRODUCTS[@]}"; do
-    if [ "$test_valid" == "@VALID_PRODUCTS@" ]; then
-        old_IFS=$"$IFS"
-        IFS=" "
-        VALID_PRODUCTS=($(printf %s "@DEVICES@" | sed 's/-e //g'))
-        if [ "${VALID_PRODUCTS[0]}" == '@DEVICES@' ]; then
-            VALID_PRODUCTS=($(printf %s "@DEVICE@" | sed 's/-e //g'))
-        fi
-        IFS=$"$old_IFS"
-        break
-    fi
-done
 
 TARGET_SERIALNO=
 count=0
@@ -517,8 +503,11 @@ run_flash_ops() {
 
 DRY_RUN=1
 run_flash_ops
-DRY_RUN=0
-run_flash_ops
+
+if [ -z "$ONLY_DRY_RUN" ]; then
+    DRY_RUN=0
+    run_flash_ops
+fi
 
 echo
 echo "Flashing completed."
