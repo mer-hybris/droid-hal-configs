@@ -297,25 +297,6 @@ if [ -z "$FASTBOOT_DEVICES" ]; then
     exit 1
 fi
 
-# Workaround for kickstart files until they are modified to not alter
-# flash.sh script directly.
-# If the valid product from flash-config.sh still contains @VALID_PRODUCTS@ placeholder,
-# assume this script is still being modified and set the product name here.
-# There are two variations of the modification, one uses DEVICE and other DEVICES
-# but both contain one or more of '-e "product_name"'
-for test_valid in "${VALID_PRODUCTS[@]}"; do
-    if [ "$test_valid" == "@VALID_PRODUCTS@" ]; then
-        old_IFS=$"$IFS"
-        IFS=" "
-        VALID_PRODUCTS=($(printf %s "@DEVICES@" | sed 's/-e //g'))
-        if [ "${VALID_PRODUCTS[0]}" == '@DEVICES@' ]; then
-            VALID_PRODUCTS=($(printf %s "@DEVICE@" | sed 's/-e //g'))
-        fi
-        IFS=$"$old_IFS"
-        break
-    fi
-done
-
 TARGET_SERIALNO=
 count=0
 for SERIALNO in $FASTBOOT_DEVICES; do
