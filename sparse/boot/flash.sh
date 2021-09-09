@@ -96,6 +96,8 @@ OS_VERSION=
 FASTBOOT_BIN_PATH=
 # Detect from fastboot command
 FLASHCMD_FLASH_BOOT=
+USB_AUTOSUSPEND=
+USB_AUTOSUSPEND_PATH=/sys/module/usbcore/parameters/autosuspend
 
 DRY_RUN=1
 
@@ -152,6 +154,14 @@ print_and_run_retry() {
 
         ((--retries))
     done
+}
+
+restore_autosuspend() {
+    if [ -z "$USB_AUTOSUSPEND" ]; then
+        return
+    fi
+
+    echo "$USB_AUTOSUSPEND" > $USB_AUTOSUSPEND_PATH
 }
 
 usage() {
@@ -278,6 +288,13 @@ if [ -z "$FASTBOOT_BIN_NAME" ]; then
             fi
         fi
     fi
+fi
+
+# Store current autosuspend value and set to -1 to disable
+if [ -f $USB_AUTOSUSPEND_PATH ]; then
+    USB_AUTOSUSPEND="$(cat $USB_AUTOSUSPEND_PATH)"
+    echo -1 > $USB_AUTOSUSPEND_PATH
+    trap restore_autosuspend EXIT
 fi
 
 if [ -z "$FLASHCMD_FLASH_BOOT" ]; then
@@ -439,7 +456,7 @@ getvar_test() {
     echo ">> $FASTBOOTCMD getvar $var_name"
     local val_line
     val_line="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1)"
-    echo "<< getvar $val_line"
+    echo "<< $val_line"
     local val
     val="$(echo "$val_line" | awk '{ print $2 }')"
 
