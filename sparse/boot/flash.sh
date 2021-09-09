@@ -90,7 +90,7 @@
 # Message to show with successful flashing.
 # "
 
-SCRIPT_VERSION=1.1
+SCRIPT_VERSION=1.2
 
 OS_VERSION=
 FASTBOOT_BIN_PATH=
