@@ -437,11 +437,16 @@ getvar_test() {
     fi
 
     echo ">> $FASTBOOTCMD getvar $var_name"
+    local val_line
+    val_line="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1)"
+    echo "<< getvar $val_line"
     local val
-    val="$($FASTBOOTCMD getvar "$var_name" 2>&1 | head -n1 | awk '{ print $2 }')"
-    echo "<< getvar $var_name: $val"
+    val="$(echo "$val_line" | awk '{ print $2 }')"
 
-    if [ "$val" == "$getvar_fail" ]; then
+    if [ "$val" == "FAILED" ]; then
+        # getvar:foo  FAILED (remote: ERROR_MESSAGE)
+        exit 1
+    elif [ "$val" == "$getvar_fail" ]; then
         eval echo -e \"\$GETVAR_ERROR_$var_name\"
         exit 1
     fi
