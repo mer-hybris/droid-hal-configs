@@ -10,7 +10,7 @@ service media mediaserver_HYBRIS_DISABLED
 
 service update_engine update_engine_HYBRIS_DISABLED
 
-service vendor.audio-hal-2-0 /vendor/bin/hw/android.hardware.audio@2.0-service_HYBRIS_DISABLED
+service vendor.audio-hal /vendor/bin/hw/android.hardware.audio.service_HYBRIS_DISABLED
 
 service lmkd /system/bin/lmkd_HYBRIS_DISABLED
 
@@ -24,6 +24,6 @@ service surfaceflinger surfaceflinger_HYBRIS_DISABLED
 
 service bootanim /system/bin/bootanimation_HYBRIS_DISABLED
 
-service vendor.usb-hal-1-0 /vendor/bin/hw/android.hardware.usb@1.0-service_HYBRIS_DISABLED
+service vendor.usb-hal-1-2 /vendor/bin/hw/android.hardware.usb@1.2-service_HYBRIS_DISABLED
 
 service vendor.vibrator-1-0 /vendor/bin/hw/android.hardware.vibrator@1.0-service_HYBRIS_DISABLED
