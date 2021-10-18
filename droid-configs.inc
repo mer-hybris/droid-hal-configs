@@ -287,10 +287,17 @@ Obsoletes: bluez-configs-mer
 %setup -q -n %{name}-%{version}
 %endif
 
+# Ensure this is sorted
+supported_android_versions=(8 9 10 11)
+
 %if 0%{?android_version_major:1}
 # If defined also use android version specfic sparse
 # Supersedes the base sparse and is superseded by device specific sparse
-case %{android_version_major} in 8|9|10|11) : ;; *) echo unsupported android_version_major; exit 1; esac
+if [[ ! " ${supported_android_versions=[*]} " =~ " ${android_version_major} " ]]; then
+  echo unsupported android_version_major %{android_version_major}
+  exit 1
+fi
+
 %endif
 
 %install
@@ -391,12 +398,17 @@ config_files() {
 copy_files_from %{dcd_sparse}
 delete_files tmp/droid-config.files delete_file.list 1
 %if 0%{?android_version_major:1}
-copy_files_from %{dcd_sparse}-%{android_version_major}
-delete_files tmp/droid-config.files \
-             %{dcd_common}/delete_file_sparse-%{android_version_major}.list 1
-copy_files_from %{dcd_sparse}-%{vendor}-%{android_version_major}
-delete_files tmp/droid-config.files \
-             %{dcd_common}/delete_file_sparse-vendor-%{android_version_major}.list 1
+for i in "${supported_android_versions[@]}"; do
+  if [ "%{android_version_major}" -lt "$i" ]; then
+    break
+  fi
+  copy_files_from %{dcd_sparse}-$i
+  delete_files tmp/droid-config.files \
+               %{dcd_common}/delete_file_sparse-$i.list 1
+  copy_files_from %{dcd_sparse}-%{vendor}-$i
+  delete_files tmp/droid-config.files \
+               %{dcd_common}/delete_file_sparse-vendor-$i.list 1
+done
 %endif
 %if 0%{?packages_own_system:1}
 copy_files_from %{dcd_sparse}-ownsystem
