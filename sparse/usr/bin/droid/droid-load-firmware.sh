@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FIRMWARE_FOLDERS="/system/etc/firmware/ /odm/firmware/ /vendor/firmware/ /firmware/image/"
+FIRMWARE_FOLDERS="/system/etc/firmware/ /odm/firmware/ /vendor/firmware/ /firmware/image/ /vendor/firmware_mnt/image/"
 
 log() {
     logger -p daemon.info -t firmware "$@"
