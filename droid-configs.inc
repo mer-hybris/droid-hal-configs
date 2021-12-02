@@ -24,6 +24,10 @@
 #  Nexus 4:      pixel_ratio=1.3 (then icon_res becomes 1.25)
 # packages_own_system: adaptation gets /system from rpm instead of device partition
 
+# Image configuration:
+# remove_sailfish_applications: set this if you do not want sailfish applications pattern
+# remove_sailfish_ui: set this if you do not want sailfish ui pattern
+
 # Overwriting other configs:
 # If your droid-config-$DEVICE needs to provide one or more device-specific
 # configuration files, do the following:
@@ -701,8 +705,12 @@ ln -s bluez5/bluetooth /etc/bluetooth   || :
 
 %package -n patterns-sailfish-device-configuration-common-%{rpm_device}
 Summary: Jolla Configuration common
+%if 0%{!?remove_sailfish_applications:1}
 Requires: patterns-sailfish-applications
+%endif
+%if 0%{!?remove_sailfish_ui:1}
 Requires: patterns-sailfish-ui
+%endif
 
 # Sailfish OS CSD tool for hardware testing
 # needs some configuration to get all features working
