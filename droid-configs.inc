@@ -313,6 +313,7 @@ echo "%defattr(-,root,root,-)" > tmp/droid-config.files
 do_not_move_to_lib64=(
     "firmware"
     "modules"
+    "oneshot.d"
     "startup"
     "systemd/system"
     "systemd/user"
