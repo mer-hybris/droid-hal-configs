@@ -318,6 +318,8 @@ do_not_move_to_lib64=(
     "systemd/system"
     "systemd/user"
     "tmpfiles.d"
+    "sysctl.d"
+    "sysusers.d"
     "udev"
     )
 copy_files_from() {
