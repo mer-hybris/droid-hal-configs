@@ -55,15 +55,7 @@ load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-p
 load-module module-meego-mainvolume virtual_stream=true unmute_delay=600
 
 ### Automatically restore the volume of streams
-# load configuration based on bluez version
-.ifexists /etc/pulse/bluez5_stream_restore.pa
- .include /etc/pulse/bluez5_stream_restore.pa
-.else
- .include /etc/pulse/bluez4_stream_restore.pa
- # fake sco sink and source are needed only by bluez4 device
- load-module module-null-sink sink_name=sink.fake.sco rate=8000 channels=1
- load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
-.endif
+load-module module-stream-restore-nemo restore_device=no restore_volume=yes restore_muted=no route_table=/etc/pulse/x-maemo-route.table fallback_table=/etc/pulse/x-maemo-stream-restore.table use_voice=false
 
 load-module module-match table=/etc/pulse/x-maemo-match.table key=application.name
 
@@ -74,7 +66,7 @@ load-module module-augment-properties
 load-module module-null-sink sink_name=sink.null rate=48000
 load-module module-null-source source_name=source.null rate=48000
 
-load-module module-bluetooth-discover bluez4_args="sco_sink=sink.fake.sco sco_source=source.fake.sco" bluez5_args="headset=droid"
+load-module module-bluetooth-discover headset=droid
 
 load-module module-policy-enforcement
 
