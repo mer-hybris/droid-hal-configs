@@ -222,36 +222,6 @@ flashing configurations or flashing scripts.
 ################################################################
 
 %if 0%{?have_bluetooth:1}
-%package bluez4
-Summary: %{rpm_device} packages for BlueZ 4
-Conflicts: droid-config-%{rpm_device}-bluez5
-Provides: %{rpm_device}-bluez-configs
-
-Requires: bluez
-Conflicts: bluez5
-
-Requires: bluez-libs
-Conflicts: bluez5-libs
-
-Requires: obexd
-Conflicts: bluez5-obexd
-
-Requires: obexd-server
-# no obexd-server equivalent in BlueZ 5, so no conflict
-
-Requires: kf5bluezqt-bluez4
-Conflicts: kf5bluezqt-bluez5
-
-Provides: bluez-configs
-Conflicts: bluez5-configs
-Obsoletes: bluez-configs-sailfish
-Obsoletes: bluez-configs-mer
-
-Requires: pulseaudio-modules-bluez4
-
-%description bluez4
-%{summary}.
-
 %package bluez5
 Summary: %{rpm_device} packages for BlueZ 5
 Conflicts: droid-config-%{rpm_device}-bluez4
@@ -452,8 +422,6 @@ fi
 # We want to keep some files in separate subpackages.
 # NOTE: some files might get to wrong place with this because of string assumption.
 %if 0%{?have_bluetooth:1}
-grep bluez4 tmp/droid-config.files > tmp/bluez4.files || true
-sed --in-place '/bluez4/d' tmp/droid-config.files
 grep bluez5 tmp/droid-config.files > tmp/bluez5.files || true
 sed --in-place '/bluez5/d' tmp/droid-config.files
 %endif
@@ -688,16 +656,9 @@ fi
 %endif
 
 %if 0%{?have_bluetooth:1}
-%posttrans bluez4
-rm -rf /etc/bluetooth                   || :
-ln -s bluez4/bluetooth /etc/bluetooth   || :
-
 %posttrans bluez5
 rm -rf /etc/bluetooth                   || :
 ln -s bluez5/bluetooth /etc/bluetooth   || :
-
-%files bluez4 -f tmp/bluez4.files
-%defattr(644,root,root,-)
 
 %files bluez5 -f tmp/bluez5.files
 %defattr(644,root,root,-)
