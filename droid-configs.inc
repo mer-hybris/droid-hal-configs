@@ -328,7 +328,7 @@ delete_file() {
   local files=$1
   local file=$2
   local dorm=$3
-  [ "x$dorm" == "x1" ] && rm $RPM_BUILD_ROOT/$file
+  [ "x$dorm" == "x1" ] && rm -f $RPM_BUILD_ROOT/$file
   grep -vE "$file" $files > tmp/$$.files
   mv tmp/$$.files $files
 }
