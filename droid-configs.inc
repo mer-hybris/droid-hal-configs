@@ -285,8 +285,10 @@ do_not_move_to_lib64=(
     "modules"
     "oneshot.d"
     "startup"
+    "sysctl.d"
     "systemd/system"
     "systemd/user"
+    "sysusers.d"
     "tmpfiles.d"
     "udev"
     )
