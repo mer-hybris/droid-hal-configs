@@ -1,0 +1,10 @@
+[Unit]
+Description=Reclaim memory once per day and on boot
+ConditionPathExists=/proc/1/reclaim
+
+[Timer]
+OnStartupSec=1s
+OnUnitActiveSec=1d
+
+[Install]
+WantedBy=timers.target
