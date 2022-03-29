@@ -27,3 +27,7 @@ service bootanim /system/bin/bootanimation_HYBRIS_DISABLED
 service vendor.usb-hal-1-0 /vendor/bin/hw/android.hardware.usb@1.0-service_HYBRIS_DISABLED
 
 service vendor.vibrator-1-0 /vendor/bin/hw/android.hardware.vibrator@1.0-service_HYBRIS_DISABLED
+
+service update_verifier_nonencrypted /system/bin/update_verifier_HYBRIS_DISABLED nonencrypted
+
+service update_verifier /system/bin/update_verifier_HYBRIS_DISABLED ${vold.decrypt}
