@@ -433,7 +433,7 @@ sed --in-place '/ohm/d' tmp/droid-config.files
 echo "%defattr(-,root,root,-)" > tmp/pulseaudio-settings.files
 grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
 sed --in-place '/pulse/d' tmp/droid-config.files
-sed --in-place '/preinit/d' tmp/droid-config.files
+sed --in-place '/\/startup\/preinit\//d' tmp/droid-config.files
 grep "/dconf/db/" tmp/droid-config.files > tmp/sailfish-settings.files
 sed --in-place '/\/dconf\/db\//d' tmp/droid-config.files
 grep -e "flash-partition" -e "platform-updates" tmp/droid-config.files > tmp/flashing.files
