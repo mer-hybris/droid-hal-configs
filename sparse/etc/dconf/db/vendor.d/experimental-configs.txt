@@ -1,0 +1,4 @@
+# Experimental homescreen configuration flags
+# [desktop/sailfish/experimental]
+# quickAppToggleGesture=false
+# lockscreen_notification_count=4
