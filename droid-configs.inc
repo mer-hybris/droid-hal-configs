@@ -22,6 +22,7 @@
 #  Jolla Tablet: 1.5
 #  Nexus 5:      2.0
 #  Nexus 4:      pixel_ratio=1.3 (then icon_res becomes 1.25)
+#  Xperia 1:     2.5
 # packages_own_system: adaptation gets /system from rpm instead of device partition
 
 # Image configuration:
@@ -460,8 +461,8 @@ sed --in-place 's|@PIXEL_RATIO@|%{pixel_ratio}|' %{buildroot}/etc/dconf/db/vendo
 %define start_drag_distance %(awk 'BEGIN{print int(%{pixel_ratio}*20)}')
 sed --in-place 's|@START_DRAG_DISTANCE@|%{start_drag_distance}|' %{buildroot}/etc/xdg/QtProject/QPlatformTheme.conf
 
-# icon_res can be only one of 1.0, 1.25, 1.5, 1.75 or 2.0 use pixel_ratio and pick closest one
-%define icon_res %(awk 'BEGIN {a=int((%{pixel_ratio}-0.125)/0.25)*0.25+0.25;a=(a<=1?"1.0":(a>=2.0?"2.0":a));print a }')
+# icon_res can be only one of 1.0, 1.25, 1.5, 1.75, 2.0 or 2.5 use pixel_ratio and pick closest one
+%define icon_res %(awk 'BEGIN {round=%{pixel_ratio}>2?0.5:0.25;a=int((%{pixel_ratio}+(round/2.0))/round)*round;a=(a<=1?"1.0":(a>=2.5?"2.5":a));print a }')
 
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 
