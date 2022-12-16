@@ -330,7 +330,7 @@ for SERIALNO in $FASTBOOT_DEVICES; do
     echo "Found $PRODUCT, serial:$SERIALNO, baseband:$BASEBAND, bootloader:$BOOTLOADER"
 
     for VALID_PRODUCT in "${VALID_PRODUCTS[@]}"; do
-        if echo "$PRODUCT" | grep -qe "^$VALID_PRODUCT$"; then
+        if echo "$PRODUCT" | grep -qie "^$VALID_PRODUCT$"; then
             TARGET_SERIALNO="$SERIALNO $TARGET_SERIALNO"
             ((++count))
         fi
