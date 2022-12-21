@@ -518,6 +518,15 @@ if [ -f %{dcd_path}/kickstart/pack_package-droid-updater ]; then
   sed -e 's|@DEVICE@|%{rpm_device}|g' %{dcd_path}/kickstart/pack_package-droid-updater > $DEST_UPDATER || true
 fi
 
+# copy kickstart packs that are from droid-config-device
+# to %%{rpm_device}-kickstart-configuration
+find %{dcd_path}/kickstart/pack/ -type l  -print0 | while read -r ks_part  ; do
+     ks_part_L=$(basename $(readlink -f "$ks_part"))
+     if [ -e %{dcd_common}/"$ks_part_L" ] ; then
+        cp %{dcd_common}/"$ks_part_L" "$ks_part"
+     fi
+done
+
 # and attachments (override if there is one)
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment
 cp -f %{dcd_common}/kickstart/attachment_hybris $RPM_BUILD_ROOT/%{_datadir}/ssu/kickstart/attachment/%{rpm_device}
