@@ -22,3 +22,5 @@ keycode 226 = ToggleCallHangup
 keycode 256 = ToggleCallHangup
 keycode 528 = CameraFocus
 keycode 766 = Camera
+# custom assistant button on at least Sony Xperia 10 III
+keycode 457 = Camera
