@@ -1,0 +1,24 @@
+service apexd /usr/libexec/droid-hybris/system/bin/apexd
+    interface aidl apexservice
+    class core
+    user root
+    group system
+    oneshot
+    override
+    disabled # does not start with the core class
+    reboot_on_failure reboot,apexd-failed
+
+service apexd-bootstrap /usr/libexec/droid-hybris/system/bin/apexd --bootstrap
+    user root
+    group system
+    oneshot
+    override
+    disabled
+    reboot_on_failure reboot,bootloader,bootstrap-apexd-failed
+
+service apexd-snapshotde /usr/libexec/droid-hybris/system/bin/apexd --snapshotde
+    user root
+    group system
+    oneshot
+    override
+    disabled
