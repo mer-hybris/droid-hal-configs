@@ -39,7 +39,7 @@ TEST=="/dev/block/bootdevice", GOTO="bootdevice_end"
 IMPORT{cmdline}="androidboot.bootdevice"
 # Unfortunately we cannot compare two variables, therefore use a workaround
 # with a file.
-ENV{androidboot.bootdevice}!="", RUN+="/bin/touch /tmp/udev-$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", ENV{androidboot.bootdevice}!="", TEST!="/tmp/udev-$env{androidboot.bootdevice}", RUN+="/bin/touch /tmp/udev-$env{androidboot.bootdevice}"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice}"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/ln -s /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice} /dev/block/bootdevice"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*/*", DEVPATH=="/devices/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice}"
