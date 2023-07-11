@@ -1,9 +1,9 @@
 [Unit]
 Description=Reclaim memory
+After=init-done.service
 
 [Service]
 Type=oneshot
-After=init-done.service
 ExecStart=/usr/bin/droid/droid-reclaim-memory.sh
 DevicePolicy=strict
 NoNewPrivileges=yes
