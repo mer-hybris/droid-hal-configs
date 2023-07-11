@@ -34,10 +34,12 @@ SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/de
 # be). If android-init doesn't create the bootdevice symlink and there is no
 # androidboot.bootdevice on the cmdline, then the bootdevice symlink is not
 # required.
+TEST=="/dev/block/bootdevice", GOTO="bootdevice_end"
+
 IMPORT{cmdline}="androidboot.bootdevice"
 # Unfortunately we cannot compare two variables, therefore use a workaround
 # with a file.
-ENV{androidboot.bootdevice}!="", RUN+="/bin/touch /tmp/udev-$env{androidboot.bootdevice}"
+SUBSYSTEM=="platform", KERNEL!="", ENV{androidboot.bootdevice}!="", TEST!="/tmp/udev-$env{androidboot.bootdevice}", RUN+="/bin/touch /tmp/udev-$env{androidboot.bootdevice}"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice}"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/devices/platform/*/*/*", DEVPATH=="/devices/platform/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/ln -s /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice} /dev/block/bootdevice"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*/*", DEVPATH=="/devices/*/*", TEST=="/tmp/udev-$env{PLATFORM_DEVICE}", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{androidboot.bootdevice}"
@@ -50,10 +52,13 @@ SUBSYSTEM=="platform", KERNEL!="", DEVPATH=="/devices/platform/*", DEVPATH!="/de
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*", DEVPATH=="/devices/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/mkdir -p /dev/block/platform/$env{androidboot.bootdevice}"
 SUBSYSTEM=="platform", KERNEL!="", DEVPATH!="/devices/platform/*", DEVPATH!="/devices/*/*", DEVPATH=="/devices/*", TEST=="/tmp/udev-$env{PLATFORM_FOLDER}", RUN+="/bin/ln -s /dev/block/platform/$env{androidboot.bootdevice} /dev/block/bootdevice"
 
-# Create the partition symlinks.
-ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/by-name/$env{ID_PART_ENTRY_NAME}"
-ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/by-num/p$env{ID_PART_ENTRY_NUMBER}"
-ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/$name"
+LABEL="bootdevice_end"
+
+# Create the partition symlinks. Use external command for linking to prevent breakage with bootdevice symlink
+ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", RUN+="/bin/mkdir -p /dev/block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/by-name"
+ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", RUN+="/bin/ln -s /dev/block/$name /dev/block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/by-name/$env{ID_PART_ENTRY_NAME}"
+ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", RUN+="/bin/ln -s /dev/block/$name /dev/block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/by-num/p$env{ID_PART_ENTRY_NUMBER}"
+ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", RUN+="/bin/ln -s /dev/block/$name /dev/block/platform/$env{PLATFORM_FOLDER}/$env{PLATFORM_DEVICE}/$name"
 
 # Backwards compatibility for old SailfishOS approach (might not be necessary)
 # NOTE: if the comment marked with (1) applies then this will not do anything.
