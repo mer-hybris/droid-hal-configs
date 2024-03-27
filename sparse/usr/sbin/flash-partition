@@ -77,7 +77,9 @@ on_device()
                         return 1
                 fi
         done
-        if cat /proc/cpuinfo | grep "$CPUCHECK_STRING" > /dev/null; then
+        if grep -q "$CPUCHECK_STRING" /proc/cpuinfo > /dev/null; then
+                return 0
+        elif grep -q "$CPUCHECK_STRING" /sys/firmware/devicetree/base/model > /dev/null; then
                 return 0
         else
                 return 1
