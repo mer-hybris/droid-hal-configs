@@ -94,7 +94,7 @@ BuildRequires: community-adaptation
 %endif
 %if 0%{?have_bluetooth:1}
 Provides: bluetooth-rfkill-event-configs
-# Device-specific obexd configuration common to BlueZ 4 & 5
+# Device-specific obexd configuration common to BlueZ 5
 Requires: obexd-calldata-provider
 Requires: obexd-contentfilter-helper
 Provides: obexd-configs
@@ -225,30 +225,16 @@ flashing configurations or flashing scripts.
 %if 0%{?have_bluetooth:1}
 %package bluez5
 Summary: %{rpm_device} packages for BlueZ 5
-Conflicts: droid-config-%{rpm_device}-bluez4
 Provides: %{rpm_device}-bluez-configs
 
 Requires: bluez5
-Conflicts: bluez
-Obsoletes: bluez
-
 Requires: bluez5-libs
-Conflicts: bluez-libs
-Obsoletes: bluez-libs
-
 Requires: bluez5-obexd
-Conflicts: obexd
-Obsoletes: obexd
-
 Requires: kf5bluezqt-bluez5
-Conflicts: kf5bluezqt-bluez4
-Obsoletes: kf5bluezqt-bluez4
-Obsoletes: kf5bluezqt-bluez4-declarative
 
 Provides: bluez5-configs
-Conflicts: bluez-configs
-Obsoletes: bluez-configs-sailfish
-Obsoletes: bluez-configs-mer
+Obsoletes: bluez5-configs-mer
+Conflicts: bluez5-configs-mer
 
 %description bluez5
 %{summary}.
