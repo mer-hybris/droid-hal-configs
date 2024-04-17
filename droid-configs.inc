@@ -327,7 +327,7 @@ delete_files() {
   local deletelist=$2
   local dorm=$3
   if [ -e $deletelist ]; then
-    egrep -v '^#|^$' $deletelist | (
+    grep -E -v '^#|^$' $deletelist | (
       while read file; do
         delete_file $files $file $dorm
       done)
@@ -338,7 +338,7 @@ config_files() {
   files=$1
   configlist=$2
   if [ -e $configlist ]; then
-    egrep -v '^#|^$' $configlist | (
+    grep -E -v '^#|^$' $configlist | (
       while read file; do
         escape=$(echo "$file" | sed 's,/,\\\/,g')
         sed -e "s/$escape/%config $escape/g" $files > tmp/$$.files
@@ -548,7 +548,7 @@ fi
 %if 0%{?variant_name_list:1}
   variants=variant_name.list
   if [ -e $variants ]; then
-    egrep -v '^#|^$' $variants | (
+    grep -E -v '^#|^$' $variants | (
       while read line; do
         %gen_ks "$line"
         sed -i s/@VARIANT_NAME@/$line/g %{buildroot}/%{_datadir}/kickstarts/*$line*.ks
