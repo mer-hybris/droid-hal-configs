@@ -448,7 +448,7 @@ sed --in-place 's|@PIXEL_RATIO@|%{pixel_ratio}|' %{buildroot}/etc/dconf/db/vendo
 sed --in-place 's|@START_DRAG_DISTANCE@|%{start_drag_distance}|' %{buildroot}/etc/xdg/QtProject/QPlatformTheme.conf
 
 # icon_res can be only one of 1.0, 1.25, 1.5, 1.75, 2.0 or 2.5 use pixel_ratio and pick closest one
-%define icon_res %(awk 'BEGIN {round=%{pixel_ratio}>2?0.5:0.25;a=int((%{pixel_ratio}+(round/2.0))/round)*round;a=(a<=1?"1.0":(a>=2.5?"2.5":a));print a }')
+%define icon_res %(awk 'BEGIN {round=%{pixel_ratio}>2?0.5:0.25;a=int((%{pixel_ratio}+(round/2.0))/round)*round;a=(a<=1?"1.0":(a>=2.5?"2.5":a));a=(a==int(a)?a".0":a);print a }')
 
 sed --in-place 's|@ICON_RES@|%{icon_res}|' %{buildroot}/etc/dconf/db/vendor.d/silica-configs.txt
 
