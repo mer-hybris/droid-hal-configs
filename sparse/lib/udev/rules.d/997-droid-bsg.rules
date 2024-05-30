@@ -1,0 +1,2 @@
+# For keymaster to work on some devices
+SUBSYSTEM=="bsg", SYMLINK+="%k"
