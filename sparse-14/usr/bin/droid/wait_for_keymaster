@@ -1,0 +1,8 @@
+#!/bin/sh
+
+while [ "$(binder-list -d /dev/hwbinder |grep android.hardware.keymaster@4.1::IKeymasterDevice/default)" == "" ]; do
+        echo "Waiting for keymaster"
+        sleep 1
+done
+
+exit 0
