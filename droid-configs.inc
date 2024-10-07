@@ -545,7 +545,7 @@ fi
   KS_LEVELS=false
 %endif
 %else
-  if ssu s 2>/dev/null | grep -q "Release (rnd): latest (devel)"; then
+  if ssu s 2>/dev/null | grep -q "Release (rnd): live (devel)"; then
     KS_LEVELS=true
   else
     KS_LEVELS=false
