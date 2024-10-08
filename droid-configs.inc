@@ -208,7 +208,9 @@ Configure sailfish eg naturally landscape devices like mako
 %package flashing
 Provides: droid-config-flashing
 # Sparse image flashing support for flash-partition
+%if 0%{!?disable_tools:1}
 Requires: droid-hal-tools
+%endif
 Summary: On device flashing files for %{rpm_device} hw
 
 %description flashing
