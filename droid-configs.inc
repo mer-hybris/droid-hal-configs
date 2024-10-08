@@ -38,6 +38,10 @@
 # * make needed modifications for your device
 # * add "Provides: PACKAGE" to your droid-config-$DEVICE.spec (e.g. Provides: ofono-configs)
 
+# Do not use dhd tools by default
+%if 0%{?enable_dhd_tools:1}
+%define have_dhd_tools 1
+%endif
 
 # We assume all devices have a cellular modem, unless explicitly removed:
 %if 0%{!?remove_modem:1}
@@ -208,7 +212,9 @@ Configure sailfish eg naturally landscape devices like mako
 %package flashing
 Provides: droid-config-flashing
 # Sparse image flashing support for flash-partition
+%if 0%{?have_dhd_tools:1}
 Requires: droid-hal-tools
+%endif
 Summary: On device flashing files for %{rpm_device} hw
 
 %description flashing
