@@ -289,7 +289,7 @@ copy_files_from() {
       if echo $dst | grep -qE "^/usr/lib/|^/lib/"; then
         move_to_lib64=true
         for stay_in_lib in "${do_not_move_to_lib64[@]}"; do
-          if echo $dst | grep -qE "^/usr/lib/$stay_in_lib/|^/lib/$stay_in_lib/"; then
+          if echo $dst | grep -qE "^/usr/lib/$stay_in_lib|^/lib/$stay_in_lib"; then
             move_to_lib64=false
             break
           fi
