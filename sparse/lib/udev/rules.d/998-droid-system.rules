@@ -20,6 +20,8 @@ SUBSYSTEM=="leds", ACTION=="add|change", RUN+="/bin/sh -c '/usr/bin/chown system
 # Partition symlinks, compatible with the android way of setting up the
 # symlinks.
 
+ACTION!="add", GOTO="partitions_end"
+
 # Pass collected (see below) information down to lower levels.
 SUBSYSTEM=="?*", ENV{PLATFORM_FOLDER}=="", IMPORT{parent}="PLATFORM_FOLDER"
 SUBSYSTEM=="?*", ENV{PLATFORM_DEVICE}=="", IMPORT{parent}="PLATFORM_DEVICE"
@@ -68,6 +70,8 @@ ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", RUN+="/bin/ln -
 # Backwards compatibility for old SailfishOS approach (might not be necessary)
 # NOTE: if the comment marked with (1) applies then this will not do anything.
 ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="block/platform/$env{PLATFORM_FOLDER}/by-name/$env{ID_PART_ENTRY_NAME}"
+
+LABEL="partitions_end"
 
 SUBSYSTEM=="firmware", ACTION=="add", RUN="/usr/bin/droid/droid-load-firmware.sh"
 
