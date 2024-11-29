@@ -1,0 +1,22 @@
+### If droid-card needs other arguments than the default, have the new
+### load-module line in /etc/pulse/arm_droid_card_custom.pa
+.ifexists /etc/pulse/arm_droid_card_custom.pa
+ .include /etc/pulse/arm_droid_card_custom.pa
+.else
+ load-module module-droid-card rate=48000
+.endif
+
+### Needed on devices with older Android bases.
+### HADK guide explains how to implement this fully
+.ifexists module-droid-glue.so
+ .nofail
+ load-module module-droid-glue
+ .fail
+.endif
+
+### Needed on many new devices. HADK guide explains how to implement this fully
+.ifexists module-droid-hidl.so
+ .nofail
+ load-module module-droid-hidl
+ .fail
+.endif

@@ -1,2 +1,2 @@
 HYBRIS_USE_VENDOR_NAMESPACE=yes
-CONFIG="-n --file=/etc/pulse/arm_droid_default.pa"
+CONFIG="-n --file=/etc/pulse/default_sailfish.pa"

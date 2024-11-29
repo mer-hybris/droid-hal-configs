@@ -23,33 +23,14 @@
 
 .fail
 
-# Transitional check as keepalive module is moved away from droid modules.
-.ifexists module-keepalive.so
- load-module module-keepalive
-.else
- load-module module-droid-keepalive
-.endif
+load-module module-keepalive
 
-### If droid-card needs other arguments than the default, have the new
-### load-module line in /etc/pulse/arm_droid_card_custom.pa
-.ifexists /etc/pulse/arm_droid_card_custom.pa
- .include /etc/pulse/arm_droid_card_custom.pa
-.else
- load-module module-droid-card rate=48000
-.endif
-
-### Needed on many new devices. HADK guide explains how to implement this fully
-.ifexists module-droid-glue.so
- .nofail
- load-module module-droid-glue
- .fail
-.endif
-
-.ifexists module-droid-hidl.so
- .nofail
- load-module module-droid-hidl
- .fail
-.endif
+### Including a default_sailfish.pa.d directory, which can be used
+### for additional configuration snippets.
+### Note that those snippet files must have a .pa file extension.
+.nofail
+.include /etc/pulse/default_sailfish.pa.d
+.fail
 
 load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-parameters use_voice=false
 load-module module-meego-mainvolume virtual_stream=true unmute_delay=600
