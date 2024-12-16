@@ -81,11 +81,15 @@ Release: %{rel_date}
 License:    GPLv2
 Source0:    %{name}-%{version}.tar.bz2
 BuildRequires: ssu-kickstart-configuration
+%if 0%{!?native_build:1}
 BuildRequires: pkgconfig(android-headers)
+%endif
 BuildRequires: qt5-qttools-kmap2qmap
 BuildRequires: sed
 Requires: sed
+%if 0%{!?native_build:1}
 Requires: droid-hal
+%endif
 %if 0%{?community_adaptation:1}
 # because it provides one ssu feature, do:
 Requires: community-adaptation
@@ -175,7 +179,11 @@ Requires:   pulseaudio >= 11.1+git4
 Requires:   pulseaudio-modules-nemo-parameters >= 11.1.24
 Requires:   pulseaudio-modules-nemo-stream-restore >= 11.1.24
 Requires:   pulseaudio-modules-nemo-mainvolume >= 11.1.24
+%if 0%{!?native_build:1}
 Requires:   pulseaudio-modules-droid >= 11.1.66
+%else
+Requires:   pulseaudio-module-keepalive
+%endif
 Requires:   pulseaudio-policy-enforcement >= 11.1.35
 Provides:   pulseaudio-settings
 
@@ -200,7 +208,9 @@ Configure sailfish eg naturally landscape devices like mako
 %package flashing
 Provides: droid-config-flashing
 # Sparse image flashing support for flash-partition
+%if 0%{!?disable_tools:1}
 Requires: droid-hal-tools
+%endif
 Summary: On device flashing files for %{rpm_device} hw
 
 %description flashing
@@ -537,7 +547,7 @@ fi
   KS_LEVELS=false
 %endif
 %else
-  if ssu s 2>/dev/null | grep -q "Release (rnd): latest (devel)"; then
+  if ssu s 2>/dev/null | grep -q "Release (rnd): live (devel)"; then
     KS_LEVELS=true
   else
     KS_LEVELS=false
