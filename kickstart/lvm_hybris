@@ -1,0 +1,137 @@
+# -*- sh -*-
+# SPDX-FileCopyrightText: 2022, Jolla Ltd.
+#
+
+pushd $IMG_OUT_DIR
+
+MD5SUMFILE=md5.lst
+
+DEVICE_VERSION_FILE=./hw-release
+
+if [ -n "@EXTRA_NAME@" ] && [ "@EXTRA_NAME@" != @"EXTRA_NAME"@ ]; then
+  EXTRA_NAME="@EXTRA_NAME@-"
+fi
+
+if [ -a $DEVICE_VERSION_FILE ] ; then
+  source $DEVICE_VERSION_FILE
+  DEVICE_ID=-${MER_HA_DEVICE// /_}-$VERSION_ID
+fi
+
+source ./os-release
+if [ "$SSU_RELEASE_TYPE" = "rnd" ]; then
+  RND_FLAVOUR=$SAILFISH_FLAVOUR
+fi
+
+RELEASENAME=${NAME// /_}-${SAILFISH_CUSTOMER// /_}${SAILFISH_CUSTOMER:+-}${EXTRA_NAME// /_}$RND_FLAVOUR${RND_FLAVOUR:+-}$VERSION_ID$DEVICE_ID
+
+IMGSECTORS=0
+IMGBLOCKS=0
+IMGSIZE=0
+BLOCKSIZE=0
+
+resizeloop() {
+  local IMG=$1
+  local LOOP=$(/sbin/losetup -f)
+  /sbin/losetup $LOOP $IMG
+
+  # Get image blocks and free blocks
+  local BLOCKCOUNT=$(/sbin/dumpe2fs -h $LOOP 2>&1 | grep "Block count:" | grep -o -E '[0-9]+')
+  local FREEBLOCKS=$(/sbin/dumpe2fs -h $LOOP 2>&1 | grep "Free blocks:" | grep -o -E '[0-9]+')
+  BLOCKSIZE=$(/sbin/dumpe2fs -h $LOOP 2>&1 | grep "Block size:" | grep -o -E '[0-9]+')
+  echo "$IMG total block count: $BLOCKCOUNT - Free blocks: $FREEBLOCKS"
+
+  local IMAGEBLOCKS=$(( $BLOCKCOUNT - $FREEBLOCKS ))
+  local IMAGESECTORS=$(( $IMAGEBLOCKS * $BLOCKSIZE / 512 ))
+
+  # Shrink to minimum
+  echo "Shrink $IMG to $IMAGESECTORS"
+  /sbin/resize2fs $LOOP ${IMAGESECTORS}s -f
+
+  # Get the size after resize.
+  IMGBLOCKS=$(/sbin/dumpe2fs -h $LOOP 2>&1 | grep "Block count:" | grep -o -E '[0-9]+')
+  IMGSIZE=$(( $IMGBLOCKS * $BLOCKSIZE))
+  IMGSECTORS=$(( $IMGBLOCKS * $BLOCKSIZE / 512))
+  echo "$IMG resized block count: $IMGBLOCKS - Block size: $BLOCKSIZE - Sectors: $IMGSECTORS - Total size: $IMGSIZE"
+
+  /sbin/losetup -d $LOOP
+}
+
+echo "Resize root and home"
+
+# Resize root and home to minimum
+resizeloop root.img
+
+ROOTSIZE=$IMGSIZE
+ROOTBLOCKS=$IMGBLOCKS
+ROOTSECTORS=$IMGSECTORS
+
+resizeloop home.img
+
+HOMESIZE=$IMGSIZE
+HOMEBLOCKS=$IMGBLOCKS
+HOMESECTORS=$IMGSECTORS
+
+# We will add some (100M) extra to temp image.
+TEMPIMGSECTORS=$(( $ROOTSECTORS + $HOMESECTORS + 200000 ))
+
+dd if=/dev/zero bs=512 count=0 of=temp.img seek=$TEMPIMGSECTORS
+
+LVM_LOOP=$(/sbin/losetup -f)
+/sbin/losetup $LVM_LOOP temp.img
+/usr/sbin/pvcreate $LVM_LOOP
+/usr/sbin/vgcreate sailfish $LVM_LOOP
+
+echo "Create logical volume ROOT size: $ROOTSIZE"
+/usr/sbin/lvcreate -L ${ROOTSIZE}B --name root sailfish
+
+echo "Create logical volume HOME size: $HOMESIZE"
+/usr/sbin/lvcreate -L ${HOMESIZE}B --name home sailfish
+
+/bin/sync
+/usr/sbin/vgchange -a y sailfish
+
+dd if=root.img bs=$BLOCKSIZE count=$ROOTBLOCKS of=/dev/sailfish/root
+
+dd if=home.img bs=$BLOCKSIZE count=$HOMEBLOCKS of=/dev/sailfish/home
+
+/usr/sbin/vgchange -a n sailfish
+
+rm home.img root.img
+
+/sbin/losetup -d $LVM_LOOP
+
+mv temp.img sailfish.img
+
+/usr/bin/atruncate sailfish.img
+# To make the file magic right lets convert to single file sparse image.
+/usr/bin/img2simg sailfish.img sailfish.img001
+rm sailfish.img
+
+chmod 755 flash.*
+
+
+# Set supported devices in flash scripts
+sed -e "s/\@VALID_PRODUCTS\@/\"@DEVICEMODE@\"/g" -i flash-config.sh
+sed -e "s/\@DEVICES\@/:: @DEVICEMODE@/g" -i flash-on-windows.bat
+
+mkdir -p ${RELEASENAME}
+
+
+for FILE in flash* *.img* *.exe *.dll *-release ; do
+    if [ -e $FILE ] ; then
+        mv ${FILE} ${RELEASENAME}/
+    fi
+done
+
+# Calculate md5sums of files included to the archive
+cd ${RELEASENAME}
+md5sum * > $MD5SUMFILE
+cd ..
+
+# Package stuff back to archive
+zip -r ${RELEASENAME}.zip $RELEASENAME
+
+# Remove the files from the output directory
+rm -r ${RELEASENAME}
+
+popd
