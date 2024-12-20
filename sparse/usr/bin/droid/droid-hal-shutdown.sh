@@ -39,9 +39,9 @@ CGROUP=$(sed -r '/1:name=systemd:/!d;s|||;s|/control||' < /proc/self/cgroup)
 [ ! -f "/sys/fs/cgroup/systemd/$CGROUP/cgroup.procs" ] && echo "No such cgroup: $CGROUP" && exit 1
 
 get_pids() {
-    # Get list of running pids in this cgroup
+    # Get list of running pids in this cgroup, excluding this script
     # return list $PIDS and $NUM_PIDS
-    PIDS=$(cat /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs)
+    PIDS=$(grep -Ev "\b$$\b" "/sys/fs/cgroup/systemd/$CGROUP/cgroup.procs")
     NUM_PIDS=$(echo "$PIDS" | wc -w)
     echo "Android service PIDs remaining: $NUM_PIDS"
 }
