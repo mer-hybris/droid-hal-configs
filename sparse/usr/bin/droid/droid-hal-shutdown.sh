@@ -79,16 +79,18 @@ done
 echo "Killing droid-hal-init"
 killall droid-hal-init
 
-echo "Killing processes hybris.shutdown missed"
 get_pids
 if [ $NUM_PIDS -gt 0 ]; then
-    killall $PIDS
+    echo "Terminating processes hybris.shutdown missed"
+    kill -TERM $PIDS
     sleep 1
     get_pids
     if [ $NUM_PIDS -gt 0 ]; then
-        killall -s 9 $PIDS
+        echo "Killing processes hybris.shutdown missed"
+        kill -KILL $PIDS
     fi
 fi
 
+get_pids
 exit 0
 
