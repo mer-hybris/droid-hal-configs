@@ -35,7 +35,7 @@
 # Kill all processes that are in this same cgroup.
 # Deducing the name of the service's cgroup based on the shutdown script's
 # cgroup name.
-CGROUP=$(cat /proc/self/cgroup | sed -r '/1:name=systemd:/!d;s|||;s|/control||')
+CGROUP=$(sed -r '/1:name=systemd:/!d;s|||;s|/control||' < /proc/self/cgroup)
 [ ! -f /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs ] && echo "No such cgroup: $CGROUP" && exit 1
 
 get_pids() {
