@@ -57,7 +57,7 @@ PREV_NUM_PIDS=$NUM_PIDS
 # We don't use it, but some init scripts watch for it as a signal to shut other things down
 /usr/bin/setprop sys.shutdown.requested 1
 
-echo "Shutting down droid-hal-init services"
+echo "Shutting down droid-hal-init services..."
 /usr/bin/setprop hybris.shutdown 1
 
 sleep 1
@@ -79,17 +79,17 @@ while [ $NUM_PIDS -gt 1 ] && [ $WAIT -lt $MAX_WAIT ]; do
     get_pids
 done
 
-echo "Killing droid-hal-init"
+echo "Killing droid-hal-init..."
 killall droid-hal-init
 
 get_pids
 if [ $NUM_PIDS -gt 0 ]; then
-    echo "Terminating processes hybris.shutdown missed"
+    echo "Terminating remaining processes after hybris.shutdown..."
     kill -TERM $PIDS
     sleep 1
     get_pids
     if [ $NUM_PIDS -gt 0 ]; then
-        echo "Killing processes hybris.shutdown missed"
+        echo "Killing remaining processes after hybris.shutdown..."
         kill -KILL $PIDS
     fi
 fi
