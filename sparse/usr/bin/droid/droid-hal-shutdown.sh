@@ -36,7 +36,10 @@
 # Deducing the name of the service's cgroup based on the shutdown script's
 # cgroup name.
 CGROUP=$(sed -r '/1:name=systemd:/!d;s|||;s|/control||' < /proc/self/cgroup)
-[ ! -f "/sys/fs/cgroup/systemd/$CGROUP/cgroup.procs" ] && echo "No such cgroup: $CGROUP" && exit 1
+if [ ! -f "/sys/fs/cgroup/systemd/$CGROUP/cgroup.procs" ]; then
+    echo "No such cgroup: $CGROUP"
+    exit 1
+fi
 
 get_pids() {
     # Get list of running pids in this cgroup, excluding this script
