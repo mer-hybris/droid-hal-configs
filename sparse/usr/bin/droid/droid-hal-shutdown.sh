@@ -66,7 +66,7 @@ get_pids
 MAX_WAIT=5
 # -gt 1 because droid-hal-init is also in this cgroup
 while [ $NUM_PIDS -gt 1 ] && [ $WAIT -lt $MAX_WAIT ]; do
-    let WAIT=$WAIT+1
+    WAIT=$((WAIT+1))
     if [ $NUM_PIDS -lt $PREV_NUM_PIDS ]; then
         # Number of running processes is getting smaller
         # Wait a little bit more
