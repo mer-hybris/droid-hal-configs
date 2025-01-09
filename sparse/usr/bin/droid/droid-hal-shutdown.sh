@@ -35,15 +35,18 @@
 # Kill all processes that are in this same cgroup.
 # Deducing the name of the service's cgroup based on the shutdown script's
 # cgroup name.
-CGROUP=$(cat /proc/self/cgroup | sed -r '/1:name=systemd:/!d;s|||;s|/control||')
-[ ! -f /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs ] && echo "No such cgroup: $CGROUP" && exit 1
+CGROUP=$(sed -r '/1:name=systemd:/!d;s|||;s|/control||' < /proc/self/cgroup)
+if [ ! -f "/sys/fs/cgroup/systemd/$CGROUP/cgroup.procs" ]; then
+    echo "No such cgroup: $CGROUP"
+    exit 1
+fi
 
 get_pids() {
-    # Get list of running pids in this cgroup
+    # Get list of running pids in this cgroup, excluding this script
     # return list $PIDS and $NUM_PIDS
-    PIDS=$(cat /sys/fs/cgroup/systemd/$CGROUP/cgroup.procs)
-    NUM_PIDS=$(echo $PIDS | wc -w)
-    echo Android service PIDs remaining: $NUM_PIDS
+    PIDS=$(grep -Ev "\b$$\b" "/sys/fs/cgroup/systemd/$CGROUP/cgroup.procs")
+    NUM_PIDS=$(echo "$PIDS" | wc -w)
+    echo "Android service PIDs remaining: $NUM_PIDS"
 }
 
 # ============== main() ===============
@@ -54,7 +57,7 @@ PREV_NUM_PIDS=$NUM_PIDS
 # We don't use it, but some init scripts watch for it as a signal to shut other things down
 /usr/bin/setprop sys.shutdown.requested 1
 
-echo Shutting down droid-hal-init services
+echo "Shutting down droid-hal-init services..."
 /usr/bin/setprop hybris.shutdown 1
 
 sleep 1
@@ -62,33 +65,35 @@ WAIT=1
 get_pids
 MAX_WAIT=5
 # -gt 1 because droid-hal-init is also in this cgroup
-while [ $NUM_PIDS -gt 1 -a $WAIT -lt $MAX_WAIT ]; do
-    let WAIT=$WAIT+1
+while [ $NUM_PIDS -gt 1 ] && [ $WAIT -lt $MAX_WAIT ]; do
+    WAIT=$((WAIT+1))
     if [ $NUM_PIDS -lt $PREV_NUM_PIDS ]; then
         # Number of running processes is getting smaller
         # Wait a little bit more
         sleep 1
      else
-        # Number of pids is not gettting smaller
+        # Number of pids is not getting smaller
         break
     fi
     PREV_NUM_PIDS=$NUM_PIDS
     get_pids
 done
 
-echo Killing droid-hal-init
+echo "Killing droid-hal-init..."
 killall droid-hal-init
 
-echo Killing processes hybris.shutdown missed
 get_pids
 if [ $NUM_PIDS -gt 0 ]; then
-    killall $PIDS
+    echo "Terminating remaining processes after hybris.shutdown..."
+    kill -TERM $PIDS
     sleep 1
     get_pids
     if [ $NUM_PIDS -gt 0 ]; then
-        killall -s 9 $PIDS
+        echo "Killing remaining processes after hybris.shutdown..."
+        kill -KILL $PIDS
     fi
 fi
 
+get_pids
 exit 0
 
