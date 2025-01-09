@@ -278,9 +278,10 @@ if [ -z "$FASTBOOT_BIN_NAME" ]; then
                 echo "No 'fastboot' found in \$PATH. To install, use:"
                 echo ""
                 echo "    Debian/Ubuntu/.deb distros:  apt-get install android-tools-fastboot"
-                echo "    Fedora:  yum install android-tools"
+                echo "    OpenSUSE: zypper install android-tools"
+                echo "    Fedora:  dnf install android-tools"
                 echo "    OS X:    brew install android-sdk"
-                echo "    FreeBSD: pkg install android-tools-fastboot"
+                echo "    DragonFlyBSD/FreeBSD: pkg install android-tools-fastboot"
                 echo ""
                 exit 1
             else
@@ -329,7 +330,7 @@ for SERIALNO in $FASTBOOT_DEVICES; do
     echo "Found $PRODUCT, serial:$SERIALNO, baseband:$BASEBAND, bootloader:$BOOTLOADER"
 
     for VALID_PRODUCT in "${VALID_PRODUCTS[@]}"; do
-        if echo "$PRODUCT" | grep -qe "^$VALID_PRODUCT$"; then
+        if echo "$PRODUCT" | grep -qie "^$VALID_PRODUCT$"; then
             TARGET_SERIALNO="$SERIALNO $TARGET_SERIALNO"
             ((++count))
         fi
