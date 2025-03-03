@@ -242,7 +242,7 @@ fi
 
 UNAME=$(uname)
 
-# Do not need root for fastboot on Mac OS X
+# Do not need root for fastboot on macOS
 if [ "$UNAME" != "Darwin" ] && [ "$(id -u)" -ne 0 ]; then
     exec sudo -E bash -c "FORCE=$FORCE FASTBOOT_BIN_NAME=\"$FASTBOOT_BIN_NAME\" IMAGE_PATH=\"$IMAGE_PATH\" BLOB_PATH=\"$BLOB_PATH\" FASTBOOTEXTRAOPTS=\"$FASTBOOTEXTRAOPTS\" FLASH_CONFIG=\"$FLASH_CONFIG\" ONLY_DRY_RUN=$ONLY_DRY_RUN $0"
 fi
@@ -256,7 +256,7 @@ case $UNAME in
     Darwin)
         IFS='.' read -r major minor patch <<< "$(sw_vers -productVersion)"
         OS_VERSION=$major-$minor
-        echo "Detected Mac OS X - Version: $OS_VERSION"
+        echo "Detected macOS ${major}.${minor}"
         ;;
     FreeBSD)
         FASTBOOT_BIN_PATH="/usr/local/bin/"
@@ -279,7 +279,7 @@ if [ -z "$FASTBOOT_BIN_NAME" ]; then
                 echo ""
                 echo "    Debian/Ubuntu/.deb distros:  apt-get install android-tools-fastboot"
                 echo "    Fedora:  yum install android-tools"
-                echo "    OS X:    brew install android-sdk"
+                echo "    macOS:   brew install --cask android-platform-tools"
                 echo "    FreeBSD: pkg install android-tools-fastboot"
                 echo ""
                 exit 1
