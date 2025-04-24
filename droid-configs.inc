@@ -238,7 +238,6 @@ Summary: %{rpm_device} packages for BlueZ 5
 Provides: %{rpm_device}-bluez-configs
 
 Requires: bluez5
-Requires: bluez5-libs
 Requires: bluez5-obexd
 Requires: kf5bluezqt-bluez5
 
