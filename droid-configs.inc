@@ -287,6 +287,7 @@ do_not_move_to_lib64=(
     "sysusers.d"
     "tmpfiles.d"
     "udev"
+    %{extra_do_not_move_to_lib64}
     )
 copy_files_from() {
   config_dir=$1
