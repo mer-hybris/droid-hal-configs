@@ -206,6 +206,7 @@ Configure sailfish eg naturally landscape devices like mako
 ################################################################
 
 %package flashing
+BuildArch: noarch
 Provides: droid-config-flashing
 # Sparse image flashing support for flash-partition
 %if 0%{!?disable_tools:1}
