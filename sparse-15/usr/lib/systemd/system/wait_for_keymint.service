@@ -1,0 +1,14 @@
+[Unit]
+Description=Fingerprint Daemon preinit
+DefaultDependencies=no
+After=droid-hal-init.service
+Before=sailfish-fpd.service
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/droid/wait_for_keymint
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
