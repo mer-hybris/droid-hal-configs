@@ -51,7 +51,7 @@ load-module module-null-source source_name=source.null rate=48000
 .ifexists /etc/pulse/bluez5_discover_custom.pa
  .include /etc/pulse/bluez5_discover_custom.pa
 .else
- load-module module-bluez5-discover headset=droid
+ load-module module-bluez5-discover headset=droid enable_msbc=false
 .endif
 
 
