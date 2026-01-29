@@ -47,7 +47,13 @@ load-module module-augment-properties
 load-module module-null-sink sink_name=sink.null rate=48000
 load-module module-null-source source_name=source.null rate=48000
 
-load-module module-bluetooth-discover headset=droid
+### Allow overriding bluez5 module options
+.ifexists /etc/pulse/bluez5_discover_custom.pa
+ .include /etc/pulse/bluez5_discover_custom.pa
+.else
+ load-module module-bluez5-discover headset=droid enable_msbc=false
+.endif
+
 
 load-module module-policy-enforcement
 
