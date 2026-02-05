@@ -9,6 +9,9 @@ SUBSYSTEM=="misc", KERNEL=="log_radio", SYMLINK+="alog/radio"
 SUBSYSTEM=="misc", KERNEL=="log_system", SYMLINK+="alog/system"
 SUBSYSTEM=="misc", KERNEL=="log_main", SYMLINK+="alog/main"
 
+# ashmem boot_id symlink, some Android versions need this for audio and don't have it created by default
+SUBSYSTEM=="misc", KERNEL=="ashmem", ACTION=="add", RUN+="/bin/sh -c '/usr/bin/cat /proc/sys/kernel/random/boot_id | /usr/bin/xargs -I % ln -s ashmem /dev/ashmem%'"
+
 # Video device symlinks needed for video codecs
 SUBSYSTEM=="video4linux", KERNEL=="video[0-9]*", ATTRS{link_name}!="", SYMLINK+="video/%s{link_name}"
 
