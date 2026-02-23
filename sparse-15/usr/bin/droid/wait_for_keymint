@@ -1,0 +1,8 @@
+#!/bin/sh
+
+while [ "$(binder-list -d /dev/binder |grep android.hardware.security.keymint.IKeyMintDevice/default)" == "" ]; do
+        echo "Waiting for keymint"
+        sleep 1
+done
+
+exit 0

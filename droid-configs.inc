@@ -260,7 +260,7 @@ Conflicts: bluez5-configs-mer
 %if 0%{?android_version_major:1}
 # If defined also use android version specfic sparse
 # Supersedes the base sparse and is superseded by device specific sparse
-case %{android_version_major} in 8|9|10|11|13|14) : ;; *) echo unsupported android_version_major; exit 1; esac
+case %{android_version_major} in 8|9|10|11|13|14|15|16) : ;; *) echo unsupported android_version_major; exit 1; esac
 %endif
 
 %install

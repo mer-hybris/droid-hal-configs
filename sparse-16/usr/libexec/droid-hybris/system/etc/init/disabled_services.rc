@@ -1,0 +1,64 @@
+service netd netd_HYBRIS_DISABLED
+    user root
+
+service installd installd_HYBRIS_DISABLED
+    user root
+
+service cameraserver cameraserver_HYBRIS_DISABLED
+    user root
+
+service audioserver audioserver_HYBRIS_DISABLED
+    user root
+
+service update_engine update_engine_HYBRIS_DISABLED
+    user root
+
+service vendor.audio-hal /vendor/bin/hw/android.hardware.audio.service_HYBRIS_DISABLED
+    user root
+
+service lmkd /system/bin/lmkd_HYBRIS_DISABLED
+    user root
+
+service vold /system/bin/vold_HYBRIS_DISABLED
+    user root
+
+service wificond /system/bin/wificond_HYBRIS_DISABLED
+    user root
+
+service storaged /system/bin/storaged_HYBRIS_DISABLED
+    user root
+
+service surfaceflinger surfaceflinger_HYBRIS_DISABLED
+    user root
+
+service bootanim /system/bin/bootanimation_HYBRIS_DISABLED
+    user root
+
+service vendor.usb-hal-1-3 /vendor/bin/hw/android.hardware.usb@1.3-service_HYBRIS_DISABLED
+    user root
+
+service vendor.vibrator-1-0 /vendor/bin/hw/android.hardware.vibrator@1.0-service_HYBRIS_DISABLED
+    user root
+
+service update_verifier_nonencrypted /system/bin/update_verifier_HYBRIS_DISABLED nonencrypted
+    user root
+
+service update_verifier /system/bin/update_verifier_HYBRIS_DISABLED ${vold.decrypt}
+    user root
+
+service gpu /system/bin/gpuservice_HYBRIS_DISABLED
+    user root
+
+service time_daemon /vendor/bin/time_daemon_HYBRIS_DISABLED
+    user root
+    override
+
+service mediaextractor /system/bin/mediaextractor_HYBRIS_DISABLED
+    user root
+    override
+
+service mediametrics /system/bin/mediametrics_HYBRIS_DISABLED
+    user root
+
+service bpfloader /system/bin/netbpfload_HYBRIS_DISABLED
+    user root
