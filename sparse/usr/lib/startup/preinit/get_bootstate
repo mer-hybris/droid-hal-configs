@@ -52,8 +52,12 @@ elif grep -q 'androidboot.mode=charger' /proc/cmdline; then
     BOOTSTATE="ACT_DEAD"
     bootreason_str="androidboot.mode=charger"
     check_bogus=1
+elif grep -q 'androidboot.mode = "charger"' /proc/bootconfig; then
+    BOOTSTATE="ACT_DEAD"
+    bootreason_str="androidboot.mode=charger"
+    check_bogus=1
 elif [ ! -z "$actdead_bootparam" ] &&
-     grep -q $actdead_bootparam /proc/cmdline; then
+     (grep -q "$actdead_bootparam" /proc/cmdline || grep -q "$actdead_bootparam" /proc/bootconfig); then
     # Device specific boot parameter
     BOOTSTATE="ACT_DEAD"
     bootreason_str=$actdead_bootparam
