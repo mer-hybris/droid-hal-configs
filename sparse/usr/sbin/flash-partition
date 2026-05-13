@@ -60,7 +60,7 @@ print_help()
         echo "    A tool for on-device partition flashing"
         echo ""
         echo "  Usage:"
-        echo "    $0 <partition_label> <image_file>"
+        echo "    $0 <partition_label> <image_file> <optional_extra_arguments>"
         echo ""
         echo "  Allowed partition labels:"
         for I in ${PART_I}; do
@@ -202,10 +202,10 @@ if on_device; then
         fi
 
 	if [[ "$SAILFISHOS_WIPE_PARTITIONS" == "1" ]]; then
-		dd if=/dev/zero bs=1M of=$DEVDIR/$DEVICE
+		dd if=/dev/zero bs=4096 $3 of=$DEVDIR/$DEVICE
 	fi
 
-        dd if=$FILENAME bs=4096 of=$DEVDIR/$DEVICE
+        dd if=$FILENAME bs=4096 $3 of=$DEVDIR/$DEVICE
 
         if [[ "$SPARSE" == "ed26ff3a" ]]; then
                 rm -f $FILENAME
