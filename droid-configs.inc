@@ -271,7 +271,7 @@ mkdir -p %{buildroot}
 # Retain permissions:
 rm -rf tmp/
 mkdir -p tmp/
-echo "%defattr(-,root,root,-)" > tmp/droid-config.files
+echo "" > tmp/droid-config.files
 
 # On 64-bit ARM certain subdirs should not be moved to lib64 but kept under lib.
 # Algorithm below autodetects cases under sparse/ so adaptations do not have to
@@ -424,10 +424,8 @@ fi
 grep bluez5 tmp/droid-config.files > tmp/bluez5.files || true
 sed --in-place '/bluez5/d' tmp/droid-config.files
 %endif
-echo "%defattr(-,root,root,-)" > tmp/policy-settings.files
 grep ohm tmp/droid-config.files > tmp/policy-settings.files
 sed --in-place '/ohm/d' tmp/droid-config.files
-echo "%defattr(-,root,root,-)" > tmp/pulseaudio-settings.files
 grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
 sed --in-place '/pulse/d' tmp/droid-config.files
 sed --in-place '/\/startup\/preinit\//d' tmp/droid-config.files
@@ -621,14 +619,12 @@ fi
 
 ################################################################
 %files -f tmp/droid-config.files
-%defattr(-,root,root,-)
 %if 0%{!?provides_own_board_mapping:1}
 %{board_mapping_file}
 %endif
 %{_datadir}/qt5/keymaps/droid.qmap
 
 %files ssu-kickstarts
-%defattr(-,root,root,-)
 %{_datadir}/kickstarts/*.ks
 
 %files policy-settings -f tmp/policy-settings.files
@@ -638,17 +634,14 @@ fi
 %defattr(644,root,root-)
 
 %files preinit-plugin
-%defattr(-,root,root,-)
 %{_prefix}/lib/startup/preinit/*
 
 %files pulseaudio-settings -f tmp/pulseaudio-settings.files
 %defattr(644,root,root,-)
  
 %files sailfish -f tmp/sailfish-settings.files
-%defattr(-,root,root,-)
 
 %files flashing -f tmp/flashing.files
-%defattr(-,root,root,-)
 
 %if 0%{?out_of_image_files:1}
 %files out-of-image-files -f tmp/out-of-image-files.files
