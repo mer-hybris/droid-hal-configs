@@ -1,0 +1,126 @@
+# To enable USB audio through audio HAL set pulseaudio-modules-droid option usb_devices=true
+# and in sparse/etc/pulse/xpolicy.conf.d make a symlink from this file to usbaudio.conf
+
+[variable]
+input_usb_headset = input-usb_headset
+input_usb_device = input-usb_device
+output_usb_headset = output-usb_headset
+output_usb_device = output-usb_device
+
+# Card section
+
+[card]
+type    = usbdevice
+name0   = equals:$card
+profile0= $card_profile
+name1    = startswith:"bluez_card"
+profile1 = off
+flags1   = disable_notify
+
+[card]
+type    = usbdeviceforcall
+name0   = equals:$card
+profile0= voicecall
+name1    = startswith:"bluez_card"
+profile1 = off
+flags1   = disable_notify
+
+[card]
+type    = usbdeviceforalien
+name0   = equals:$card
+profile0= communication
+name1    = startswith:"bluez_card"
+profile1 = off
+flags1   = disable_notify
+
+[card]
+type    = usbheadset
+name0   = equals:$card
+profile0= $card_profile
+name1    = startswith:"bluez_card"
+profile1 = off
+flags1   = disable_notify
+
+[card]
+type    = usbheadsetforcall
+name0   = equals:$card
+profile0= voicecall
+name1    = startswith:"bluez_card"
+profile1 = off
+flags1   = disable_notify
+
+[card]
+type    = usbheadsetforalien
+name0   = equals:$card
+profile0= communication
+name1    = startswith:"bluez_card"
+profile1 = off
+flags1   = disable_notify
+
+# Device section
+
+[device]
+type  = usbdevice
+sink  = $output_media_latency@equals:$output_equals
+ports = $output_primary@equals:$output_equals->$output_usb_device
+flags = disable_notify, refresh_always, $sink_port_change_delay, update_available
+delay = $delay_time
+
+[device]
+type  = usbdeviceforcall
+sink  = $output_primary@equals:$output_equals
+ports = $output_primary@equals:$output_equals->$output_usb_device
+flags = disable_notify, refresh_always, $sink_port_change_delay
+delay = $delay_time
+
+[device]
+type  = usbdeviceforalien
+sink  = $output_primary@equals:$output_equals
+ports = $output_primary@equals:$output_equals->$output_usb_device
+flags = disable_notify, refresh_always, $sink_port_change_delay
+delay = $delay_time
+
+[device]
+type   = usbmicrophone
+source = $input_external@equals:$input_equals
+ports  = $input_external@equals:$input_equals->$input_usb_device
+flags  = disable_notify, refresh_always, update_available
+
+[device]
+type  = usbheadset
+sink  = $output_media_latency@equals:$output_equals
+ports = $output_primary@equals:$output_equals->$output_usb_headset
+flags = disable_notify, refresh_always, $sink_port_change_delay, update_available
+delay = $delay_time
+
+[device]
+type   = usbheadset
+source = $input_external@equals:$input_equals
+ports  = $input_external@equals:$input_equals->$input_usb_headset
+flags  = disable_notify, refresh_always
+
+[device]
+type  = usbheadsetforcall
+sink  = $output_primary@equals:$output_equals
+ports = $output_primary@equals:$output_equals->$output_usb_headset
+flags = disable_notify, refresh_always, $sink_port_change_delay
+delay = $delay_time
+
+[device]
+type   = usbheadsetforcall
+source = $input_external@equals:$input_equals
+ports  = $input_external@equals:$input_equals->$input_usb_headset
+flags  = disable_notify, refresh_always
+
+[device]
+type  = usbheadsetforalien
+sink  = $output_primary@equals:$output_equals
+ports = $output_primary@equals:$output_equals->$output_usb_headset
+flags = disable_notify, refresh_always, $sink_port_change_delay
+delay = $delay_time
+
+[device]
+type   = usbheadsetforalien
+source = $input_external@equals:$input_equals
+ports  = $input_external@equals:$input_equals->$input_usb_headset
+flags  = disable_notify, refresh_always
