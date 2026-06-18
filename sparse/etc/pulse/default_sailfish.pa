@@ -33,7 +33,7 @@ load-module module-keepalive
 .fail
 
 load-module module-meego-parameters cache=1 directory=/var/lib/nemo-pulseaudio-parameters use_voice=false
-load-module module-meego-mainvolume virtual_stream=true unmute_delay=600
+load-module module-meego-mainvolume virtual_stream=false unmute_delay=600
 
 ### Automatically restore the volume of streams
 load-module module-stream-restore-nemo restore_device=no restore_volume=yes restore_muted=no route_table=/etc/pulse/x-maemo-route.table fallback_table=/etc/pulse/x-maemo-stream-restore.table use_voice=false
