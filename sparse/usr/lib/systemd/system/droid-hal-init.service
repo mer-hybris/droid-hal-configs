@@ -17,6 +17,9 @@ ProtectHome=true
 PrivateTmp=true
 ExecStartPre=-/bin/sh /usr/bin/droid/droid-hal-early-init.sh
 ExecStart=/bin/sh /usr/bin/droid/droid-hal-startup.sh
+# Since droid-hal-shutdown.sh effectively kills the cgroup processes (as well as it's possible),
+# systemd can safely skip trying to kill any stubborn processes the second time, causing unncessary delay.
+KillMode=none
 ExecStop=/bin/sh /usr/bin/droid/droid-hal-shutdown.sh
 Restart=always
 # Lets make sure we don't block minutes in case of errors.
