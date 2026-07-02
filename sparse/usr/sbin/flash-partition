@@ -96,9 +96,14 @@ parameters_correct()
 # Parameter $1 should be the partition name like "boot"
 find_device()
 {
-        if [[ $USE_BLKID -eq 1 ]]; then
+        if [[ "${1:0:1}" = "/" ]]; then
+                echo "Using provided absoulte device path"
+                DEVICE=$1
+        elif [[ $USE_BLKID -eq 1 ]]; then
+                echo "Using blkid to lookup device"
                 DEVICE=$(blkid -t PARTLABEL="$1" -o device)
         else
+                echo "Using device-info mappings to lookup device"
                 for I in ${PART_I}; do
                         eval PART="\${PART_$I}"
                         if [[ ${PART} = "$1" ]]; then
