@@ -1,0 +1,6 @@
+service hybris_timezone /bin/sh /usr/bin/droid/droid-listen-timezone.sh
+    class main
+    user system
+    group system
+    ioprio rt 4
+
