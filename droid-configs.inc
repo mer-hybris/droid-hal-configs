@@ -420,10 +420,11 @@ fi
 
 # We want to keep some files in separate subpackages.
 # NOTE: some files might get to wrong place with this because of string assumption.
-%if 0%{?have_bluetooth:1}
 grep bluez5 tmp/droid-config.files > tmp/bluez5.files || true
-sed --in-place '/bluez5/d' tmp/droid-config.files
-%endif
+grep "/etc/obexd" tmp/droid-config.files >> tmp/bluez5.files || true
+grep bluetooth.service.d tmp/droid-config.files >> tmp/bluez5.files || true
+delete_files tmp/droid-config.files tmp/bluez5.files %{!?have_bluetooth:1}
+
 grep ohm tmp/droid-config.files > tmp/policy-settings.files
 sed --in-place '/ohm/d' tmp/droid-config.files
 grep pulse tmp/droid-config.files > tmp/pulseaudio-settings.files
