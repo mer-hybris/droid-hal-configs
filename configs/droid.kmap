@@ -24,3 +24,6 @@ keycode 528 = CameraFocus
 keycode 766 = Camera
 # custom assistant button on at least Sony Xperia 10 III
 keycode 457 = Camera
+# 12-key keypad (Callback): * and #, KEY_NUMERIC_STAR and KEY_NUMERIC_POUND
+keycode 522 = asterisk
+keycode 523 = numbersign
