@@ -27,3 +27,11 @@ keycode 457 = Camera
 # 12-key keypad (Callback): * and #, KEY_NUMERIC_STAR and KEY_NUMERIC_POUND
 keycode 522 = asterisk
 keycode 523 = numbersign
+# Callback function keys and back-of-phone button: KEY_F21..F24. Without these
+# lines lipstick's evdev plugin drops them before the xkb keymap runs. The
+# matching keysyms come from xkeyboard-config's jolla:fnkeys option, which binds
+# F22 to XF86HomePage for the launcher key.
+keycode 191 = F21
+keycode 192 = HomePage
+keycode 193 = F23
+keycode 194 = F24
