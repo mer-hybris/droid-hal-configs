@@ -5,42 +5,16 @@
 # used in your device.
 
 [device]
-type  = headphoneasfmradio
-source= $input_external@equals:$input_equals
-ports = $input_external@equals:$input_equals->$source_input_fmradio
+type  = fmradio
+source= $input_fm@equals:$input_equals
+ports = $input_fm@equals:$input_equals->$source_input_fmradio
 flags = refresh_always
 
 [device]
-type  = headphoneasfmradiolp
-source= $input_external@equals:$input_equals
-ports = $input_external@equals:$input_equals->$source_input_fmradio
-module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20source_output_properties='media.name=fmradio-loopback-source'%20latency_msec=250
-flags = refresh_always, module_unload_immediately
-
-[device]
-type  = lineoutasfmradio
-source= $input_external@equals:$input_equals
-ports = $input_external@equals:$input_equals->$source_input_fmradio
-flags = refresh_always
-
-[device]
-type  = lineoutasfmradiolp
-source= $input_external@equals:$input_equals
-ports = $input_external@equals:$input_equals->$source_input_fmradio
-module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20source_output_properties='media.name=fmradio-loopback-source'%20latency_msec=250
-flags = refresh_always, module_unload_immediately
-
-[device]
-type  = headsetasfmradio
-source= $input_external@equals:$input_equals
-ports = $input_external@equals:$input_equals->$source_input_fmradio
-flags = refresh_always
-
-[device]
-type  = headsetasfmradiolp
-source= $input_external@equals:$input_equals
-ports = $input_external@equals:$input_equals->$source_input_fmradio
-module= module-loopback@sink_input_properties='media.role=x-maemo%20media.name=fmradio-loopback'%20source_output_properties='media.name=fmradio-loopback-source'%20latency_msec=250
+type  = fmradioloopback
+source= $input_fm@equals:$input_equals
+ports = $input_fm@equals:$input_equals->$source_input_fmradio
+module= module-loopback@$fm_loopback_args
 flags = refresh_always, module_unload_immediately
 
 [stream]
