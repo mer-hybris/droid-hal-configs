@@ -66,6 +66,10 @@ else
     BOOTSTATE="USER"
 fi
 
+if [ "$NO_BOGUS_CHECK" == "1" ]; then
+    check_bogus=0
+fi
+
 # Bootreason can be bogus (pwr down by low voltage peak or battery removal)
 # We try to detect that and boot to USER in that case
 # ACTDEAD boot would cause only shutdown if there wasn't real reason
