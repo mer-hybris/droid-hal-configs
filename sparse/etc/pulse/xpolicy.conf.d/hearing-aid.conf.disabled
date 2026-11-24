@@ -1,0 +1,11 @@
+# Enable with a hearing-aid.conf symlink on adaptations that support HAC.
+
+[context-rule]
+variable = hearing_aid
+value = equals:"enabled"
+set-property = sink-property:$output_primary@equals:$output_equals, property:"droid.hac", value@constant:"on"
+
+[context-rule]
+variable = hearing_aid
+value = equals:"disabled"
+set-property = sink-property:$output_primary@equals:$output_equals, property:"droid.hac", value@constant:"off"
