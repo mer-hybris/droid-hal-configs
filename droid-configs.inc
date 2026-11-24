@@ -133,7 +133,6 @@ Requires:   ohm-plugins-dbus
 Requires:   ohm-plugin-telephony
 Requires:   ohm-plugin-signaling
 Requires:   ohm-plugin-media
-Requires:   ohm-plugin-accessories
 Requires:   ohm-plugin-resolver
 Requires:   ohm-plugin-ruleengine
 Requires:   ohm-plugin-profile
